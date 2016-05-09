@@ -1,0 +1,384 @@
+.editor-container{
+	width:auto;
+	height: auto;
+    position: relative;
+    box-shadow: 2px 2px 5px #d3d6da;
+    background-color: #fff;
+	border:1px solid #d8d8d8;
+	border-radius: 4px;
+	.editor-toolbar{
+		position: relative;
+		border-top-right-radius: 2px;
+		border-top-left-radius: 2px;
+	}
+	.editor-contenteditable-div{
+		position: relative;
+		border-top-right-radius: 2px;
+		border-top-left-radius: 2px;
+		min-height: 100px;
+		outline: none;
+		&:focus{
+			outline: none;
+		}
+	}
+}
+
+.editor-default{
+	.editor-toolbar{
+		position: relative;
+		width: auto;
+		border-bottom: 1px solid #e1e1e1;
+		box-shadow: 2px 2px 5px #d3d6da;
+		background-color: #fafafa;
+		z-index: 99999;
+		padding: 5px;
+		.editor-icon{
+			height: 20px !important;
+			width:20px !important;
+			background-image: url(images/icons.png);
+			display: inline-block;
+    		vertical-align: top;
+    		border: 1px solid transparent;
+			&:hover{
+				background-color: #d5e1f2;
+				border:1px solid #a3bde3;
+			}
+			&:hover.icon-separator{
+				background-color: transparent;
+				border:1px solid transparent;
+			}
+			&.icon-undo{
+				background-position: -160px 0;
+			}
+			&.icon-redo{
+				background-position: -100px 0;
+			}
+			&.icon-bold{
+				background-position: 0 0;
+			}
+			&.icon-italic{
+				background-position: -60px 0;
+			}
+			&.icon-fontborder{
+				background-position:-160px -40px;
+			}
+			&.icon-underline{
+				background-position: -140px 0;
+			}
+			&.icon-strikethrough{
+				background-position: -120px 0;
+			}
+			&.icon-subscript {
+				background-position: -600px 0;
+			}
+			&.icon-superscript {
+				background-position: -620px 0;
+			}
+			&.icon-blockquote {
+				background-position: -220px 0;
+			}
+			&.icon-forecolor {
+				background-position: -720px 0;
+			}
+			&.icon-backcolor {
+				background-position: -760px 0;
+			}
+			&.icon-inserttable{
+				background-position: -580px -20px;
+			}
+			&.icon-autotypeset{
+				background-position: -640px -40px;
+			}
+			&.icon-justifyleft{
+				background-position: -460px 0;
+			}
+			&.icon-justifycenter{
+				background-position: -420px 0;
+			}
+			&.icon-justifyright{
+				background-position: -480px 0;
+			}
+			&.icon-justifyjustify{
+				background-position: -440px 0;
+			}
+			&.icon-insertorderedlist{
+				background-position: -80px 0;
+			}
+			&.icon-insertunorderedlist{
+				background-position: -20px 0;
+			}
+			&.icon-lineheight{
+				background-position: -725px -40px;
+			}
+			&.icon-rowspacingbottom{
+				background-position: -745px -40px;
+			}
+			&.icon-rowspacingtop{
+				background-position: -765px -40px;
+			}
+			&.icon-horizontal{
+				background-position: -360px 0;
+			}
+			&.icon-link{
+				background-position: -500px 0;
+			}
+			&.icon-code{
+				background-position: -440px -40px;
+			}
+			&.icon-image{
+				background-position: -380px 0;
+			}
+			&.icon-insertimage{
+				background-position: -726px -77px;
+			}
+			&.icon-insertframe{
+				background-position: -240px -40px;
+			}
+			&.icon-emotion{
+				background-position: -60px -20px;
+			}
+			&.icon-spechars{
+				background-position: -240px 0;
+			}
+			&.icon-help{
+				background-position: -340px 0;
+			}
+			&.icon-print{
+				background-position: -440px -20px;
+			}
+			&.icon-preview{
+				background-position: -420px -20px;
+			}
+			&.icon-selectall{
+				background-position: -400px -20px;
+			}
+			&.icon-searchreplace{
+				background-position: -520px -20px;
+			}
+			&.icon-map{
+				background-position: -40px -40px;
+			}
+			&.icon-gmap{
+				background-position: -260px -40px;
+			}
+			&.icon-video{
+				background-position: -320px -20px;
+			}
+			&.icon-insertvideo{
+				background-position: -320px -20px;
+			}
+			&.icon-time{
+				background-position: -160px -20px;
+			}
+			&.icon-date{
+				background-position: -140px -20px;
+			}
+			&.icon-cut{
+				background-position: -680px 0;
+			}
+			&.icon-copy{
+				background-position: -700px 0;
+			}
+			&.icon-paste{
+				background-position: -560px 0;
+			}
+			&.icon-formatmatch{
+				background-position: -40px 0;
+			}
+			&.icon-pasteplain{
+				background-position: -360px -20px;
+			}
+			&.icon-directionalityltr{
+				background-position: -20px -20px;
+			}
+			&.icon-directionalityrtl{
+				background-position: -40px -20px;
+			}
+			&.icon-source{
+				background-position: -261px -0px;
+			}
+			&.icon-removeformat{
+				background-position: -580px 0;
+			}
+			&.icon-unlink{
+				background-position: -640px 0;
+			}
+			&.icon-touppercase{
+				background-position: -786px 0;
+			}
+			&.icon-tolowercase{
+				background-position: -806px 0;
+			}
+			&.icon-insertrow{
+				background-position: -478px -76px;
+			}
+			&.icon-insertrownext{
+				background-position: -498px -76px;
+			}
+			&.icon-insertcol{
+				background-position: -455px -76px;
+			}
+			&.icon-insertcolnext {
+				background-position: -429px -76px;
+			}
+			&.icon-mergeright{
+				background-position: -60px -40px;
+			}
+			&.icon-mergedown{
+				background-position: -80px -40px;
+			}
+			&.icon-splittorows{
+				background-position: -100px -40px;
+			}
+			&.icon-splittocols{
+				background-position: -120px -40px;
+			}
+			&.icon-insertparagraphbeforetable{
+				background-position: -140px 0;
+			}
+			&.icon-deleterow{
+				background-position: -660px -20px;
+			}
+			&.icon-deletecol{
+				background-position: -640px -20px;
+			}
+			&.icon-splittocells{
+				background-position: -800px -20px;
+			}
+			&.icon-mergecells{
+				background-position: -760px -20px;
+			}
+			&.icon-deletetable{
+				background-position: -620px -20px;
+			}
+			&.icon-cleardoc{
+				background-position: -520px 0;
+			}
+			&.icon-fullscreen{
+				background-position: -100px -20px;
+			}
+			&.icon-anchor{
+				background-position: -200px 0;
+			}
+			&.icon-pagebreak{
+				background-position: -460px -40px;
+			}
+			&.icon-imagenone{
+				background-position: -480px -40px;
+			}
+			&.icon-imageleft{
+				background-position: -500px -40px;
+			}
+			&.icon-wordimage{
+				background-position: -660px -40px;
+			}
+			&.icon-imageright{
+				background-position: -520px -40px;
+			}
+			&.icon-imagecenter{
+				background-position: -540px -40px;
+			}
+			&.icon-indent{
+				background-position: -400px 0;
+			}
+			&.icon-outdent{
+				background-position: -540px 0;
+			}
+			&.icon-webapp{
+				background-position: -601px -40px
+			}
+			&.icon-table{
+				background-position: -580px -20px;
+			}
+			&.icon-edittable{
+				background-position: -420px -40px;
+			}
+			&.icon-template{
+				background-position: -339px -40px;
+			}
+			&.icon-delete{
+				background-position: -360px -40px;
+			}
+			&.icon-attachment{
+				background-position: -620px -40px;
+			}
+			&.icon-edittd{
+				background-position: -700px -40px;
+			}
+			&.icon-snapscreen{
+				background-position: -581px -40px
+			}
+			&.icon-scrawl{
+				background-position: -801px -41px
+			}
+			&.icon-background{
+				background-position: -680px -40px;
+			}
+			&.icon-music{
+				background-position: -18px -40px
+			}
+			&.icon-formula{
+				background-position: -200px -40px
+			}
+			&.icon-aligntd {
+				background-position: -236px -76px;
+			}
+			&.icon-insertparagraphtrue {
+				background-position: -625px -76px;
+			}
+			&.icon-insertparagraph {
+				background-position: -602px -76px;
+			}
+			&.icon-insertcaption {
+				background-position: -336px -76px;
+			}
+			&.icon-deletecaption {
+				background-position: -362px -76px;
+			}
+			&.icon-inserttitle {
+				background-position: -286px -76px;
+			}
+			&.icon-deletetitle {
+				background-position: -311px -76px;
+			}
+			&.icon-aligntable {
+				background-position: -440px 0;
+			}
+			&.icon-tablealignment-left {
+				background-position: -460px 0;
+			}
+			&.icon-tablealignment-center {
+				background-position: -420px 0;
+			}
+			&.icon-tablealignment-right {
+				background-position: -480px 0;
+			}
+			&.icon-drafts {
+				background-position: -560px 0;
+			}
+			&.icon-charts {
+				background: url(images/charts.png) no-repeat 2px 3px!important;
+			}
+			&.icon-inserttitlecol {
+				background-position: -673px -76px;
+			}
+			&.icon-deletetitlecol {
+				background-position: -698px -76px;
+			}
+			&.icon-simpleupload {
+				background-position: -380px 0px;
+			}
+			&.icon-separator{
+				background-position:-179px 1px;
+				width: 2px !important;
+				padding: 1px 2px;
+			}
+		}
+	}
+	.editor-contenteditable-div{
+		padding: 0px 10px;
+		p{
+			margin: 5px 0;
+		}
+	}
+}
