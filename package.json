@@ -19,7 +19,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/liuhong1happy/react-editor.git"
+        "url": "git://github.com/liuhong1happy/react-umeditor.git"
     },
     "license": "MIT",
     "keywords": [
