@@ -9,7 +9,6 @@ var EditorSelection = require('./utils/EditorSelection');
 
 var ColorDropdown = require('./components/ColorDropdown.react');
 
-
 /**
 * @icon: 图标名称 string
 * @disabled: 是否禁用 bool
@@ -186,6 +185,12 @@ var maxInputCount = 20;
 var lastKeyCode = null;
 var keycont = 0;
 
+/**
+* 对外接口方法
+* @findDOMNode: 获取"root","textarea","toolbar","color"的ref对象以及相应的dom对象
+* @setContent: 设置html格式数据
+* @getContent: 获取html格式数据
+**/
 var Editor = React.createClass({
 	getInitialState:function(){
 		return {
@@ -369,10 +374,28 @@ var Editor = React.createClass({
 			e.cancelBubble = true;
 		}
 	},
+	findDOMNode:function(refName){
+		// 对外公布方法
+		var keys = [ "root","textarea","toolbar","color"];
+		if(keys.indexOf(refName)==-1) 
+			return {ref:null,dom:null};
+		return {
+			ref:this.refs[refName],
+			dom:ReactDOM.findDOMNode(this.refs[refName])
+	   }
+	},
+	setContent:function(content){
+		// 后续添加校验方法
+		this.refs.editarea.setContent(content);
+	},
+	getContent:function(){
+		return this.refs.editarea.getContent();
+	},
 	render:function(){
 		var editArea = this.genEditArea();
-		return (<div ref="root" className="editor-container editor-default" onBlur={this.handleRangeChange}>
-				<EditorToolbar editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick}/>
+		var {onBlur,className,id,...props}
+		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onBlur={this.handleRangeChange} {...props}>
+				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick}/>
 				{editArea}
 				<ColorDropdown ref="color"/>
 				</div>)
