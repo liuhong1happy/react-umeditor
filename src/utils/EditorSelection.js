@@ -58,10 +58,25 @@ var EditorSelection = {
 					case "SUB":
 						rangeState["subscript"] = { active:true,icon:"subscript"}
 						break;
+					case "FONT":
+						rangeState["forecolor"] = {color: parentElement.color, icon:"forecolor"}
+						rangeState["backcolor"] = {color: parentElement.style.backgroundColor, icon:"backcolor"}
+						break;
+					case "P":
+						var textAlign = parentElement.style.textAlign?parentElement.style.textAlign:"left";
+						rangeState["justifycenter"] = { active:textAlign=="center",icon:"subscript"}
+						rangeState["justifyleft"] = { active:textAlign=="left",icon:"subscript"}
+						rangeState["justifyright"] = { active:textAlign=="right",icon:"subscript"}
+						break;
+					
 				}
 				parentElement = parentElement.parentElement;
 			}
 		}
+		
+		if(!rangeState["forecolor"]) rangeState["forecolor"] = {color: 'transparent', icon:"forecolor"}
+		if(!rangeState["backcolor"]) rangeState["backcolor"] = {color: 'transparent', icon:"backcolor"}
+		
 		return rangeState;
 	}
 }

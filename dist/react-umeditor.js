@@ -353,10 +353,31 @@ var ColorDropdown = require('./components/ColorDropdown.react');
 * @title: 提示 string
 * @active: 是否选中 bool
 * @showHtml: 是否当前是显示html属性
+* @color: 前景色和背景色
 **/
 var EditorIcon = React.createClass({
 	displayName: 'EditorIcon',
 
+	componentDidMount: function componentDidMount() {
+		this.updateStyle();
+	},
+	componentDidUpdate: function componentDidUpdate() {
+		this.updateStyle();
+	},
+	updateStyle: function updateStyle() {
+		var root = ReactDOM.findDOMNode(this.refs.root);
+		var icon = this.props.icon;
+		switch (this.props.icon) {
+			case "forecolor":
+			case "backcolor":
+				var color = this.props.color ? this.props.color : "transparent";
+				root.id = icon + "_" + new Date().valueOf();
+				var style = root.childElementCount > 0 ? root.children[0] : document.createElement('style');
+				style.innerHTML = ".icon-" + icon + "#" + root.id + ":before{content:'';border-bottom:3px solid " + color + ";}";
+				if (root.childElementCount == 0) root.appendChild(style);
+				break;
+		}
+	},
 	handleClick: function handleClick(e) {
 		var _props = this.props;
 		var onClick = _props.onClick;
@@ -378,7 +399,7 @@ var EditorIcon = React.createClass({
 		var props = _objectWithoutProperties(_props2, ['icon', 'active', 'disabled', 'showHtml', 'onClick']);
 
 		var _disabled = showHtml && icon != "source" && icon != "separator";
-		return React.createElement('span', _extends({ className: "editor-icon icon-" + icon + (active ? " active" : "") + (disabled || _disabled ? " disabled" : ""), onClick: this.handleClick }, props));
+		return React.createElement('span', _extends({ ref: 'root', className: "editor-icon icon-" + icon + (active ? " active" : "") + (disabled || _disabled ? " disabled" : ""), onClick: this.handleClick }, props));
 	}
 });
 
@@ -386,8 +407,9 @@ var EditorToolbar = React.createClass({
 	displayName: 'EditorToolbar',
 
 	getInitialState: function getInitialState() {
+		// paragraph fontfamily fontsize image formula emotion video map print preview drafts link unlink
 		return {
-			icons: ["source | undo redo | bold italic underline strikethrough | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc | paragraph fontfamily fontsize | justifyleft justifycenter justifyright | link unlink | ", "emotion image video | map | horizontal print preview drafts formula"],
+			icons: ["source | undo redo | bold italic underline strikethrough | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | justifyleft justifycenter justifyright | horizontal"],
 			selection: null
 		};
 	},
@@ -414,6 +436,7 @@ var EditorToolbar = React.createClass({
 			if (editorState.icons[_icons[i]]) {
 				returnArray[i].disabled = !!editorState.icons[_icons[i]].disabled;
 				returnArray[i].active = !!editorState.icons[_icons[i]].active;
+				returnArray[i].color = editorState.icons[_icons[i]].color;
 			}
 			returnArray[i].showHtml = !!editorState.showHtml;
 		}
@@ -512,6 +535,11 @@ var EditorContentEditableDiv = React.createClass({
 	}
 });
 
+var saveSceneTimer = null;
+var maxInputCount = 20;
+var lastKeyCode = null;
+var keycont = 0;
+
 var Editor = React.createClass({
 	displayName: 'Editor',
 
@@ -526,11 +554,52 @@ var Editor = React.createClass({
 	componentDidMount: function componentDidMount() {
 		EditorHistory.clear();
 		this.refs.editarea.setContent(this.props.defaultContent ? this.props.defaultContent : "<p>This is an Editor</p>");
+		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
+		var isCollapsed = true;
+		editarea.addEventListener('keydown', this.handleKeyDown);
+		editarea.addEventListener('keyup', this.handleKeyUp);
+	},
+	autoSave: function autoSave() {
+		EditorHistory.execCommand('autosave', false, null);
+		this.handleRangeChange();
+	},
+	handleKeyDown: function handleKeyDown(evt) {
+		var keyCode = evt.keyCode || evt.which;
+		var autoSave = this.autoSave;
+		if (!evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
+			if (EditorHistory.getCommandStack().length == 0) {
+				autoSave();
+				keycont = 0;
+			}
+			clearTimeout(saveSceneTimer);
+			saveSceneTimer = setTimeout(function () {
+				var interalTimer = setInterval(function () {
+					autoSave();
+					keycont = 0;
+					clearInterval(interalTimer);
+				}, 300);
+			}, 200);
+			lastKeyCode = keyCode;
+			keycont++;
+			if (keycont >= maxInputCount) {
+				autoSave();
+				keycont = 0;
+			}
+		}
+	},
+	handleKeyUp: function handleKeyUp(evt) {
+		var keyCode = evt.keyCode || evt.which;
+		if (!evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
+			// some handle
+		}
 	},
 	componentDidUpdate: function componentDidUpdate() {
 		var editorState = this.state.editorState;
 		switch (editorState.icon) {
 			case "source":
+				this.refs.editarea.setContent(editorState.content);
+				break;
+			case "cleardoc":
 				this.refs.editarea.setContent(editorState.content);
 				break;
 		}
@@ -546,7 +615,15 @@ var Editor = React.createClass({
 	exchangeRangeState: function exchangeRangeState(editorState) {
 		var rangeState = EditorSelection.getRangeState();
 		for (var icon in rangeState) {
-			if (!editorState.icons[icon]) editorState.icons[icon] = rangeState[icon];else editorState.icons[icon].active = rangeState[icon].active;
+			if (!editorState.icons[icon]) editorState.icons[icon] = rangeState[icon];else {
+				switch (icon) {
+					case "forecolor":
+					case "backcolor":
+						editorState.icons[icon].color = rangeState[icon].color;
+						break;
+				}
+				editorState.icons[icon].active = rangeState[icon].active;
+			}
 		}
 		return editorState;
 	},
@@ -577,6 +654,8 @@ var Editor = React.createClass({
 		var target = e.target || e.srcElement;
 		var offsetPosition = this.getOffsetRootParentPosition(target);
 
+		var handleRangeChange = this.handleRangeChange;
+
 		var editorState = this.state.editorState;
 		EditorSelection.addRange();
 		switch (state.icon) {
@@ -597,24 +676,36 @@ var Editor = React.createClass({
 			case "strikethrough":
 			case "subscript":
 			case "superscript":
-			case "unlink":
+			case "removeformat":
+			case "insertorderedlist":
+			case "insertunorderedlist":
+			case "selectall":
+			case "justifyleft":
+			case "justifyright":
+			case "justifycenter":
 				EditorHistory.execCommand(state.icon, false, null);
-				break;
-			case "link":
-				EditorHistory.execCommand(state.icon, true, null);
 				break;
 			case "forecolor":
 				offsetPosition.y += offsetPosition.h + 5;
 				this.refs.color.open(offsetPosition, function (e, color) {
 					EditorHistory.execCommand('forecolor', false, color);
+					handleRangeChange();
 				});
 				break;
 			case "backcolor":
 				offsetPosition.y += offsetPosition.h + 5;
 				this.refs.color.open(offsetPosition, function (e, color) {
 					EditorHistory.execCommand('backcolor', false, color);
+					handleRangeChange();
 				});
 				break;
+			case "cleardoc":
+				editorState.content = "<p><br/></p>";
+				break;
+			case "horizontal":
+				EditorHistory.execCommand('inserthtml', false, "<hr/><p><br/></p>");
+				break;
+
 		}
 		// setState
 		editorState.icons[state.icon] = state;
@@ -677,12 +768,20 @@ var EditorHistory = {
 		return this.canRedo();
 	},
 	execCommand: function execCommand(command, flag, args) {
+		document.execCommand(command, flag, args);
+		if (command == "selectall") return;
+		if (command == "inserthtml") {
+			if (this.range) {
+				var div = document.createElement('div');
+				div.innerHTML = args;
+				this.range.insertNode(div);
+			}
+		}
 		this.commandIndex = this.commandIndex + 1;
 		this.curCommand = { command: command, flag: flag, args: args };
 		// 必需移除index后的command
 		this.commandStack.splice(this.commandIndex, this.commandStack.length - this.commandIndex);
 		this.commandStack[this.commandIndex] = { command: command, flag: flag, args: args };
-		document.execCommand(command, flag, args);
 	},
 	getCurCommand: function getCurCommand() {
 		return this.curCommand;
@@ -761,10 +860,25 @@ var EditorSelection = {
 					case "SUB":
 						rangeState["subscript"] = { active: true, icon: "subscript" };
 						break;
+					case "FONT":
+						rangeState["forecolor"] = { color: parentElement.color, icon: "forecolor" };
+						rangeState["backcolor"] = { color: parentElement.style.backgroundColor, icon: "backcolor" };
+						break;
+					case "P":
+						var textAlign = parentElement.style.textAlign ? parentElement.style.textAlign : "left";
+						rangeState["justifycenter"] = { active: textAlign == "center", icon: "subscript" };
+						rangeState["justifyleft"] = { active: textAlign == "left", icon: "subscript" };
+						rangeState["justifyright"] = { active: textAlign == "right", icon: "subscript" };
+						break;
+
 				}
 				parentElement = parentElement.parentElement;
 			}
 		}
+
+		if (!rangeState["forecolor"]) rangeState["forecolor"] = { color: 'transparent', icon: "forecolor" };
+		if (!rangeState["backcolor"]) rangeState["backcolor"] = { color: 'transparent', icon: "backcolor" };
+
 		return rangeState;
 	}
 };
