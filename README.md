@@ -25,7 +25,15 @@ You can `this.refs.editor.xxx()`! The `xxx` maybe is as follows:
 * getContent
 * setContent
 
+## Snapshot
+
+![](snapshot/editor.png)
+
 ## Develop
 
+	git clone https://github.com/liuhong1happy/react-umeditor
+	cd react-umeditor
 	npm install
-	npm start
+	npm run build
+
+open the file `example/dist/index.html`
