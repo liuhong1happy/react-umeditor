@@ -39,7 +39,7 @@
 		position: absolute;
 		top: 0px;
 		left: 0px;
-		z-index: 99999;
+		z-index: 999;
 		background-color: #fff;
 		border: 1px solid #d8d8d8;
 		border-radius: 2px;
@@ -162,6 +162,195 @@
 			z-index: 1000;
 		}
 	}
+	.tab-group{
+		font-size: 12px;
+		margin: 15px;
+		.tab-nav{
+			margin: 0;
+			padding: 0;
+			border-bottom: 1px solid #ddd;
+			list-style: none;
+			height: 30px;
+			.tab-item{
+				float: left;
+				margin-bottom: -1px;
+				margin-top: 1px;
+				.tab-text{
+					display: block;
+					padding: 8px 12px;
+					border: 1px solid transparent;
+					color: #08c;
+					text-decoration: none;
+					outline: 0;
+					cursor: pointer;
+				}
+				&.active{
+					.tab-text{
+						border: 1px solid #ddd;
+						border-bottom-color: transparent;
+						background-color: #fff;
+						padding: 8px 12px;
+						color: #555;
+						cursor: default;
+					}
+				}
+			}
+		}
+		.tab-content{
+			padding: 1px;
+			position: relative;
+			background-color: #fff;
+			clear: both;
+		}
+	}
+	.image-dialog{
+		.tab-panel{
+			.image-content{
+			height: 330px;
+			width: 100%;
+			position: relative;
+			.image-item{
+				position: relative;
+				float: left;
+				width: 120px;
+				height: 120px;
+				border: 1px solid #d8d8d8;
+				cursor: default;
+				margin: 5px 0 0 5px;
+				background-color: #ccc;
+				.image-close{
+					position: absolute;
+					right: 0;
+					background: url('images/close2.png');
+					width: 17px;
+					height: 17px;
+					cursor: pointer;
+					z-index: 1;
+				}
+				.image-pic{
+					margin-top: 22.5px;
+					background-color: #fff;
+				}
+			}
+			.image-upload2{
+				position: relative;
+				float: left;
+				width: 120px;
+				height: 120px;
+				margin: 5px 0 0 5px;
+				.image-icon{
+					display: inline-block;
+					width: 120px;
+					height: 120px;
+					background-image: url('images/upload2.png');
+				}
+				.image-form{
+					position: absolute;
+					left: 0px;
+					top: 0px;
+					width: 100%;
+					height: 100%;
+					opacity: 0;
+					cursor: pointer;
+					.image-file{
+						width: 100%;
+						height: 100%;
+						filter: alpha(opacity=0);
+					}
+				}
+			}
+		}
+			.image-dragTip{
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-top: 30px;
+				margin-left: -60px;
+				color: #222;
+				font-size: 14px;
+				text-shadow: 0px 2px 3px #555;
+			}
+			.image-upload1{
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				width: 44px;
+				height: 38px;
+				margin-top: -19px;
+				margin-left: -22px;
+				&:hover{
+					.image-icon{
+						background-position: -50px 0;
+					}
+				}
+				.image-icon{
+					display: inline-block;
+					width: 44px;
+					height: 38px;
+					background-image: url('images/upload1.png');
+				}
+				.image-form{
+					position: absolute;
+					left: 0px;
+					top: 0px;
+					width: 100%;
+					height: 100%;
+					opacity: 0;
+					cursor: pointer;
+					.image-file{
+						width: 100%;
+						height: 100%;
+						filter: alpha(opacity=0);
+						margin: 3px 3px 3px 4px;
+					}
+				}
+			}
+
+			.image-mask{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: #fff;
+				text-align: center;
+				line-height: 300px;
+				color: rgba(0,0,0,0.6);
+				font-size: 14px;
+				font-weight: bold;
+				display: none;
+			}
+			.search-bar{
+				margin: 10px;
+				border-collapse: separate;
+    			border-spacing: 2px;
+				.image-searchTxt{
+					display: inline-block !important;
+					width: 400px;
+					border: 1px solid #c5d2ff;
+					height: 20px;
+					line-height: 18px;
+					font-size: 14px;
+					padding: 3px;
+					margin: 0;
+					outline: 0;
+				}
+				.image-searchAdd{
+					display: inline-block !important;
+					width: 60px;
+					text-align: center;
+					height: 25px;
+					text-align: center;
+					line-height: 25px;
+					background-color: #ffffff;
+					padding: 0;
+					border: 1px solid #ababab;
+					margin-left: 20px;
+					cursor: pointer;
+				}
+			}
+		}
+	}
 }
 .editor-default{
 	.editor-toolbar{
@@ -170,7 +359,7 @@
 		border-bottom: 1px solid #e1e1e1;
 		box-shadow: 2px 2px 5px #d3d6da;
 		background-color: #fafafa;
-		z-index: 99999;
+		z-index: 999;
 		padding: 5px;
 		.editor-icon{
 			height: 20px !important;

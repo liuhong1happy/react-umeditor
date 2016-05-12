@@ -29,25 +29,33 @@ var Dialog = React.createClass({
 			show:!this.state.show
 		})
 	},
+	handleMouseDown:function(e){
+		e = e || event;
+		if(e.stopPropagation){
+			e.stopPropagation()
+		}else{
+			e.cancelBubble = true;
+		}
+	},
 	render:function(){
-		var {...props,buttons,title,style,width,height} = this.props;
+		var {...props,className,buttons,title,style,width,height} = this.props;
 		var style = style?style:{};
 		 if(width){
 			style.width = width;
-			style.marginLeft = width /2;
+			style.marginLeft = -width /2;
 		}
 		if(height){
 			style.height = height;
 		}
 		style.display = this.state.show ? "" : "none";
-		
-		return (<div className="dialog-container"   ref="root">
-				<div className={"dialog"+(className?" "+className:"")} {...props} ref="dialog" style={style}>
+		var _className = "dialog"+(className?" "+className:"");
+		return (<div className="dialog-container"   ref="root" onMouseDown={this.handleMouseDown}>
+				<div className={_className} ref="dialog" style={style}>
 					<div className="dialog-header" ref="header">
+						<a className="dialog-close" onClick={this.props.onClose}></a>
 			 			<h3 className="dialog-title">
 			 				{title}
 			 			</h3>
-			 			<a className="dialog-close" onClick={this.props.onClose}>&times;</a>
 			 		</div>
 			 		<div className="dialog-body" ref="body">
 			 				{this.props.children}
@@ -60,7 +68,7 @@ var Dialog = React.createClass({
 						}
 			 		</div>
 				</div>
-				<div className="dialog-backdrop" ref="backdrop"></div>
+				<div className="dialog-backdrop" ref="backdrop" style={{"display":this.state.show?"":"none"}}></div>
 				</div>)
 	}
 })

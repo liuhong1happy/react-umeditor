@@ -8,6 +8,7 @@ var EditorHistory = require('./utils/EditorHistory');
 var EditorSelection = require('./utils/EditorSelection');
 
 var ColorDropdown = require('./components/ColorDropdown.react');
+var ImageDialog = require('./components/ImageDialog.react');
 
 /**
 * @icon: 图标名称 string
@@ -55,12 +56,12 @@ var EditorIcon = React.createClass({
 
 var EditorToolbar = React.createClass({
 	getInitialState:function(){
-		// paragraph fontfamily fontsize image formula emotion video map print preview drafts link unlink
+		// paragraph fontfamily fontsize formula emotion video map print preview drafts link unlink
 		return {
 			icons:[
 				"source | undo redo | bold italic underline strikethrough | superscript subscript | ",
 				"forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ",
-				"cleardoc  | justifyleft justifycenter justifyright | horizontal"
+				"cleardoc  | justifyleft justifycenter justifyright | horizontal | image"
 		    ],
 			selection:null
 		}
@@ -95,9 +96,9 @@ var EditorToolbar = React.createClass({
 	render:function(){
 		var icons = this.getIcons();
 		return (<div className="editor-toolbar">{
-					icons.map(function(icon){
+					icons.map(function(icon,pos){
 						var props = icon;
-						return(<EditorIcon {...props} />)
+						return(<EditorIcon key={pos} {...props} />)
 					})
 				}</div>)
 	}
@@ -306,7 +307,7 @@ var Editor = React.createClass({
 		var offsetPosition = this.getOffsetRootParentPosition(target);
 		
 		var handleRangeChange = this.handleRangeChange;
-		
+		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var editorState = this.state.editorState;
 		EditorSelection.addRange();
 		switch(state.icon){
@@ -356,6 +357,21 @@ var Editor = React.createClass({
 			case "horizontal":
 				EditorHistory.execCommand('inserthtml',false,"<hr/><p><br/></p>");
 				break;
+			case "image":
+				EditorSelection.storeRange();
+				this.refs.image.open(function(e,html){
+					editarea.focus();
+					EditorSelection.restoreRange();
+					
+					if(html && html.length>0){
+						if(EditorSelection.range){
+							EditorHistory.execCommand('inserthtml',false,html);
+						}else{
+							editarea.innerHTML += html;
+						}
+					}
+				})
+				break;
 				
 		}
 		// setState
@@ -376,7 +392,7 @@ var Editor = React.createClass({
 	},
 	findDOMNode:function(refName){
 		// 对外公布方法
-		var keys = [ "root","textarea","toolbar","color"];
+		var keys = [ "root","editarea","toolbar","color"];
 		if(keys.indexOf(refName)==-1) 
 			return {ref:null,dom:null};
 		return {
@@ -398,6 +414,7 @@ var Editor = React.createClass({
 				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick}/>
 				{editArea}
 				<ColorDropdown ref="color"/>
+				<ImageDialog ref="image" />
 				</div>)
 	}
 })

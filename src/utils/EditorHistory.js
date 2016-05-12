@@ -28,19 +28,11 @@ var EditorHistory = {
 		document.execCommand(command,flag,args);
 		if(command=="selectall") 
 			return;
-		if(command=="inserthtml"){
-			if(this.range){
-				var div = document.createElement('div');
-				div.innerHTML = args;
-				this.range.insertNode(div);
-			}
-		}
 		this.commandIndex = this.commandIndex+1;
 		this.curCommand = {command,flag,args};
 		// 必需移除index后的command
 		this.commandStack.splice(this.commandIndex,this.commandStack.length-this.commandIndex);
 		this.commandStack[this.commandIndex] = {command,flag,args};
-		
 	},
 	getCurCommand:function(){
 		return this.curCommand;

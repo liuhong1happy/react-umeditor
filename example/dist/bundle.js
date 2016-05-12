@@ -51,47 +51,51 @@ var ColorDropdown = React.createClass({
 				'table',
 				null,
 				React.createElement(
-					'tr',
-					{ className: 'title-row' },
+					'tbody',
+					null,
 					React.createElement(
-						'td',
-						{ colSpan: 10 },
-						'主题颜色'
-					)
-				),
-				ColorTypes.themeColors.map(function (colors, pos) {
-					var firstRow = pos == 0;
-					return React.createElement(
 						'tr',
-						{ className: firstRow ? "first-row" : "" },
-						colors.map(function (color) {
+						{ className: 'title-row', key: "title-row" },
+						React.createElement(
+							'td',
+							{ colSpan: 10 },
+							'主题颜色'
+						)
+					),
+					ColorTypes.themeColors.map(function (colors, pos) {
+						var firstRow = pos == 0;
+						return React.createElement(
+							'tr',
+							{ key: pos, className: firstRow ? "first-row" : "" },
+							colors.map(function (color, index) {
+								return React.createElement(
+									'td',
+									{ key: index },
+									React.createElement('a', { className: 'color-anchor', 'data-color': color, style: { "backgroundColor": color }, onClick: handleSelectColor })
+								);
+							})
+						);
+					}),
+					React.createElement(
+						'tr',
+						{ className: 'title-row', key: "title-row2" },
+						React.createElement(
+							'td',
+							{ colSpan: 10 },
+							'标准颜色'
+						)
+					),
+					React.createElement(
+						'tr',
+						{ className: 'last-row', key: "last-row" },
+						ColorTypes.standardColors.map(function (color, pos) {
 							return React.createElement(
 								'td',
-								null,
+								{ key: pos },
 								React.createElement('a', { className: 'color-anchor', 'data-color': color, style: { "backgroundColor": color }, onClick: handleSelectColor })
 							);
 						})
-					);
-				}),
-				React.createElement(
-					'tr',
-					{ className: 'title-row' },
-					React.createElement(
-						'td',
-						{ colSpan: 10 },
-						'标准颜色'
 					)
-				),
-				React.createElement(
-					'tr',
-					{ className: 'last-row' },
-					ColorTypes.standardColors.map(function (color) {
-						return React.createElement(
-							'td',
-							null,
-							React.createElement('a', { className: 'color-anchor', 'data-color': color, style: { "backgroundColor": color }, onClick: handleSelectColor })
-						);
-					})
 				)
 			)
 		);
@@ -100,7 +104,115 @@ var ColorDropdown = React.createClass({
 
 module.exports = ColorDropdown;
 
-},{"../constants/EditorConstants":3,"./Dropdown.react":2,"react":undefined}],2:[function(require,module,exports){
+},{"../constants/EditorConstants":6,"./Dropdown.react":3,"react":undefined}],2:[function(require,module,exports){
+"use strict";
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var React = require('react');
+
+/**
+* @width: 对话框宽度
+* @height: 对话框高度
+* @style: 样式
+* @buttons: 对话框按钮组
+* @title: 对话框标题
+* @className: 对话框类名
+**/
+var Dialog = React.createClass({
+	displayName: "Dialog",
+
+	getInitialState: function getInitialState() {
+		return {
+			show: false
+		};
+	},
+	open: function open() {
+		this.setState({
+			show: true
+		});
+	},
+	close: function close() {
+		this.setState({
+			show: false
+		});
+	},
+	toggle: function toggle() {
+		this.setState({
+			show: !this.state.show
+		});
+	},
+	handleMouseDown: function handleMouseDown(e) {
+		e = e || event;
+		if (e.stopPropagation) {
+			e.stopPropagation();
+		} else {
+			e.cancelBubble = true;
+		}
+	},
+	render: function render() {
+		var _props = this.props;
+
+		var props = _objectWithoutProperties(_props, []);
+
+		var className = _props.className;
+		var buttons = _props.buttons;
+		var title = _props.title;
+		var style = _props.style;
+		var width = _props.width;
+		var height = _props.height;
+
+		var style = style ? style : {};
+		if (width) {
+			style.width = width;
+			style.marginLeft = -width / 2;
+		}
+		if (height) {
+			style.height = height;
+		}
+		style.display = this.state.show ? "" : "none";
+		var _className = "dialog" + (className ? " " + className : "");
+		return React.createElement(
+			"div",
+			{ className: "dialog-container", ref: "root", onMouseDown: this.handleMouseDown },
+			React.createElement(
+				"div",
+				{ className: _className, ref: "dialog", style: style },
+				React.createElement(
+					"div",
+					{ className: "dialog-header", ref: "header" },
+					React.createElement("a", { className: "dialog-close", onClick: this.props.onClose }),
+					React.createElement(
+						"h3",
+						{ className: "dialog-title" },
+						title
+					)
+				),
+				React.createElement(
+					"div",
+					{ className: "dialog-body", ref: "body" },
+					this.props.children
+				),
+				React.createElement(
+					"div",
+					{ className: "dialog-footer", ref: "footer" },
+					buttons.map(function (ele, pos) {
+						return React.createElement(
+							"a",
+							{ className: "dialog-button", key: pos, "data-name": ele.name, onClick: ele.onClick },
+							ele.content
+						);
+					})
+				)
+			),
+			React.createElement("div", { className: "dialog-backdrop", ref: "backdrop", style: { "display": this.state.show ? "" : "none" } })
+		);
+	}
+});
+
+module.exports = Dialog;
+
+},{"react":undefined}],3:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -173,7 +285,351 @@ var Dropdown = React.createClass({
 
 module.exports = Dropdown;
 
-},{"react":undefined}],3:[function(require,module,exports){
+},{"react":undefined}],4:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var ReactDOM = require('react-dom');
+
+var Dialog = require('./Dialog.react');
+var TabGroup = require('./TabGroup.react');
+var Uploader = require('../utils/FileUpload');
+
+var ImageUpload = React.createClass({
+	displayName: 'ImageUpload',
+
+	getInitialState: function getInitialState() {
+		return {
+			images: []
+		};
+	},
+	handleChange: function handleChange(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var mask = ReactDOM.findDOMNode(this.refs.mask);
+		var _self = this;
+		var images = this.state.images;
+		if (target.files.length > 0) {
+			Uploader.uploadFile({
+				file: target.files[0],
+				onLoad: function onLoad(e) {
+					mask.style.display = "block";
+					mask.innerHTML = "Loading...";
+				},
+				onSuccess: function onSuccess(res) {
+					mask.style.display = "block";
+					mask.innerHTML = "Load Success";
+
+					if (res && res.status == "success") {
+						images.push({
+							src: res.image_src
+						});
+						_self.setState({
+							images: images
+						});
+					}
+
+					setTimeout(function () {
+						mask.style.display = "none";
+					}, 200);
+				},
+				onError: function onError(e) {
+					mask.style.display = "block";
+					mask.innerHTML = "Load Error";
+					setTimeout(function () {
+						mask.style.display = "none";
+					}, 200);
+				}
+			});
+		}
+	},
+	getImages: function getImages() {
+		return this.state.images;
+	},
+	clearImages: function clearImages() {
+		this.setState({
+			images: []
+		});
+	},
+	handleRemoveImage: function handleRemoveImage(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var index = parseInt(target.getAttribute("data-index"));
+		var images = this.state.images;
+		images.splice(index, 1);
+		this.setState({
+			images: images
+		});
+	},
+	render: function render() {
+		var images = this.state.images;
+		var handleRemoveImage = this.handleRemoveImage;
+		var action = this.props.action ? this.props.action : "/upload";
+		var showStyle = {
+			"display": "block"
+		};
+		var hideStyle = {
+			"display": "none"
+		};
+		var hasImages = images.length > 0;
+		return React.createElement(
+			'div',
+			{ className: 'tab-panel' },
+			React.createElement(
+				'div',
+				{ className: 'image-content' },
+				images.map(function (ele, pos) {
+					return React.createElement(
+						'div',
+						{ className: 'image-item' },
+						React.createElement('div', { className: 'image-close', onClick: handleRemoveImage }),
+						React.createElement('img', { src: ele.src, className: 'image-pic', height: '75', width: '120' })
+					);
+				}),
+				React.createElement(
+					'div',
+					{ className: 'image-upload2', style: hasImages ? showStyle : hideStyle },
+					React.createElement('span', { className: 'image-icon' }),
+					React.createElement(
+						'form',
+						{ className: 'image-form', method: 'post', encType: 'multipart/form-data', target: 'up', action: action },
+						React.createElement('input', { onChange: this.handleChange, style: { filter: "alpha(opacity=0)" }, className: 'image-file', type: 'file', hidefocus: '', name: 'file', accept: 'image/gif,image/jpeg,image/png,image/jpg,image/bmp' })
+					)
+				)
+			),
+			React.createElement(
+				'div',
+				{ className: 'image-dragTip', style: hasImages ? hideStyle : showStyle },
+				'支持图片拖拽上传'
+			),
+			React.createElement(
+				'div',
+				{ className: 'image-upload1', style: hasImages ? hideStyle : showStyle },
+				React.createElement('span', { className: 'image-icon' }),
+				React.createElement(
+					'form',
+					{ className: 'image-form', method: 'post', encType: 'multipart/form-data', target: 'up', action: action },
+					React.createElement('input', { onChange: this.handleChange, style: { filter: "alpha(opacity=0)" }, className: 'image-file', type: 'file', hidefocus: '', name: 'file', accept: 'image/gif,image/jpeg,image/png,image/jpg,image/bmp' })
+				)
+			),
+			React.createElement(
+				'div',
+				{ className: 'image-mask', ref: 'mask' },
+				"Loading...."
+			)
+		);
+	}
+});
+
+var ImageSearch = React.createClass({
+	displayName: 'ImageSearch',
+
+	getInitialState: function getInitialState() {
+		return {
+			images: []
+		};
+	},
+	getImages: function getImages() {
+		return this.state.images;
+	},
+	clearImages: function clearImages() {
+		this.setState({
+			images: []
+		});
+	},
+	handleClick: function handleClick(e) {
+		var text = ReactDOM.findDOMNode(this.refs.text);
+		var src = text.value;
+		var images = this.state.images;
+		if (src && src.length > 0) {
+			images.push({ src: src });
+			this.setState({
+				images: images
+			});
+			if (this.props.onChange) this.props.onChange(1, images);
+			text.value = "";
+		}
+	},
+	handleRemoveImage: function handleRemoveImage(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var index = parseInt(target.getAttribute("data-index"));
+		var images = this.state.images;
+		images.splice(index, 1);
+		this.setState({
+			images: images
+		});
+	},
+	render: function render() {
+		var images = this.state.images;
+		var handleRemoveImage = this.handleRemoveImage;
+		return React.createElement(
+			'div',
+			{ className: 'tab-panel' },
+			React.createElement(
+				'table',
+				{ className: 'search-bar' },
+				React.createElement(
+					'tbody',
+					null,
+					React.createElement(
+						'tr',
+						null,
+						React.createElement(
+							'td',
+							null,
+							React.createElement('input', { className: 'image-searchTxt', type: 'text', ref: 'text' })
+						),
+						React.createElement(
+							'td',
+							null,
+							React.createElement(
+								'div',
+								{ className: 'image-searchAdd', onClick: this.handleClick },
+								'添加'
+							)
+						)
+					)
+				)
+			),
+			React.createElement(
+				'div',
+				{ className: 'image-content' },
+				images.map(function (ele, pos) {
+					return React.createElement(
+						'div',
+						{ className: 'image-item' },
+						React.createElement('div', { className: 'image-close', 'data-index': pos, onClick: handleRemoveImage }),
+						React.createElement('img', { src: ele.src, className: 'image-pic', height: '75', width: '120' })
+					);
+				})
+			)
+		);
+	}
+});
+
+var ImageDialog = React.createClass({
+	displayName: 'ImageDialog',
+
+	getInitialState: function getInitialState() {
+		return {
+			images: [[], []],
+			handle: function handle() {}
+		};
+	},
+	open: function open(handle) {
+		this.setState({
+			handle: handle
+		});
+		this.refs.modal.open();
+	},
+	close: function close() {
+		this.refs.modal.close();
+		if (this.state.handle) {
+			this.state.handle();
+		}
+		this.refs.image.clearImages();
+	},
+	toggle: function toggle() {
+		this.refs.modal.toggle();
+	},
+	handleOkClick: function handleOkClick(e) {
+		// 做相应的处理
+		var tabIndex = this.refs.tab.getTabIndex();
+		var images = this.state.images[tabIndex];
+		var strImgs = "";
+		if (images.length > 0 && this.state.handle) {
+			for (var i = 0; i < images.length; i++) {
+				var src = images[i].src;
+				var str = "<img src='" + src + "' />";
+				strImgs += str;
+			}
+			this.state.handle(e, strImgs);
+		}
+		this.close();
+	},
+	handleChange: function handleChange(index, imgs) {
+		var images = this.state.images;
+		images[index] = imgs;
+		this.setState({
+			images: images
+		});
+	},
+	render: function render() {
+		var buttons = [{ name: "btn-ok", content: "确定", onClick: this.handleOkClick }, { name: "btn-cancel", content: "取消", onClick: this.close }];
+		var tabs = [{ title: "本地上传", component: React.createElement(ImageUpload, { ref: 'image', onChange: this.handleChange }) }, { title: "网络图片", component: React.createElement(ImageSearch, { ref: 'image', onChange: this.handleChange }) }];
+		return React.createElement(
+			Dialog,
+			{ ref: 'modal', className: 'image-dialog', width: 700, height: 508, title: '图片', buttons: buttons, onClose: this.close },
+			React.createElement(TabGroup, { tabs: tabs, ref: 'tab' })
+		);
+	}
+});
+
+module.exports = ImageDialog;
+
+},{"../utils/FileUpload":9,"./Dialog.react":2,"./TabGroup.react":5,"react":undefined,"react-dom":undefined}],5:[function(require,module,exports){
+"use strict";
+
+var React = require('react');
+
+var TabGroup = React.createClass({
+	displayName: "TabGroup",
+
+	getInitialState: function getInitialState() {
+		return {
+			tabIndex: 0
+		};
+	},
+	setTabIndex: function setTabIndex(index) {
+		this.setState({
+			tabIndex: index
+		});
+	},
+	getTabIndex: function getTabIndex() {
+		return this.state.tabIndex;
+	},
+	handleClick: function handleClick(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var index = parseInt(target.getAttribute("data-index"));
+		this.setTabIndex(index);
+	},
+	render: function render() {
+		var tabIndex = this.state.tabIndex;
+		var tabs = this.props.tabs;
+		var component = tabs[tabIndex].component;
+		var handleClick = this.handleClick;
+		return React.createElement(
+			"div",
+			{ className: "tab-group" },
+			React.createElement(
+				"ul",
+				{ className: "tab-nav" },
+				tabs.map(function (ele, pos) {
+					return React.createElement(
+						"li",
+						{ key: pos, className: "tab-item" + (tabIndex == pos ? " active" : "") },
+						React.createElement(
+							"a",
+							{ "data-index": pos, className: "tab-text", onClick: handleClick },
+							ele.title
+						)
+					);
+				})
+			),
+			React.createElement(
+				"div",
+				{ className: "tab-content" },
+				component
+			)
+		);
+	}
+});
+
+module.exports = TabGroup;
+
+},{"react":undefined}],6:[function(require,module,exports){
 "use strict";
 
 var EditorIconTypes = {
@@ -322,7 +778,7 @@ module.exports = {
 	ColorTypes: ColorTypes
 };
 
-},{}],4:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 
 var EditorHistory = {
@@ -354,13 +810,6 @@ var EditorHistory = {
 	execCommand: function execCommand(command, flag, args) {
 		document.execCommand(command, flag, args);
 		if (command == "selectall") return;
-		if (command == "inserthtml") {
-			if (this.range) {
-				var div = document.createElement('div');
-				div.innerHTML = args;
-				this.range.insertNode(div);
-			}
-		}
 		this.commandIndex = this.commandIndex + 1;
 		this.curCommand = { command: command, flag: flag, args: args };
 		// 必需移除index后的command
@@ -384,16 +833,18 @@ var EditorHistory = {
 };
 module.exports = EditorHistory;
 
-},{}],5:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 var EditorSelection = {
 	range: null,
 	selection: null,
+	storedRange: false,
 	getSelection: function getSelection() {
 		if (window.getSelection) return window.getSelection();else if (document.getSelection) return document.getSelection();else if (document.selection) return document.selection.createRange();else return null;
 	},
 	addRange: function addRange() {
+		if (this.storedRange) return;
 		this.selection = this.getSelection();
 		this.selection.removeAllRanges();
 		if (this.selection && this.range) {
@@ -402,6 +853,7 @@ var EditorSelection = {
 		}
 	},
 	createRange: function createRange() {
+		if (this.storedRange) return;
 		this.selection = this.getSelection();
 		if (this.selection && this.selection.rangeCount > 0) {
 			this.range = this.selection.getRangeAt(0).cloneRange();
@@ -410,6 +862,7 @@ var EditorSelection = {
 		}
 	},
 	clearRange: function clearRange() {
+		if (this.storedRange) return;
 		this.selection = this.getSelection();
 		this.selection.removeAllRanges();
 	},
@@ -464,9 +917,103 @@ var EditorSelection = {
 		if (!rangeState["backcolor"]) rangeState["backcolor"] = { color: 'transparent', icon: "backcolor" };
 
 		return rangeState;
+	},
+	storeRange: function storeRange() {
+		this.storedRange = this.range ? this.range.cloneRange() : null;
+	},
+	restoreRange: function restoreRange() {
+		this.range = this.storedRange ? this.storedRange.cloneRange() : null;
+		this.storedRange = null;
+		this.addRange();
 	}
 };
 module.exports = EditorSelection;
+
+},{}],9:[function(require,module,exports){
+'use strict';
+
+var getError = function getError(options, xhr) {
+    var msg = 'cannot post ' + options.url + ":" + xhr.status;
+    var err = new Error(msg);
+    err.status = xhr.status;
+    err.method = 'post';
+    err.url = options.url;
+    return err;
+};
+var getBody = function getBody(xhr) {
+    var text = xhr.responseText || xhr.response;
+    if (!text) {
+        return text;
+    }
+
+    try {
+        return JSON.parse(text);
+    } catch (e) {
+        return text;
+    }
+};
+var Uploader = {
+    post: function post(options) {
+        if (typeof XMLHttpRequest === 'undefined') {
+            return;
+        }
+
+        var xhr = new XMLHttpRequest();
+        if (xhr.upload) {
+            xhr.upload.onprogress = function (e) {
+                if (e.total > 0) {
+                    e.percent = e.loaded / e.total * 100;
+                }
+                options.onLoad(e);
+            };
+        }
+        var formData = new FormData();
+        formData.append(options.filename, options.file);
+        if (options.data) {
+            for (var i in options.data) {
+                formData[i] = options.data[i];
+            }
+        }
+        xhr.onerror = function (e) {
+            options.onEnd(e);
+            options.onError(e);
+        };
+        xhr.onload = function (e) {
+            if (xhr.status !== 200) {
+                options.onEnd(e);
+                return options.onError(getError(options, xhr), getBody(xhr));
+            }
+            options.onEnd(e);
+            options.onSuccess(getBody(xhr));
+        };
+
+        xhr.open('post', options.url, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.send(formData);
+    }
+};
+
+module.exports = {
+    uploadFile: function uploadFile(options) {
+        options.url = options.url || "/upload";
+        options.filename = options.filename || "file";
+        options.beforeUpload = options.beforeUpload || function (e) {
+            return true;
+        };
+        options.onSuccess = options.onSuccess || function (e) {};
+        options.onError = options.onError || function (e) {};
+        options.onLoad = options.onLoad || function (e) {};
+        options.onStart = options.onStart || function (e) {};
+        options.onEnd = options.onEnd || function (e) {};
+
+        if (options.beforeUpload(options)) {
+            options.onStart(options);
+            // 开始上传文件
+            Uploader.post(options);
+        }
+    },
+    uploadFiles: function uploadFiles(options) {}
+};
 
 },{}],"react-umeditor":[function(require,module,exports){
 'use strict';
@@ -486,6 +1033,7 @@ var EditorHistory = require('./utils/EditorHistory');
 var EditorSelection = require('./utils/EditorSelection');
 
 var ColorDropdown = require('./components/ColorDropdown.react');
+var ImageDialog = require('./components/ImageDialog.react');
 
 /**
 * @icon: 图标名称 string
@@ -548,9 +1096,9 @@ var EditorToolbar = React.createClass({
 	displayName: 'EditorToolbar',
 
 	getInitialState: function getInitialState() {
-		// paragraph fontfamily fontsize image formula emotion video map print preview drafts link unlink
+		// paragraph fontfamily fontsize formula emotion video map print preview drafts link unlink
 		return {
-			icons: ["source | undo redo | bold italic underline strikethrough | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | justifyleft justifycenter justifyright | horizontal"],
+			icons: ["source | undo redo | bold italic underline strikethrough | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | justifyleft justifycenter justifyright | horizontal | image"],
 			selection: null
 		};
 	},
@@ -588,9 +1136,9 @@ var EditorToolbar = React.createClass({
 		return React.createElement(
 			'div',
 			{ className: 'editor-toolbar' },
-			icons.map(function (icon) {
+			icons.map(function (icon, pos) {
 				var props = icon;
-				return React.createElement(EditorIcon, props);
+				return React.createElement(EditorIcon, _extends({ key: pos }, props));
 			})
 		);
 	}
@@ -802,7 +1350,7 @@ var Editor = React.createClass({
 		var offsetPosition = this.getOffsetRootParentPosition(target);
 
 		var handleRangeChange = this.handleRangeChange;
-
+		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var editorState = this.state.editorState;
 		EditorSelection.addRange();
 		switch (state.icon) {
@@ -852,6 +1400,21 @@ var Editor = React.createClass({
 			case "horizontal":
 				EditorHistory.execCommand('inserthtml', false, "<hr/><p><br/></p>");
 				break;
+			case "image":
+				EditorSelection.storeRange();
+				this.refs.image.open(function (e, html) {
+					editarea.focus();
+					EditorSelection.restoreRange();
+
+					if (html && html.length > 0) {
+						if (EditorSelection.range) {
+							EditorHistory.execCommand('inserthtml', false, html);
+						} else {
+							editarea.innerHTML += html;
+						}
+					}
+				});
+				break;
 
 		}
 		// setState
@@ -872,7 +1435,7 @@ var Editor = React.createClass({
 	},
 	findDOMNode: function findDOMNode(refName) {
 		// 对外公布方法
-		var keys = ["root", "textarea", "toolbar", "color"];
+		var keys = ["root", "editarea", "toolbar", "color"];
 		if (keys.indexOf(refName) == -1) return { ref: null, dom: null };
 		return {
 			ref: this.refs[refName],
@@ -900,11 +1463,12 @@ var Editor = React.createClass({
 			_extends({ ref: 'root', id: id, className: "editor-container editor-default" + (className ? " " + className : ""), onBlur: this.handleRangeChange }, props),
 			React.createElement(EditorToolbar, { ref: 'toolbar', editorState: this.state.editorState, onIconClick: this.handleToolbarIconClick }),
 			editArea,
-			React.createElement(ColorDropdown, { ref: 'color' })
+			React.createElement(ColorDropdown, { ref: 'color' }),
+			React.createElement(ImageDialog, { ref: 'image' })
 		);
 	}
 });
 
 module.exports = Editor;
 
-},{"./components/ColorDropdown.react":1,"./constants/EditorConstants":3,"./utils/EditorHistory":4,"./utils/EditorSelection":5,"react":undefined,"react-dom":undefined}]},{},[]);
+},{"./components/ColorDropdown.react":1,"./components/ImageDialog.react":4,"./constants/EditorConstants":6,"./utils/EditorHistory":7,"./utils/EditorSelection":8,"react":undefined,"react-dom":undefined}]},{},[]);

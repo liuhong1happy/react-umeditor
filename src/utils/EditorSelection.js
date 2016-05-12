@@ -1,6 +1,7 @@
 var EditorSelection = {
 	range:null,
 	selection:null,
+	storedRange:false,
 	getSelection:function(){
 		if(window.getSelection) return window.getSelection();
 		else if(document.getSelection) return document.getSelection();
@@ -8,6 +9,7 @@ var EditorSelection = {
 		else return null;
 	},
 	addRange:function(){
+		if(this.storedRange) return;
 		this.selection = this.getSelection();
 		this.selection.removeAllRanges();
 		if(this.selection && this.range) {
@@ -16,6 +18,7 @@ var EditorSelection = {
 		}
 	},
 	createRange:function(){
+		if(this.storedRange) return;
 		this.selection = this.getSelection()
 		if(this.selection && this.selection.rangeCount>0) {
 			this.range = this.selection.getRangeAt(0).cloneRange();
@@ -24,6 +27,7 @@ var EditorSelection = {
 		}
 	},
 	clearRange:function(){
+		if(this.storedRange) return;
 		this.selection = this.getSelection();
 		this.selection.removeAllRanges();
 	},
@@ -78,6 +82,14 @@ var EditorSelection = {
 		if(!rangeState["backcolor"]) rangeState["backcolor"] = {color: 'transparent', icon:"backcolor"}
 		
 		return rangeState;
+	},
+	storeRange:function(){
+		this.storedRange = this.range?this.range.cloneRange():null;
+	},
+	restoreRange:function(){
+		this.range = this.storedRange?this.storedRange.cloneRange():null;
+		this.storedRange = null;
+		this.addRange();
 	}
 }
 module.exports = EditorSelection;
