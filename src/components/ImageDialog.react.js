@@ -19,8 +19,8 @@ var ImageDialog = React.createClass({
 	},
 	render:function(){
 		var buttons = [
-			{name:"btn-ok",content:"确定",onClick:{this.handleOkClick}},
-			{name:"btn-cancel",content:"取消",onClick:{this.close}}
+			{ name:"btn-ok", content:"确定", onClick:this.handleOkClick},
+			{ name:"btn-cancel", content:"取消", onClick:this.close}
 		];
 		return (<Dialog ref="modal" className="image-dialog" width={700} height={408} title="图片" buttons={buttons}></Dialog>)
 	}
