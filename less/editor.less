@@ -351,6 +351,40 @@
 			}
 		}
 	}
+	.editor-resize{
+		z-index: 999;
+		border:2px solid #38B2CE;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		box-sizing: border-box;
+		.block-resize{
+			position: absolute;
+			width:10px;
+			height: 10px;
+			background-color: #38B2CE;
+		}
+		.nw-resize{
+			cursor: nw-resize;
+			top: -4px;
+			left: -4px;
+		}
+		.ne-resize{
+			cursor: ne-resize;
+			top: -4px;
+			right:-4px;
+		}
+		.se-resize{
+			cursor: se-resize;
+			bottom: -4px;
+			right:-4px;
+		}
+		.sw-resize{
+			cursor: sw-resize;
+			bottom: -4px;
+			left:-4px;
+		}
+	}
 }
 .editor-default{
 	.editor-toolbar{

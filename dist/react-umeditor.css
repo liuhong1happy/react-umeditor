@@ -336,6 +336,40 @@
   margin-left: 20px;
   cursor: pointer;
 }
+.editor-container .editor-resize {
+  z-index: 999;
+  border: 2px solid #38B2CE;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  box-sizing: border-box;
+}
+.editor-container .editor-resize .block-resize {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #38B2CE;
+}
+.editor-container .editor-resize .nw-resize {
+  cursor: nw-resize;
+  top: -4px;
+  left: -4px;
+}
+.editor-container .editor-resize .ne-resize {
+  cursor: ne-resize;
+  top: -4px;
+  right: -4px;
+}
+.editor-container .editor-resize .se-resize {
+  cursor: se-resize;
+  bottom: -4px;
+  right: -4px;
+}
+.editor-container .editor-resize .sw-resize {
+  cursor: sw-resize;
+  bottom: -4px;
+  left: -4px;
+}
 .editor-default .editor-toolbar {
   position: relative;
   width: auto;
