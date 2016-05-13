@@ -370,6 +370,28 @@
   bottom: -4px;
   left: -4px;
 }
+.editor-container .formula-dropdown {
+  width: 350px;
+}
+.editor-container .formula-dropdown .formulas-icons {
+  margin: 0px;
+  padding: 10px 0px;
+}
+.editor-container .formula-dropdown .formulas-icons .latex-icon {
+  display: block;
+  float: left;
+  margin: 0px 3px 3px 0px;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #cccccc;
+  background-image: url("images/formula.png");
+  cursor: pointer;
+}
+.editor-container .mathquill-embedded-latex {
+  border: 0px;
+  padding: 0px;
+  margin: 4px;
+}
 .editor-default .editor-toolbar {
   position: relative;
   width: auto;

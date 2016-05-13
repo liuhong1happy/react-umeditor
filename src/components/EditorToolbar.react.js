@@ -7,12 +7,12 @@ var EditorHistory = require('../utils/EditorHistory');
 
 var EditorToolbar = React.createClass({
 	getInitialState:function(){
-		// paragraph fontfamily fontsize formula emotion video map print preview drafts link unlink
+		// paragraph fontfamily fontsize  emotion video map print preview drafts link unlink
 		return {
 			icons:[
 				"source | undo redo | bold italic underline strikethrough | superscript subscript | ",
 				"forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ",
-				"cleardoc  | justifyleft justifycenter justifyright | horizontal | image"
+				"cleardoc  | justifyleft justifycenter justifyright | horizontal | image formula"
 		    ],
 			selection:null
 		}

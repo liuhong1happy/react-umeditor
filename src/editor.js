@@ -3,11 +3,14 @@ var ReactDOM = require('react-dom');
 var { 
 	EditorIconTypes
 } = require('./constants/EditorConstants');
+
 // utlils
 var EditorHistory = require('./utils/EditorHistory');
 var EditorSelection = require('./utils/EditorSelection');
+var EditorDOM = require('./utils/EditorDOM');
 // dialog & dropdown
 var ColorDropdown = require('./components/ColorDropdown.react');
+var FormulaDropdown = require('./components/FormulaDropdown.react');
 var ImageDialog = require('./components/ImageDialog.react');
 // image resize
 var EditorResize = require('./components/EditorResize.react');
@@ -15,6 +18,8 @@ var EditorResize = require('./components/EditorResize.react');
 var EditorToolbar = require('./components/EditorToolbar.react');
 var EditorTextArea = require('./components/EditorTextArea.react');
 var EditorContentEditableDiv = require('./components/EditorContentEditableDiv.react');
+
+var MQ = MathQuill.getInterface(2);
 
 // key down context
 var saveSceneTimer = null;
@@ -50,6 +55,7 @@ var Editor = React.createClass({
 		this.handleRangeChange();
 	},
 	handleKeyDown:function(evt){
+		evt = evt || event;
         var keyCode = evt.keyCode || evt.which;
 		var autoSave = this.autoSave;
         if (!evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
@@ -117,9 +123,9 @@ var Editor = React.createClass({
 	},
 	handleRangeChange:function(e){
 		e = e || event;
+		if(e && e.type=="blur") return;
 		var target = e?e.target || e.srcElement:null;
 		var selection = EditorSelection.getSelection();
-		
 		if(selection && selection.rangeCount>0){
 			var editorState = this.state.editorState;
 			editorState = this.exchangeRangeState(editorState);
@@ -188,15 +194,21 @@ var Editor = React.createClass({
 				EditorHistory.execCommand(state.icon,false,null);
 				break;
 			case "forecolor":
+				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
 				this.refs.color.open(offsetPosition,function(e,color){
+					editarea.focus();
+					EditorSelection.restoreRange();
 					EditorHistory.execCommand('forecolor',false,color);
 					handleRangeChange();
 				});
 				break;
 			case "backcolor":
+				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
 				this.refs.color.open(offsetPosition,function(e,color){
+					editarea.focus();
+					EditorSelection.restoreRange();
 					EditorHistory.execCommand('backcolor',false,color);
 					handleRangeChange();
 				});
@@ -222,7 +234,47 @@ var Editor = React.createClass({
 					}
 				})
 				break;
-				
+			case "formula":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h+5;
+				this.refs.formula.open(offsetPosition,function(e,latex,id){
+					editarea.focus();
+					EditorSelection.restoreRange();
+					
+					if(latex && latex.length>0){
+						var html = '<p>&nbsp;<span class="mathquill-embedded-latex" id="'+id+'"></span>&nbsp;</p>';
+						if(EditorSelection.range){
+							EditorHistory.execCommand('inserthtml',false,html);
+						}else{
+							editarea.innerHTML += html;
+						}
+						setTimeout(function(){
+								var htmlElement = document.getElementById(id);
+								var config = {
+								  handlers: { edit: function(){ } },
+								  restrictMismatchedBrackets: true
+								};
+								var mathField = MQ.MathField(htmlElement, config);
+								mathField.latex(latex); 
+								var $htmlElement = $(htmlElement);
+							
+								$htmlElement.keydown(EditorDOM.stopPropagation);
+								$htmlElement.keyup(EditorDOM.stopPropagation);
+								$htmlElement.mouseup(function(e){
+									editarea.blur();
+									EditorDOM.stopPropagation(e);
+								});
+								$htmlElement.mousedown(EditorDOM.stopPropagation);
+							    
+								$(editarea).mousedown(function(e){
+									mathField.blur();
+								})
+						},200);
+						handleRangeChange();
+					}
+				})
+				break;
+			
 		}
 		// setState
 		editorState.icons[state.icon] = state;
@@ -263,9 +315,10 @@ var Editor = React.createClass({
 		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onBlur={this.handleRangeChange} {...props}>
 				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick}/>
 				{editArea}
-				<ColorDropdown ref="color"/>
 				<ImageDialog ref="image" />
 				<EditorResize ref="resize" />
+				<ColorDropdown ref="color"/>
+				<FormulaDropdown ref="formula"/>
 				</div>)
 	}
 })

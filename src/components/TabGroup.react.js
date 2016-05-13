@@ -19,6 +19,11 @@ var TabGroup = React.createClass({
 		var target = e.target || e.srcElement;
 		var index = parseInt(target.getAttribute("data-index"));
 		this.setTabIndex(index);
+		if(e.stopPropagation){
+			e.stopPropagation()
+		}else{
+			e.cancelBubble = true;
+		}
 	},
 	render:function(){
 		var tabIndex = this.state.tabIndex;

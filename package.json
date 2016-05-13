@@ -6,7 +6,7 @@
 	"private": false,
     "scripts": {
 		"test": "echo \"no tests yet\" && exit 0",
-		"build": "gulp clean && NODE_ENV=development gulp build && cp -R images/. dist/images",
+		"build": "gulp clean && NODE_ENV=development gulp build && cp -R images/. dist/images && cp -R third-part/. dist/third-part",
 		"examples": "gulp dev:server",
 		"publish:site": "gulp publish:examples",
 		"start": "gulp dev",
