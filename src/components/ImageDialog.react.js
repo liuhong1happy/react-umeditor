@@ -168,7 +168,7 @@ var ImageSearch = React.createClass({
 				<div className="image-content">
 						{
 							images.map(function(ele,pos){
-								return (<div className="image-item">
+								return (<div key={pos} className="image-item">
 													<div className="image-close" data-index={pos} onClick={handleRemoveImage}></div>
 													<img src={ele.src} className="image-pic" height="75" width="120"  />
 									</div>)
@@ -178,7 +178,6 @@ var ImageSearch = React.createClass({
 			</div>)
 	}
 })
-
 
 var ImageDialog = React.createClass({
 	getInitialState:function(){
