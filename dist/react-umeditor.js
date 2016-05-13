@@ -1420,7 +1420,7 @@ var Editor = React.createClass({
 	},
 	autoSave: function autoSave() {
 		EditorHistory.execCommand('autosave', false, null);
-		this.handleRangeChange();
+		//		this.handleRangeChange();
 	},
 	handleKeyDown: function handleKeyDown(evt) {
 		evt = evt || event;
@@ -1572,6 +1572,7 @@ var Editor = React.createClass({
 			case "backcolor":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h + 5;
+
 				this.refs.color.open(offsetPosition, function (e, color) {
 					editarea.focus();
 					EditorSelection.restoreRange();
@@ -1603,6 +1604,7 @@ var Editor = React.createClass({
 			case "formula":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h + 5;
+				offsetPosition.x -= offsetPosition.w / 2;
 				this.refs.formula.open(offsetPosition, function (e, latex, id) {
 					editarea.focus();
 					EditorSelection.restoreRange();

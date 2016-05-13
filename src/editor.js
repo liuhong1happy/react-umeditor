@@ -52,7 +52,6 @@ var Editor = React.createClass({
 	},
 	autoSave:function(){
 		EditorHistory.execCommand('autosave',false,null);
-		this.handleRangeChange();
 	},
 	handleKeyDown:function(evt){
 		evt = evt || event;
