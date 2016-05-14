@@ -106,7 +106,7 @@ var ColorDropdown = React.createClass({
 module.exports = ColorDropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../constants/EditorConstants":12,"./Dropdown.react":3}],2:[function(require,module,exports){
+},{"../constants/EditorConstants":13,"./Dropdown.react":3}],2:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -351,7 +351,7 @@ var EditorContentEditableDiv = React.createClass({
 module.exports = EditorContentEditableDiv;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/EditorSelection":16,"react-dom":undefined}],5:[function(require,module,exports){
+},{"../utils/EditorSelection":17,"react-dom":undefined}],5:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -711,7 +711,7 @@ var EditorToolbar = React.createClass({
 	getInitialState: function getInitialState() {
 		// paragraph fontfamily fontsize  emotion video map print preview drafts link unlink
 		return {
-			icons: ["source | undo redo | bold italic underline strikethrough | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | justifyleft justifycenter justifyright | horizontal | image formula"],
+			icons: ["source | undo redo | bold italic underline strikethrough | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | justifyleft justifycenter justifyright | horizontal | image formula | inserttable"],
 			selection: null
 		};
 	},
@@ -760,7 +760,7 @@ var EditorToolbar = React.createClass({
 module.exports = EditorToolbar;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../constants/EditorConstants":12,"../utils/EditorHistory":15,"./EditorIcon.react":5}],9:[function(require,module,exports){
+},{"../constants/EditorConstants":13,"../utils/EditorHistory":16,"./EditorIcon.react":5}],9:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -845,7 +845,7 @@ var FormulaDropdown = React.createClass({
 module.exports = FormulaDropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../constants/EditorConstants":12,"./Dropdown.react":3,"./TabGroup.react":11,"react-dom":undefined}],10:[function(require,module,exports){
+},{"../constants/EditorConstants":13,"./Dropdown.react":3,"./TabGroup.react":11,"react-dom":undefined}],10:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1130,7 +1130,7 @@ var ImageDialog = React.createClass({
 module.exports = ImageDialog;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/FileUpload":17,"./Dialog.react":2,"./TabGroup.react":11,"react-dom":undefined}],11:[function(require,module,exports){
+},{"../utils/FileUpload":18,"./Dialog.react":2,"./TabGroup.react":11,"react-dom":undefined}],11:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -1199,6 +1199,101 @@ module.exports = TabGroup;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],12:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var React = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
+var Dropdown = require('./Dropdown.react');
+
+var TablePickerDropdown = React.createClass({
+    displayName: 'TablePickerDropdown',
+
+    getInitialState: function getInitialState() {
+        return {
+            row: 0,
+            column: 0,
+            handle: function handle() {},
+            position: { x: 0, y: 0 }
+        };
+    },
+    open: function open(position, handle) {
+        this.setState({
+            handle: handle,
+            position: position
+        });
+        this.refs.root.open(position);
+    },
+    close: function close() {
+        this.refs.root.close();
+    },
+    toggle: function toggle(position) {
+        this.refs.root.toggle(position);
+    },
+    handleMouseEvent: function handleMouseEvent(e) {
+        e = e || event;
+        var row = Math.ceil((e.clientX - this.state.position.x - 20) / 22);
+        var column = Math.ceil((e.clientY - this.state.position.y - 35) / 22);
+        if (row < 0) row = 0;
+        if (column < 0) column = 0;
+
+        if (row > 10) row = 10;
+        if (column > 10) column = 10;
+        this.setState({
+            row: row,
+            column: column
+        });
+    },
+    handleMouseOut: function handleMouseOut(e) {
+        this.setState({
+            row: 0,
+            column: 0
+        });
+    },
+    handleClick: function handleClick(e) {
+        // insert table
+        var Table = document.createElement("table");
+        var TBody = Table.createTBody();
+        for (var i = 0; i < this.state.row; i++) {
+            var Tr = TBody.insertRow();
+            for (var j = 0; j < this.state.column; j++) {
+                var Td = Tr.insertCell();
+                Td.width = 200;
+            }
+        }
+        this.state.handle(e, Table.outerHTML);
+        this.refs.root.close();
+    },
+    render: function render() {
+        var row = this.state.row;
+        var column = this.state.column;
+
+        return React.createElement(
+            Dropdown,
+            { ref: 'root', className: 'tablepicker-dropdown' },
+            React.createElement(
+                'div',
+                { className: 'infoarea' },
+                ' ',
+                React.createElement(
+                    'span',
+                    null,
+                    column + "列 x " + row + "行"
+                )
+            ),
+            React.createElement(
+                'div',
+                { className: 'pickarea', onMouseOver: this.handleMouseEvent, onMouseMove: this.handleMouseEvent,
+                    onMouseOut: this.handleMouseOut, onClick: this.handleClick },
+                React.createElement('div', { className: 'overlay', style: { width: row * 22, height: column * 22 } })
+            )
+        );
+    }
+});
+
+module.exports = TablePickerDropdown;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Dropdown.react":3}],13:[function(require,module,exports){
 "use strict";
 
 var EditorIconTypes = {
@@ -1336,6 +1431,10 @@ var EditorIconTypes = {
 	"formula": {
 		title: "数学公式",
 		disabled: false
+	},
+	"inserttable": {
+		title: "插入表格",
+		disabled: false
 	}
 };
 var ColorTypes = {
@@ -1355,7 +1454,7 @@ module.exports = {
 	FormulaTypes: FormulaTypes
 };
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1377,6 +1476,7 @@ var EditorDOM = require('./utils/EditorDOM');
 // dialog & dropdown
 var ColorDropdown = require('./components/ColorDropdown.react');
 var FormulaDropdown = require('./components/FormulaDropdown.react');
+var TablePickerDropdown = require('./components/TablePickerDropdown.react');
 var ImageDialog = require('./components/ImageDialog.react');
 // image resize
 var EditorResize = require('./components/EditorResize.react');
@@ -1420,7 +1520,6 @@ var Editor = React.createClass({
 	},
 	autoSave: function autoSave() {
 		EditorHistory.execCommand('autosave', false, null);
-		//		this.handleRangeChange();
 	},
 	handleKeyDown: function handleKeyDown(evt) {
 		evt = evt || event;
@@ -1642,7 +1741,17 @@ var Editor = React.createClass({
 					}
 				});
 				break;
-
+			case "inserttable":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h + 5;
+				offsetPosition.x -= offsetPosition.w / 2;
+				this.refs.table.open(offsetPosition, function (e, html) {
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('inserthtml', false, html);
+					handleRangeChange();
+				});
+				break;
 		}
 		// setState
 		editorState.icons[state.icon] = state;
@@ -1693,7 +1802,8 @@ var Editor = React.createClass({
 			React.createElement(ImageDialog, { ref: 'image' }),
 			React.createElement(EditorResize, { ref: 'resize' }),
 			React.createElement(ColorDropdown, { ref: 'color' }),
-			React.createElement(FormulaDropdown, { ref: 'formula' })
+			React.createElement(FormulaDropdown, { ref: 'formula' }),
+			React.createElement(TablePickerDropdown, { ref: 'table' })
 		);
 	}
 });
@@ -1701,7 +1811,7 @@ var Editor = React.createClass({
 module.exports = Editor;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./components/ColorDropdown.react":1,"./components/EditorContentEditableDiv.react":4,"./components/EditorResize.react":6,"./components/EditorTextArea.react":7,"./components/EditorToolbar.react":8,"./components/FormulaDropdown.react":9,"./components/ImageDialog.react":10,"./constants/EditorConstants":12,"./utils/EditorDOM":14,"./utils/EditorHistory":15,"./utils/EditorSelection":16,"react-dom":undefined}],14:[function(require,module,exports){
+},{"./components/ColorDropdown.react":1,"./components/EditorContentEditableDiv.react":4,"./components/EditorResize.react":6,"./components/EditorTextArea.react":7,"./components/EditorToolbar.react":8,"./components/FormulaDropdown.react":9,"./components/ImageDialog.react":10,"./components/TablePickerDropdown.react":12,"./constants/EditorConstants":13,"./utils/EditorDOM":15,"./utils/EditorHistory":16,"./utils/EditorSelection":17,"react-dom":undefined}],15:[function(require,module,exports){
 "use strict";
 
 var EditorDOM = {
@@ -1716,7 +1826,7 @@ var EditorDOM = {
 };
 module.exports = EditorDOM;
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 var EditorHistory = {
@@ -1771,7 +1881,7 @@ var EditorHistory = {
 };
 module.exports = EditorHistory;
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 
 var EditorSelection = {
@@ -1867,7 +1977,7 @@ var EditorSelection = {
 };
 module.exports = EditorSelection;
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 var getError = function getError(options, xhr) {
@@ -1953,5 +2063,5 @@ module.exports = {
     uploadFiles: function uploadFiles(options) {}
 };
 
-},{}]},{},[13])(13)
+},{}]},{},[14])(14)
 });

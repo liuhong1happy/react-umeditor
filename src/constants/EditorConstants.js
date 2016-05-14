@@ -133,7 +133,11 @@ var EditorIconTypes = {
 	"formula":{
 		title:"数学公式",
 		disabled:false
-	}
+	},
+    "inserttable":{
+		title:"插入表格",
+		disabled:false
+    }
 }
 var ColorTypes = {
 	themeColors:[

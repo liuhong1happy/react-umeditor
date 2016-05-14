@@ -11,6 +11,7 @@ var EditorDOM = require('./utils/EditorDOM');
 // dialog & dropdown
 var ColorDropdown = require('./components/ColorDropdown.react');
 var FormulaDropdown = require('./components/FormulaDropdown.react');
+var TablePickerDropdown = require('./components/TablePickerDropdown.react');
 var ImageDialog = require('./components/ImageDialog.react');
 // image resize
 var EditorResize = require('./components/EditorResize.react');
@@ -275,7 +276,17 @@ var Editor = React.createClass({
 					}
 				})
 				break;
-			
+            case "inserttable":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h+5;
+                offsetPosition.x -= offsetPosition.w/2;
+				this.refs.table.open(offsetPosition,function(e,html){
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('inserthtml',false,html);
+					handleRangeChange();
+				});
+				break;
 		}
 		// setState
 		editorState.icons[state.icon] = state;
@@ -320,6 +331,7 @@ var Editor = React.createClass({
 				<EditorResize ref="resize" />
 				<ColorDropdown ref="color"/>
 				<FormulaDropdown ref="formula"/>
+                <TablePickerDropdown ref="table" />
 				</div>)
 	}
 })

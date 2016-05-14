@@ -392,6 +392,37 @@
   padding: 0px;
   margin: 4px;
 }
+.editor-container .tablepicker-dropdown .infoarea {
+  height: 14px;
+  line-height: 14px;
+  font-size: 12px;
+  width: 220px;
+  margin-bottom: 3px;
+  clear: both;
+}
+.editor-container .tablepicker-dropdown .pickarea {
+  width: 220px;
+  height: 220px;
+  background: url("../images/unhighlighted.gif") repeat;
+}
+.editor-container .tablepicker-dropdown .pickarea .overlay {
+  width: 0px;
+  height: 0px;
+  background: url("images/highlighted.gif") repeat;
+}
+.editor-container table {
+  margin-bottom: 10px;
+  border-collapse: collapse;
+  display: table;
+}
+.editor-container table td,
+.editor-container table th {
+  padding: 5px 10px;
+  border: 1px solid #d8d8d8;
+  font-size: 16px;
+  vertical-align: top;
+  height: 18px;
+}
 .editor-default .editor-toolbar {
   position: relative;
   width: auto;
