@@ -2040,8 +2040,9 @@ var Editor = React.createClass({
 		var onBlur = _props.onBlur;
 		var className = _props.className;
 		var id = _props.id;
+		var onFocus = _props.onFocus;
 
-		var props = _objectWithoutProperties(_props, ['onBlur', 'className', 'id']);
+		var props = _objectWithoutProperties(_props, ['onBlur', 'className', 'id', 'onFocus']);
 
 		return React.createElement(
 			'div',

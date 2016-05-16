@@ -345,7 +345,7 @@ var Editor = React.createClass({
 	},
 	render:function(){
 		var editArea = this.genEditArea();
-		var {onBlur,className,id,...props} = this.props;
+		var {onBlur,className,id,onFocus,...props} = this.props;
 		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onBlur={this.handleRangeChange} {...props}>
 				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick}/>
 				{editArea}
