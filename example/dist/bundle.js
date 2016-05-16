@@ -1725,6 +1725,8 @@ var keycont = 0;
 * @findDOMNode: 获取"root","textarea","toolbar","color"的ref对象以及相应的dom对象
 * @setContent: 设置html格式数据
 * @getContent: 获取html格式数据
+* @onFocus: 监听focus事件
+* @focusEditor: 聚焦到Editor上
 **/
 var Editor = React.createClass({
 	displayName: 'Editor',
@@ -1793,9 +1795,9 @@ var Editor = React.createClass({
 	genEditArea: function genEditArea() {
 		var showHtml = this.state.editorState.showHtml;
 		if (showHtml) {
-			return React.createElement(EditorTextArea, { ref: 'editarea' });
+			return React.createElement(EditorTextArea, { ref: 'editarea', onFocus: this.props.onFocus });
 		} else {
-			return React.createElement(EditorContentEditableDiv, { ref: 'editarea', onRangeChange: this.handleRangeChange });
+			return React.createElement(EditorContentEditableDiv, { ref: 'editarea', onRangeChange: this.handleRangeChange, onFocus: this.props.onFocus });
 		}
 	},
 	exchangeRangeState: function exchangeRangeState(editorState) {
@@ -2011,6 +2013,10 @@ var Editor = React.createClass({
 	},
 	getContent: function getContent() {
 		return this.refs.editarea.getContent();
+	},
+	focusEditor: function focusEditor() {
+		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
+		editarea.focus();
 	},
 	render: function render() {
 		var editArea = this.genEditArea();
