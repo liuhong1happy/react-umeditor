@@ -737,7 +737,8 @@ var EditorToolbar = React.createClass({
 			icons.map(function (icon, pos) {
 				var props = icon;
 				return React.createElement(EditorIcon, _extends({ key: pos }, props));
-			})
+			}),
+			this.props.children
 		);
 	}
 });
@@ -2047,13 +2048,16 @@ var Editor = React.createClass({
 		return React.createElement(
 			'div',
 			_extends({ ref: 'root', id: id, className: "editor-container editor-default" + (className ? " " + className : ""), onBlur: this.handleRangeChange, onFocus: this.handleFocus }, props),
-			React.createElement(EditorToolbar, { ref: 'toolbar', editorState: this.state.editorState, onIconClick: this.handleToolbarIconClick }),
-			editArea,
-			React.createElement(ImageDialog, { ref: 'image' }),
-			React.createElement(EditorResize, { ref: 'resize' }),
-			React.createElement(ColorDropdown, { ref: 'color' }),
-			React.createElement(FormulaDropdown, { ref: 'formula' }),
-			React.createElement(TablePickerDropdown, { ref: 'table' })
+			React.createElement(
+				EditorToolbar,
+				{ ref: 'toolbar', editorState: this.state.editorState, onIconClick: this.handleToolbarIconClick },
+				React.createElement(ImageDialog, { ref: 'image' }),
+				React.createElement(EditorResize, { ref: 'resize' }),
+				React.createElement(ColorDropdown, { ref: 'color' }),
+				React.createElement(FormulaDropdown, { ref: 'formula' }),
+				React.createElement(TablePickerDropdown, { ref: 'table' })
+			),
+			editArea
 		);
 	}
 });

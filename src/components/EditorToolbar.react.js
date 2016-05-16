@@ -51,7 +51,8 @@ var EditorToolbar = React.createClass({
 						var props = icon;
 						return(<EditorIcon key={pos} {...props} />)
 					})
-				}</div>)
+					
+				}{this.props.children}</div>)
 	}
 })
 

@@ -347,13 +347,14 @@ var Editor = React.createClass({
 		var editArea = this.genEditArea();
 		var {onBlur,className,id,onFocus,...props} = this.props;
 		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
-				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick}/>
+				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick}>
+					<ImageDialog ref="image" />
+					<EditorResize ref="resize" />
+					<ColorDropdown ref="color"/>
+					<FormulaDropdown ref="formula"/>
+					<TablePickerDropdown ref="table" />
+				</EditorToolbar>
 				{editArea}
-				<ImageDialog ref="image" />
-				<EditorResize ref="resize" />
-				<ColorDropdown ref="color"/>
-				<FormulaDropdown ref="formula"/>
-                <TablePickerDropdown ref="table" />
 				</div>)
 	}
 })
