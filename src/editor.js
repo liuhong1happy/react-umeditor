@@ -30,7 +30,7 @@ var keycont = 0;
 		
 /**
 * 对外接口方法
-* @findDOMNode: 获取"root","textarea","toolbar","color"的ref对象以及相应的dom对象
+* @findDOMNode: 获取"root","editarea","toolbar","color"的ref对象以及相应的dom对象
 * @setContent: 设置html格式数据
 * @getContent: 获取html格式数据
 * @onFocus: 监听focus事件
@@ -112,9 +112,14 @@ var Editor = React.createClass({
 	genEditArea:function(){
 		var showHtml = this.state.editorState.showHtml;
 		if(showHtml){
-			return (<EditorTextArea ref="editarea" onFocus={this.props.onFocus}/>)
+			return (<EditorTextArea ref="editarea" onFocus={this.handleFocus}/>)
 		}else{
-			return (<EditorContentEditableDiv ref="editarea" onRangeChange={this.handleRangeChange} onFocus={this.props.onFocus}/>)		
+			return (<EditorContentEditableDiv ref="editarea" onRangeChange={this.handleRangeChange} onFocus={this.handleFocus}/>)		
+		}
+	},
+	handleFocus:function(e){
+		if(this.props.onFocus){
+			this.props.onFocus(e,this);
 		}
 	},
 	exchangeRangeState:function(editorState){
