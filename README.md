@@ -21,9 +21,13 @@ React Editor like [Umeditor](https://github.com/fex-team/umeditor)
 
 You can `this.refs.editor.xxx()`! The `xxx` maybe is as follows:
 
-* findDOMNode 
-* getContent
-* setContent
+* findDOMNode: find  refs by ref name  `"root","editarea","toolbar","color" `
+* setContent: set html of editor
+* getContent: get html of editor
+* onFocus: the focus event
+* focusEditor: focus the editor
+* defaultValue: default value of editor
+* value: value of editor
 
 ## Snapshot
 
