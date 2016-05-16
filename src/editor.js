@@ -112,9 +112,9 @@ var Editor = React.createClass({
 	genEditArea:function(){
 		var showHtml = this.state.editorState.showHtml;
 		if(showHtml){
-			return (<EditorTextArea ref="editarea" onFocus={this.handleFocus}/>)
+			return (<EditorTextArea ref="editarea" />)
 		}else{
-			return (<EditorContentEditableDiv ref="editarea" onRangeChange={this.handleRangeChange} onFocus={this.handleFocus}/>)		
+			return (<EditorContentEditableDiv ref="editarea" onRangeChange={this.handleRangeChange}/>)		
 		}
 	},
 	handleFocus:function(e){
@@ -346,7 +346,7 @@ var Editor = React.createClass({
 	render:function(){
 		var editArea = this.genEditArea();
 		var {onBlur,className,id,onFocus,...props} = this.props;
-		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onBlur={this.handleRangeChange} {...props}>
+		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
 				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick}/>
 				{editArea}
 				<ImageDialog ref="image" />
