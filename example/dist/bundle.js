@@ -1788,7 +1788,7 @@ var Editor = React.createClass({
 	},
 	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 		// update value
-		if (this.props.value != newProps.value) {
+		if (this.props.value != nextProps.value) {
 			this.refs.editarea.setContent(nextProps.value ? nextProps.value : nextProps.defaultValue);
 		}
 	},
