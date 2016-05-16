@@ -1827,12 +1827,12 @@ var Editor = React.createClass({
 				EditorToolbar,
 				{ ref: 'toolbar', editorState: this.state.editorState, onIconClick: this.handleToolbarIconClick },
 				React.createElement(ImageDialog, { ref: 'image' }),
-				React.createElement(EditorResize, { ref: 'resize' }),
 				React.createElement(ColorDropdown, { ref: 'color' }),
 				React.createElement(FormulaDropdown, { ref: 'formula' }),
 				React.createElement(TablePickerDropdown, { ref: 'table' })
 			),
-			editArea
+			editArea,
+			React.createElement(EditorResize, { ref: 'resize' })
 		);
 	}
 });

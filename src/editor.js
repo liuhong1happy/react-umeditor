@@ -349,12 +349,12 @@ var Editor = React.createClass({
 		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
 				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick}>
 					<ImageDialog ref="image" />
-					<EditorResize ref="resize" />
 					<ColorDropdown ref="color"/>
 					<FormulaDropdown ref="formula"/>
 					<TablePickerDropdown ref="table" />
 				</EditorToolbar>
 				{editArea}
+				<EditorResize ref="resize" />
 				</div>)
 	}
 })
