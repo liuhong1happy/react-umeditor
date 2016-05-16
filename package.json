@@ -2,7 +2,7 @@
     "name": "react-umeditor",
     "version": "0.2.0",
     "description": "React Editor like UMEditor",
-    "main": "lib/js/editor.js",
+    "main": "lib/js/react-umeditor.js",
 	"private": false,
     "scripts": {
 		"test": "echo \"no tests yet\" && exit 0",
