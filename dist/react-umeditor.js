@@ -565,8 +565,8 @@ var EditorResize = React.createClass({
 		if (height < minHeight) height = minHeight;
 
 		if (this.state.target) {
-			this.state.target.width = width;
-			this.state.target.height = height;
+			this.state.target.style.width = width + "px";
+			this.state.target.style.height = height + "px";
 		}
 
 		this.setState({
@@ -615,8 +615,8 @@ var EditorResize = React.createClass({
 		window.removeEventListener("mouseup", this.handleMouseUp);
 		window.removeEventListener("mousemove", this.handleMouseMove);
 		if (this.state.target) {
-			this.state.target.width = width;
-			this.state.target.height = height;
+			this.state.target.style.width = width + "px";
+			this.state.target.style.height = height + "px";
 		}
 		this.setState({
 			startPosition: startPosition,
