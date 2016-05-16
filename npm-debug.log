@@ -1,0 +1,111 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/Cellar/node/5.3.0/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'publish' ]
+2 info using npm@3.3.12
+3 info using node@v5.3.0
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec Result {
+7 silly cache add   raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: '/Users/liuhong/workdir/react-editor',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory /Users/liuhong/.npm/react-umeditor/0.2.6/package.tgz not in flight; packing
+9 info lifecycle react-umeditor@0.2.6~prepublish: react-umeditor@0.2.6
+10 silly lifecycle react-umeditor@0.2.6~prepublish: no script for prepublish, continuing
+11 verbose tar pack [ '/Users/liuhong/.npm/react-umeditor/0.2.6/package.tgz',
+11 verbose tar pack   '/Users/liuhong/workdir/react-editor' ]
+12 verbose tarball /Users/liuhong/.npm/react-umeditor/0.2.6/package.tgz
+13 verbose folder /Users/liuhong/workdir/react-editor
+14 verbose addLocalTarball adding from inside cache /Users/liuhong/.npm/react-umeditor/0.2.6/package.tgz
+15 silly cache afterAdd react-umeditor@0.2.6
+16 verbose afterAdd /Users/liuhong/.npm/react-umeditor/0.2.6/package/package.json not in flight; writing
+17 verbose afterAdd /Users/liuhong/.npm/react-umeditor/0.2.6/package/package.json written
+18 silly publish { name: 'react-umeditor',
+18 silly publish   version: '0.2.6',
+18 silly publish   description: 'React Editor like UMEditor',
+18 silly publish   main: 'lib/editor.js',
+18 silly publish   private: false,
+18 silly publish   scripts:
+18 silly publish    { test: 'echo "no tests yet" && exit 0',
+18 silly publish      build: 'gulp clean && NODE_ENV=development gulp build && cp -R images/. dist/images && cp -R third-part/. dist/third-part',
+18 silly publish      'build-win': 'gulp clean && set NODE_ENV=development && gulp build && cp -R images/. dist/images && cp -R third-part/. dist/third-part',
+18 silly publish      examples: 'gulp dev:server',
+18 silly publish      'publish:site': 'gulp publish:examples',
+18 silly publish      start: 'gulp dev',
+18 silly publish      release: 'gulp release',
+18 silly publish      watch: 'gulp watch:lib' },
+18 silly publish   author: { name: 'Holly Liu', email: 'liuhong1.happy@163.com' },
+18 silly publish   repository:
+18 silly publish    { type: 'git',
+18 silly publish      url: 'git://github.com/liuhong1happy/react-umeditor.git' },
+18 silly publish   license: 'MIT',
+18 silly publish   keywords: [ 'react', 'react-editor', 'react-component' ],
+18 silly publish   dependencies: { classnames: '^2.2.1' },
+18 silly publish   peerDependencies: { react: '^0.14.0', 'react-dom': '^0.14.0' },
+18 silly publish   devDependencies: { 'react-component-gulp-tasks': '^0.7.7', gulp: '^3.9.0' },
+18 silly publish   browserify: { transform: [ 'reactify', 'envify' ] },
+18 silly publish   'browserify-shim': { react: 'global:React' },
+18 silly publish   readme: '# react-umeditor\n\nReact Editor like [Umeditor](https://github.com/fex-team/umeditor)\n\n## Install \n\n\tnpm install -g react-umeditor\n\n## Use\n\n\tvar React = require(\'react\');\n\tvar Editor = require(\'react-umeditor\');\n\n\tvar App = React.createClass({\n\t\trender:function(){\n\t\t\treturn (<Editor ref="editor"/>)\n\t\t}\n\t})\n\t\n## Ref Functions\n\nYou can `this.refs.editor.xxx()`! The `xxx` maybe is as follows:\n\n* findDOMNode \n* getContent\n* setContent\n\n## Snapshot\n\n![](snapshot/editor.png)\n\n## Develop\n\n\tgit clone https://github.com/liuhong1happy/react-umeditor\n\tcd react-umeditor\n\tnpm install\n\tnpm run build\n\nopen the file `example/dist/index.html`',
+18 silly publish   readmeFilename: 'README.md',
+18 silly publish   gitHead: '6680e61552719b086296ede2ccb55d5ec0386718',
+18 silly publish   bugs: { url: 'https://github.com/liuhong1happy/react-umeditor/issues' },
+18 silly publish   homepage: 'https://github.com/liuhong1happy/react-umeditor#readme',
+18 silly publish   _id: 'react-umeditor@0.2.6',
+18 silly publish   _shasum: '27b891d9ab984edb753841b4d024a66d82eddf22',
+18 silly publish   _from: '.' }
+19 verbose getPublishConfig undefined
+20 silly mapToRegistry name react-umeditor
+21 silly mapToRegistry using default registry
+22 silly mapToRegistry registry https://registry.npmjs.org/
+23 silly mapToRegistry uri https://registry.npmjs.org/react-umeditor
+24 verbose publish registryBase https://registry.npmjs.org/
+25 silly publish uploading /Users/liuhong/.npm/react-umeditor/0.2.6/package.tgz
+26 verbose request uri https://registry.npmjs.org/react-umeditor
+27 verbose request sending authorization for write operation
+28 info attempt registry request try #1 at 17:43:25
+29 verbose request using bearer token for auth
+30 verbose request id 1cd0f121ecf79007
+31 http request PUT https://registry.npmjs.org/react-umeditor
+32 http 403 https://registry.npmjs.org/react-umeditor
+33 verbose headers { 'content-type': 'application/json',
+33 verbose headers   'cache-control': 'max-age=300',
+33 verbose headers   'content-length': '95',
+33 verbose headers   'accept-ranges': 'bytes',
+33 verbose headers   date: 'Mon, 16 May 2016 09:43:31 GMT',
+33 verbose headers   via: '1.1 varnish',
+33 verbose headers   connection: 'keep-alive',
+33 verbose headers   'x-served-by': 'cache-itm7420-ITM',
+33 verbose headers   'x-cache': 'MISS',
+33 verbose headers   'x-cache-hits': '0',
+33 verbose headers   'x-timer': 'S1463391805.793590,VS0,VE5676',
+33 verbose headers   vary: 'Accept-Encoding' }
+34 verbose request invalidating /Users/liuhong/.npm/registry.npmjs.org/react-umeditor on PUT
+35 error publish Failed PUT 403
+36 verbose stack Error: "You cannot publish over the previously published version 0.2.6." : react-umeditor
+36 verbose stack     at makeError (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:264:12)
+36 verbose stack     at CachingRegistryClient.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:252:14)
+36 verbose stack     at Request._callback (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:172:14)
+36 verbose stack     at Request.self.callback (/usr/local/lib/node_modules/npm/node_modules/request/request.js:198:22)
+36 verbose stack     at emitTwo (events.js:87:13)
+36 verbose stack     at Request.emit (events.js:172:7)
+36 verbose stack     at Request.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1082:10)
+36 verbose stack     at emitOne (events.js:82:20)
+36 verbose stack     at Request.emit (events.js:169:7)
+36 verbose stack     at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1009:12)
+37 verbose statusCode 403
+38 verbose pkgid react-umeditor
+39 verbose cwd /Users/liuhong/workdir/react-editor
+40 error Darwin 15.3.0
+41 error argv "/usr/local/Cellar/node/5.3.0/bin/node" "/usr/local/bin/npm" "publish"
+42 error node v5.3.0
+43 error npm  v3.3.12
+44 error code E403
+45 error "You cannot publish over the previously published version 0.2.6." : react-umeditor
+46 error If you need help, you may report this error at:
+46 error     <https://github.com/npm/npm/issues>
+47 verbose exit [ 1, true ]
