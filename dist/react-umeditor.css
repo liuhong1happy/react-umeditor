@@ -403,7 +403,7 @@
 .editor-container .tablepicker-dropdown .pickarea {
   width: 220px;
   height: 220px;
-  background: url("../images/unhighlighted.gif") repeat;
+  background: url("images/unhighlighted.gif") repeat;
 }
 .editor-container .tablepicker-dropdown .pickarea .overlay {
   width: 0px;
