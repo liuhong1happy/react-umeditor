@@ -1586,7 +1586,7 @@ var Editor = React.createClass({
 	},
 	handleFocus: function handleFocus(e) {
 		if (this.props.onFocus) {
-			this.props.onFocus(e, this);
+			this.props.onFocus(e, this.findDOMNode('root'));
 		}
 	},
 	exchangeRangeState: function exchangeRangeState(editorState) {
