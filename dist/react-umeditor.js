@@ -1500,7 +1500,10 @@ var keycont = 0;
 * @getContent: 获取html格式数据
 * @onFocus: 监听focus事件
 * @focusEditor: 聚焦到Editor上
+* @defaultValue: 默认内容
+* @value: 编辑器的值
 **/
+
 var Editor = React.createClass({
 	displayName: 'Editor',
 
@@ -1509,12 +1512,14 @@ var Editor = React.createClass({
 			editorState: {
 				showHtml: false,
 				icons: {}
-			}
+			},
+			defaultValue: this.props.defaultValue ? this.props.defaultValue : "<p>This is an Editor</p>",
+			value: this.props.value
 		};
 	},
 	componentDidMount: function componentDidMount() {
 		EditorHistory.clear();
-		this.refs.editarea.setContent(this.props.defaultContent ? this.props.defaultContent : "<p>This is an Editor</p>");
+		this.refs.editarea.setContent(this.state.value ? this.state.value : this.state.defaultValue);
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var isCollapsed = true;
 		editarea.addEventListener('keydown', this.handleKeyDown);
@@ -1552,6 +1557,12 @@ var Editor = React.createClass({
 		var keyCode = evt.keyCode || evt.which;
 		if (!evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
 			// some handle
+		}
+	},
+	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+		// update value
+		if (this.props.value != newProps.value) {
+			this.refs.editarea.setContent(nextProps.value ? nextProps.value : nextProps.defaultValue);
 		}
 	},
 	componentDidUpdate: function componentDidUpdate() {
