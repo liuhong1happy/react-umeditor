@@ -25,8 +25,10 @@ var TablePickerDropdown = React.createClass({
 	},
     handleMouseEvent:function(e){
         e = e || event;
-        var row =Math.ceil((e.clientX - this.state.position.x -20) / 22);
-        var column =Math.ceil((e.clientY - this.state.position.y -35) / 22);
+		var target = e.target || e.srcElement;
+		var parentPostion = target.getBoundingClientRect();
+        var row =Math.ceil((e.clientX - parentPostion.left) / 22);
+        var column =Math.ceil((e.clientY - parentPostion.top) / 22);
         if(row<0) row = 0;
         if(column<0) column = 0;
         
