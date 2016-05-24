@@ -52,7 +52,7 @@ var Editor = React.createClass({
 	},
 	componentDidMount:function(){
 		EditorHistory.clear();
-		this.refs.editarea.setContent(this.state.value?this.state.value:this.state.defaultValue);
+		this.setContent(this.state.value?this.state.value:this.state.defaultValue);
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var isCollapsed = true;
     	editarea.addEventListener('keydown', this.handleKeyDown);
@@ -95,17 +95,17 @@ var Editor = React.createClass({
 	componentWillReceiveProps:function(nextProps){
 		// update value
 		if(this.props.value!=nextProps.value){
-			this.refs.editarea.setContent(nextProps.value?nextProps.value:nextProps.defaultValue);
+			this.setContent(nextProps.value?nextProps.value:nextProps.defaultValue);
 		}
 	},
 	componentDidUpdate:function(){
 		var editorState = this.state.editorState;
 		switch(editorState.icon){
 			case "source":
-				this.refs.editarea.setContent(editorState.content)
+				this.setContent(editorState.content)
 				break;
 			case "cleardoc":
-				this.refs.editarea.setContent(editorState.content)
+				this.setContent(editorState.content)
 				break;
 		}
 	},
