@@ -35,8 +35,9 @@ var ImageUpload = React.createClass({
 						_self.setState({
 							images:images
 						})
+						if(_self.props.onChange)
+							_self.props.onChange(0,images);
 					}
-					
 					setTimeout(function(){
 						mask.style.display = "none";
 					},200)
@@ -68,6 +69,8 @@ var ImageUpload = React.createClass({
 		this.setState({
 			images:images
 		})
+		if(this.props.onChange)
+			this.props.onChange(0,images);
 	},
 	render:function(){
 			var images = this.state.images;
