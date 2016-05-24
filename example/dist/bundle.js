@@ -2036,15 +2036,18 @@ var Editor = React.createClass({
 		this.refs.editarea.setContent(content);
 		// mathquill supports
 		if (content.indexOf("mathquill-embedded-latex") != -1) {
-			var elements = document.getElementsByClassName("mathquill-embedded-latex");
-			for (var i = 0; i < elements.length; i++) {
-				if (!elements[i].id) {
-					var id = "mathquill-" + i + "-" + new Date().valueOf();
-					var latex = elements.innerHTML;
-					elements[i].id = id;
-					this.addFormula(id, latex);
+			var _self = this;
+			setTimeout(function () {
+				var elements = _self.refs.editarea.querySelectorAll('.mathquill-embedded-latex');
+				for (var i = 0; i < elements.length; i++) {
+					if (!elements[i].id) {
+						var id = "mathquill-" + i + "-" + new Date().valueOf();
+						var latex = elements.innerHTML;
+						elements[i].id = id;
+						_self.addFormula(id, latex);
+					}
 				}
-			}
+			}, 200);
 		}
 	},
 	getContent: function getContent() {
