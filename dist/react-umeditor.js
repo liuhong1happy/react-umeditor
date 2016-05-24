@@ -1644,6 +1644,28 @@ var Editor = React.createClass({
 		}
 		return position;
 	},
+	addFormula: function addFormula(id, latex) {
+		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
+		var htmlElement = document.getElementById(id);
+		var config = {
+			handlers: { edit: function edit() {} },
+			restrictMismatchedBrackets: true
+		};
+		var mathField = MQ.MathField(htmlElement, config);
+		mathField.latex(latex);
+		var $htmlElement = $(htmlElement);
+
+		$htmlElement.keydown(EditorDOM.stopPropagation);
+		$htmlElement.keyup(EditorDOM.stopPropagation);
+		$htmlElement.mouseup(function (e) {
+			editarea.blur();
+			EditorDOM.stopPropagation(e);
+		});
+		$htmlElement.mousedown(EditorDOM.stopPropagation);
+		$(editarea).mousedown(function (e) {
+			mathField.blur();
+		});
+	},
 	handleToolbarIconClick: function handleToolbarIconClick(e, state) {
 		e = e || event;
 		var target = e.target || e.srcElement;
@@ -1726,6 +1748,7 @@ var Editor = React.createClass({
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h + 5;
 				offsetPosition.x -= offsetPosition.w / 2;
+				var _self = this;
 				this.refs.formula.open(offsetPosition, function (e, latex, id) {
 					editarea.focus();
 					EditorSelection.restoreRange();
@@ -1738,26 +1761,7 @@ var Editor = React.createClass({
 							editarea.innerHTML += html;
 						}
 						setTimeout(function () {
-							var htmlElement = document.getElementById(id);
-							var config = {
-								handlers: { edit: function edit() {} },
-								restrictMismatchedBrackets: true
-							};
-							var mathField = MQ.MathField(htmlElement, config);
-							mathField.latex(latex);
-							var $htmlElement = $(htmlElement);
-
-							$htmlElement.keydown(EditorDOM.stopPropagation);
-							$htmlElement.keyup(EditorDOM.stopPropagation);
-							$htmlElement.mouseup(function (e) {
-								editarea.blur();
-								EditorDOM.stopPropagation(e);
-							});
-							$htmlElement.mousedown(EditorDOM.stopPropagation);
-
-							$(editarea).mousedown(function (e) {
-								mathField.blur();
-							});
+							_self.addFormula(id, latex);
 						}, 200);
 						handleRangeChange();
 					}
@@ -1803,6 +1807,18 @@ var Editor = React.createClass({
 	setContent: function setContent(content) {
 		// 后续添加校验方法
 		this.refs.editarea.setContent(content);
+		// mathquill supports
+		if (content.indexOf("mathquill-embedded-latex") != -1) {
+			var elements = document.getElementsByClassName("mathquill-embedded-latex");
+			for (var i = 0; i < elements.length; i++) {
+				if (!elements[i].id) {
+					var id = "mathquill-" + i + "-" + new Date().valueOf();
+					var latex = elements.innerHTML;
+					elements[i].id = id;
+					this.addFormula(id, latex);
+				}
+			}
+		}
 	},
 	getContent: function getContent() {
 		return this.refs.editarea.getContent();
