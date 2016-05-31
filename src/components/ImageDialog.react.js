@@ -49,7 +49,9 @@ var ImageUpload = React.createClass({
 						mask.style.display = "none";
 					},200)
 				}
-			})
+			});
+			// clear value
+			target.value = "";
 		}
 	},
 	getImages:function(){

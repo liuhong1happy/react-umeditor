@@ -903,6 +903,8 @@ var ImageUpload = React.createClass({
 					}, 200);
 				}
 			});
+			// clear value
+			target.value = "";
 		}
 	},
 	getImages: function getImages() {
