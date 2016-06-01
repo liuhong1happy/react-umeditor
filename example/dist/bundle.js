@@ -1235,6 +1235,7 @@ var TablePickerDropdown = React.createClass({
     handleClick: function handleClick(e) {
         // insert table
         var Table = document.createElement("table");
+        Table.className = "editor-table";
         var TBody = Table.createTBody();
         for (var i = 0; i < this.state.row; i++) {
             var Tr = TBody.insertRow();
