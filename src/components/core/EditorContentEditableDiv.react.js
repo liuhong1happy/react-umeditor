@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var EditorSelection = require('../utils/EditorSelection');
+var EditorSelection = require('../../utils/EditorSelection');
 
 var EditorContentEditableDiv = React.createClass({
 	getInitialState:function(){

@@ -1,110 +1,4 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict';
-
-var React = require('react');
-var Dropdown = require('./Dropdown.react');
-
-var _require = require('../constants/EditorConstants');
-
-var ColorTypes = _require.ColorTypes;
-
-var ColorDropdown = React.createClass({
-	displayName: 'ColorDropdown',
-
-	getInitialState: function getInitialState() {
-		return {
-			handle: function handle() {}
-		};
-	},
-	open: function open(position, handle) {
-		this.setState({
-			handle: handle
-		});
-		this.refs.root.open(position);
-	},
-	close: function close() {
-		this.refs.root.close();
-	},
-	toggle: function toggle(position) {
-		this.refs.root.toggle(position);
-	},
-	handleSelectColor: function handleSelectColor(e) {
-		e = e || event;
-		var target = e.target || e.srcElement;
-		var color = target.getAttribute('data-color');
-		if (this.state.handle) {
-			this.state.handle(e, color);
-		}
-		if (e.stopPropagation) {
-			e.stopPropagation();
-		} else {
-			e.cancelBubble = true;
-		}
-		this.close();
-	},
-	render: function render() {
-		var handleSelectColor = this.handleSelectColor;
-		return React.createElement(
-			Dropdown,
-			{ ref: 'root', className: 'color-dropdown' },
-			React.createElement(
-				'table',
-				null,
-				React.createElement(
-					'tbody',
-					null,
-					React.createElement(
-						'tr',
-						{ className: 'title-row', key: "title-row" },
-						React.createElement(
-							'td',
-							{ colSpan: 10 },
-							'主题颜色'
-						)
-					),
-					ColorTypes.themeColors.map(function (colors, pos) {
-						var firstRow = pos == 0;
-						return React.createElement(
-							'tr',
-							{ key: pos, className: firstRow ? "first-row" : "" },
-							colors.map(function (color, index) {
-								return React.createElement(
-									'td',
-									{ key: index },
-									React.createElement('a', { className: 'color-anchor', 'data-color': color, style: { "backgroundColor": color }, onClick: handleSelectColor })
-								);
-							})
-						);
-					}),
-					React.createElement(
-						'tr',
-						{ className: 'title-row', key: "title-row2" },
-						React.createElement(
-							'td',
-							{ colSpan: 10 },
-							'标准颜色'
-						)
-					),
-					React.createElement(
-						'tr',
-						{ className: 'last-row', key: "last-row" },
-						ColorTypes.standardColors.map(function (color, pos) {
-							return React.createElement(
-								'td',
-								{ key: pos },
-								React.createElement('a', { className: 'color-anchor', 'data-color': color, style: { "backgroundColor": color }, onClick: handleSelectColor })
-							);
-						})
-					)
-				)
-			)
-		);
-	}
-});
-
-module.exports = ColorDropdown;
-
-},{"../constants/EditorConstants":13,"./Dropdown.react":3,"react":undefined}],2:[function(require,module,exports){
 "use strict";
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
@@ -212,7 +106,7 @@ var Dialog = React.createClass({
 
 module.exports = Dialog;
 
-},{"react":undefined}],3:[function(require,module,exports){
+},{"react":undefined}],2:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -285,12 +179,78 @@ var Dropdown = React.createClass({
 
 module.exports = Dropdown;
 
+},{"react":undefined}],3:[function(require,module,exports){
+"use strict";
+
+var React = require('react');
+
+var TabGroup = React.createClass({
+	displayName: "TabGroup",
+
+	getInitialState: function getInitialState() {
+		return {
+			tabIndex: 0
+		};
+	},
+	setTabIndex: function setTabIndex(index) {
+		this.setState({
+			tabIndex: index
+		});
+	},
+	getTabIndex: function getTabIndex() {
+		return this.state.tabIndex;
+	},
+	handleClick: function handleClick(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var index = parseInt(target.getAttribute("data-index"));
+		this.setTabIndex(index);
+		if (e.stopPropagation) {
+			e.stopPropagation();
+		} else {
+			e.cancelBubble = true;
+		}
+	},
+	render: function render() {
+		var tabIndex = this.state.tabIndex;
+		var tabs = this.props.tabs;
+		var component = tabs[tabIndex].component;
+		var handleClick = this.handleClick;
+		return React.createElement(
+			"div",
+			{ className: "tab-group" },
+			React.createElement(
+				"ul",
+				{ className: "tab-nav" },
+				tabs.map(function (ele, pos) {
+					return React.createElement(
+						"li",
+						{ key: pos, className: "tab-item" + (tabIndex == pos ? " active" : "") },
+						React.createElement(
+							"a",
+							{ "data-index": pos, className: "tab-text", onClick: handleClick },
+							ele.title
+						)
+					);
+				})
+			),
+			React.createElement(
+				"div",
+				{ className: "tab-content" },
+				component
+			)
+		);
+	}
+});
+
+module.exports = TabGroup;
+
 },{"react":undefined}],4:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
 var ReactDOM = require('react-dom');
-var EditorSelection = require('../utils/EditorSelection');
+var EditorSelection = require('../../utils/EditorSelection');
 
 var EditorContentEditableDiv = React.createClass({
 	displayName: 'EditorContentEditableDiv',
@@ -343,7 +303,7 @@ var EditorContentEditableDiv = React.createClass({
 });
 module.exports = EditorContentEditableDiv;
 
-},{"../utils/EditorSelection":16,"react":undefined,"react-dom":undefined}],5:[function(require,module,exports){
+},{"../../utils/EditorSelection":16,"react":undefined,"react-dom":undefined}],5:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -417,233 +377,6 @@ module.exports = EditorIcon;
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-// resize context
-var minWidth = 12;
-var minHeight = 12;
-var EditorResize = React.createClass({
-	displayName: 'EditorResize',
-
-	getInitialState: function getInitialState() {
-		return {
-			target: null,
-			position: {
-				x: 0, y: 0
-			},
-			width: 0,
-			height: 0,
-			startPosition: {
-				x: 0, y: 0
-			},
-			curPosition: {
-				x: 0, y: 0
-			}
-		};
-	},
-	setTarget: function setTarget(target) {
-		var width = parseFloat(target.width || target.style.width);
-		var height = parseFloat(target.height || target.style.height);
-		var offsetLeft = target.offsetLeft + target.offsetParent.offsetLeft;
-		var offsetTop = target.offsetTop + target.offsetParent.offsetTop;;
-		this.setState({
-			target: target,
-			width: width,
-			height: height,
-			show: true,
-			position: { x: offsetLeft, y: offsetTop }
-		});
-	},
-	getTarget: function getTarget() {
-		return this.state.target;
-	},
-	clearTarget: function clearTarget() {
-		this.setState({
-			target: null,
-			show: false
-		});
-	},
-	stopPropagation: function stopPropagation(e) {
-		if (e.stopPropagation) e.stopPropagation();else e.cancelBubble = true;
-	},
-	clearSelect: function clearSelect(e) {
-		if (window.getSelection) {
-			window.getSelection().removeAllRanges();
-		} else {
-			document.selection.empty();
-		}
-	},
-	getMousePosition: function getMousePosition(e) {
-		e = e || window.event;
-		var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
-		var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
-
-		var x = parseFloat(e.pageX || e.clientX + scrollX);
-		var y = parseFloat(e.pageY || e.clientY + scrollY);
-
-		return { x: x, y: y };
-	},
-	handleMouseDown: function handleMouseDown(e) {
-		e = e || event;
-		var target = e.target || e.srcElement;
-		var className = target.className;
-		var startPosition = this.getMousePosition(e);
-		this.clearSelect();
-		if (className.indexOf("nw-resize") != -1) {
-			this.setState({
-				direction: "nw-resize",
-				startPosition: startPosition
-			});
-		}
-		if (className.indexOf("ne-resize") != -1) {
-			this.setState({
-				direction: "ne-resize",
-				startPosition: startPosition
-			});
-		}
-		if (className.indexOf("sw-resize") != -1) {
-			this.setState({
-				direction: "sw-resize",
-				startPosition: startPosition
-			});
-		}
-		if (className.indexOf("se-resize") != -1) {
-			this.setState({
-				direction: "se-resize",
-				startPosition: startPosition
-			});
-		}
-
-		window.removeEventListener("mouseup", this.handleMouseUp);
-		window.removeEventListener("mousemove", this.handleMouseMove);
-		window.addEventListener("mouseup", this.handleMouseUp);
-		window.addEventListener("mousemove", this.handleMouseMove);
-
-		this.stopPropagation(e);
-	},
-	handleMouseMove: function handleMouseMove(e) {
-		if (!this.state.direction) return;
-		this.clearSelect();
-		e = e || event;
-		var target = e.target || e.srcElement;
-		var curPosition = this.getMousePosition(e);
-		var startPosition = this.state.startPosition;
-		var dx = curPosition.x - startPosition.x;
-		var dy = curPosition.y - startPosition.y;
-		var width = this.state.width;
-		var height = this.state.height;
-
-		switch (this.state.direction) {
-			case "nw-resize":
-				width -= dx;
-				height -= dy;
-				break;
-			case "ne-resize":
-				width += dx;
-				height -= dy;
-				break;
-			case "sw-resize":
-				width -= dx;
-				height += dy;
-				break;
-			case "se-resize":
-				width += dx;
-				height += dy;
-				break;
-		}
-		startPosition = curPosition;
-		if (width < minWidth) width = minWidth;
-		if (height < minHeight) height = minHeight;
-
-		if (this.state.target) {
-			this.state.target.style.width = width + "px";
-			this.state.target.style.height = height + "px";
-		}
-
-		this.setState({
-			startPosition: startPosition,
-			width: width,
-			height: height
-		});
-
-		this.stopPropagation(e);
-	},
-	handleMouseUp: function handleMouseUp(e) {
-		if (!this.state.direction) return;
-		this.clearSelect();
-		e = e || event;
-		var target = e.target || e.srcElement;
-		var curPosition = this.getMousePosition(e);
-		var startPosition = this.state.startPosition;
-		var dx = curPosition.x - startPosition.x;
-		var dy = curPosition.y - startPosition.y;
-		var width = this.state.width;
-		var height = this.state.height;
-
-		switch (this.state.direction) {
-			case "nw-resize":
-				width -= dx;
-				height -= dy;
-				break;
-			case "ne-resize":
-				width += dx;
-				height -= dy;
-				break;
-			case "sw-resize":
-				width -= dx;
-				height += dy;
-				break;
-			case "se-resize":
-				width += dx;
-				height += dy;
-				break;
-		}
-		startPosition = curPosition;
-
-		if (width < minWidth) width = minWidth;
-		if (height < minHeight) height = minHeight;
-
-		window.removeEventListener("mouseup", this.handleMouseUp);
-		window.removeEventListener("mousemove", this.handleMouseMove);
-		if (this.state.target) {
-			this.state.target.style.width = width + "px";
-			this.state.target.style.height = height + "px";
-		}
-		this.setState({
-			startPosition: startPosition,
-			height: height,
-			width: width,
-			direction: null
-		});
-
-		this.stopPropagation(e);
-	},
-	render: function render() {
-		var style = {
-			width: this.state.width,
-			height: this.state.height,
-			left: this.state.position.x,
-			top: this.state.position.y,
-			display: this.state.show ? "block" : "none",
-			positoin: "absolute"
-		};
-		return React.createElement(
-			'div',
-			{ className: 'editor-resize', style: style },
-			React.createElement('div', { className: 'block-resize nw-resize', onMouseDown: this.handleMouseDown, onMouseMove: this.handleMouseMove, onMouseUp: this.handleMouseUp }),
-			React.createElement('div', { className: 'block-resize ne-resize', onMouseDown: this.handleMouseDown, onMouseMove: this.handleMouseMove, onMouseUp: this.handleMouseUp }),
-			React.createElement('div', { className: 'block-resize sw-resize', onMouseDown: this.handleMouseDown, onMouseMove: this.handleMouseMove, onMouseUp: this.handleMouseUp }),
-			React.createElement('div', { className: 'block-resize se-resize', onMouseDown: this.handleMouseDown, onMouseMove: this.handleMouseMove, onMouseUp: this.handleMouseUp })
-		);
-	}
-});
-
-module.exports = EditorResize;
-
-},{"react":undefined,"react-dom":undefined}],7:[function(require,module,exports){
-'use strict';
-
-var React = require('react');
-var ReactDOM = require('react-dom');
-
 var EditorTextArea = React.createClass({
 	displayName: 'EditorTextArea',
 
@@ -676,7 +409,7 @@ var EditorTextArea = React.createClass({
 });
 module.exports = EditorTextArea;
 
-},{"react":undefined,"react-dom":undefined}],8:[function(require,module,exports){
+},{"react":undefined,"react-dom":undefined}],7:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -684,11 +417,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 var React = require('react');
 var EditorIcon = require('./EditorIcon.react');
 
-var _require = require('../constants/EditorConstants');
+var _require = require('../../constants/EditorConstants');
 
 var EditorIconTypes = _require.EditorIconTypes;
 
-var EditorHistory = require('../utils/EditorHistory');
+var EditorHistory = require('../../utils/EditorHistory');
 
 var EditorToolbar = React.createClass({
 	displayName: 'EditorToolbar',
@@ -745,16 +478,122 @@ var EditorToolbar = React.createClass({
 
 module.exports = EditorToolbar;
 
-},{"../constants/EditorConstants":13,"../utils/EditorHistory":15,"./EditorIcon.react":5,"react":undefined}],9:[function(require,module,exports){
+},{"../../constants/EditorConstants":12,"../../utils/EditorHistory":14,"./EditorIcon.react":5,"react":undefined}],8:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var Dropdown = require('../base/Dropdown.react');
+
+var _require = require('../../constants/EditorConstants');
+
+var ColorTypes = _require.ColorTypes;
+
+var ColorDropdown = React.createClass({
+	displayName: 'ColorDropdown',
+
+	getInitialState: function getInitialState() {
+		return {
+			handle: function handle() {}
+		};
+	},
+	open: function open(position, handle) {
+		this.setState({
+			handle: handle
+		});
+		this.refs.root.open(position);
+	},
+	close: function close() {
+		this.refs.root.close();
+	},
+	toggle: function toggle(position) {
+		this.refs.root.toggle(position);
+	},
+	handleSelectColor: function handleSelectColor(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var color = target.getAttribute('data-color');
+		if (this.state.handle) {
+			this.state.handle(e, color);
+		}
+		if (e.stopPropagation) {
+			e.stopPropagation();
+		} else {
+			e.cancelBubble = true;
+		}
+		this.close();
+	},
+	render: function render() {
+		var handleSelectColor = this.handleSelectColor;
+		return React.createElement(
+			Dropdown,
+			{ ref: 'root', className: 'color-dropdown' },
+			React.createElement(
+				'table',
+				null,
+				React.createElement(
+					'tbody',
+					null,
+					React.createElement(
+						'tr',
+						{ className: 'title-row', key: "title-row" },
+						React.createElement(
+							'td',
+							{ colSpan: 10 },
+							'主题颜色'
+						)
+					),
+					ColorTypes.themeColors.map(function (colors, pos) {
+						var firstRow = pos == 0;
+						return React.createElement(
+							'tr',
+							{ key: pos, className: firstRow ? "first-row" : "" },
+							colors.map(function (color, index) {
+								return React.createElement(
+									'td',
+									{ key: index },
+									React.createElement('a', { className: 'color-anchor', 'data-color': color, style: { "backgroundColor": color }, onClick: handleSelectColor })
+								);
+							})
+						);
+					}),
+					React.createElement(
+						'tr',
+						{ className: 'title-row', key: "title-row2" },
+						React.createElement(
+							'td',
+							{ colSpan: 10 },
+							'标准颜色'
+						)
+					),
+					React.createElement(
+						'tr',
+						{ className: 'last-row', key: "last-row" },
+						ColorTypes.standardColors.map(function (color, pos) {
+							return React.createElement(
+								'td',
+								{ key: pos },
+								React.createElement('a', { className: 'color-anchor', 'data-color': color, style: { "backgroundColor": color }, onClick: handleSelectColor })
+							);
+						})
+					)
+				)
+			)
+		);
+	}
+});
+
+module.exports = ColorDropdown;
+
+},{"../../constants/EditorConstants":12,"../base/Dropdown.react":2,"react":undefined}],9:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-var TabGroup = require('./TabGroup.react');
-var Dropdown = require('./Dropdown.react');
+var TabGroup = require('../base/TabGroup.react');
+var Dropdown = require('../base/Dropdown.react');
 
-var _require = require('../constants/EditorConstants');
+var _require = require('../../constants/EditorConstants');
 
 var FormulaTypes = _require.FormulaTypes;
 
@@ -828,15 +667,15 @@ var FormulaDropdown = React.createClass({
 
 module.exports = FormulaDropdown;
 
-},{"../constants/EditorConstants":13,"./Dropdown.react":3,"./TabGroup.react":11,"react":undefined,"react-dom":undefined}],10:[function(require,module,exports){
+},{"../../constants/EditorConstants":12,"../base/Dropdown.react":2,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],10:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-var Dialog = require('./Dialog.react');
-var TabGroup = require('./TabGroup.react');
-var Uploader = require('../utils/FileUpload');
+var Dialog = require('../base/Dialog.react');
+var TabGroup = require('../base/TabGroup.react');
+var Uploader = require('../../utils/FileUpload');
 
 var ImageUpload = React.createClass({
 	displayName: 'ImageUpload',
@@ -1114,77 +953,11 @@ var ImageDialog = React.createClass({
 
 module.exports = ImageDialog;
 
-},{"../utils/FileUpload":17,"./Dialog.react":2,"./TabGroup.react":11,"react":undefined,"react-dom":undefined}],11:[function(require,module,exports){
-"use strict";
-
-var React = require('react');
-
-var TabGroup = React.createClass({
-	displayName: "TabGroup",
-
-	getInitialState: function getInitialState() {
-		return {
-			tabIndex: 0
-		};
-	},
-	setTabIndex: function setTabIndex(index) {
-		this.setState({
-			tabIndex: index
-		});
-	},
-	getTabIndex: function getTabIndex() {
-		return this.state.tabIndex;
-	},
-	handleClick: function handleClick(e) {
-		e = e || event;
-		var target = e.target || e.srcElement;
-		var index = parseInt(target.getAttribute("data-index"));
-		this.setTabIndex(index);
-		if (e.stopPropagation) {
-			e.stopPropagation();
-		} else {
-			e.cancelBubble = true;
-		}
-	},
-	render: function render() {
-		var tabIndex = this.state.tabIndex;
-		var tabs = this.props.tabs;
-		var component = tabs[tabIndex].component;
-		var handleClick = this.handleClick;
-		return React.createElement(
-			"div",
-			{ className: "tab-group" },
-			React.createElement(
-				"ul",
-				{ className: "tab-nav" },
-				tabs.map(function (ele, pos) {
-					return React.createElement(
-						"li",
-						{ key: pos, className: "tab-item" + (tabIndex == pos ? " active" : "") },
-						React.createElement(
-							"a",
-							{ "data-index": pos, className: "tab-text", onClick: handleClick },
-							ele.title
-						)
-					);
-				})
-			),
-			React.createElement(
-				"div",
-				{ className: "tab-content" },
-				component
-			)
-		);
-	}
-});
-
-module.exports = TabGroup;
-
-},{"react":undefined}],12:[function(require,module,exports){
+},{"../../utils/FileUpload":17,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],11:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
-var Dropdown = require('./Dropdown.react');
+var Dropdown = require('../base/Dropdown.react');
 
 var TablePickerDropdown = React.createClass({
     displayName: 'TablePickerDropdown',
@@ -1276,7 +1049,7 @@ var TablePickerDropdown = React.createClass({
 
 module.exports = TablePickerDropdown;
 
-},{"./Dropdown.react":3,"react":undefined}],13:[function(require,module,exports){
+},{"../base/Dropdown.react":2,"react":undefined}],12:[function(require,module,exports){
 "use strict";
 
 var EditorIconTypes = {
@@ -1437,7 +1210,7 @@ module.exports = {
 	FormulaTypes: FormulaTypes
 };
 
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 var EditorDOM = {
@@ -1452,7 +1225,7 @@ var EditorDOM = {
 };
 module.exports = EditorDOM;
 
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 var EditorHistory = {
@@ -1507,7 +1280,234 @@ var EditorHistory = {
 };
 module.exports = EditorHistory;
 
-},{}],16:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var ReactDOM = require('react-dom');
+
+// resize context
+var minWidth = 12;
+var minHeight = 12;
+var EditorResize = React.createClass({
+	displayName: 'EditorResize',
+
+	getInitialState: function getInitialState() {
+		return {
+			target: null,
+			position: {
+				x: 0, y: 0
+			},
+			width: 0,
+			height: 0,
+			startPosition: {
+				x: 0, y: 0
+			},
+			curPosition: {
+				x: 0, y: 0
+			}
+		};
+	},
+	setTarget: function setTarget(target) {
+		var width = parseFloat(target.width || target.style.width);
+		var height = parseFloat(target.height || target.style.height);
+		var offsetLeft = target.offsetLeft + target.offsetParent.offsetLeft;
+		var offsetTop = target.offsetTop + target.offsetParent.offsetTop;;
+		this.setState({
+			target: target,
+			width: width,
+			height: height,
+			show: true,
+			position: { x: offsetLeft, y: offsetTop }
+		});
+	},
+	getTarget: function getTarget() {
+		return this.state.target;
+	},
+	clearTarget: function clearTarget() {
+		this.setState({
+			target: null,
+			show: false
+		});
+	},
+	stopPropagation: function stopPropagation(e) {
+		if (e.stopPropagation) e.stopPropagation();else e.cancelBubble = true;
+	},
+	clearSelect: function clearSelect(e) {
+		if (window.getSelection) {
+			window.getSelection().removeAllRanges();
+		} else {
+			document.selection.empty();
+		}
+	},
+	getMousePosition: function getMousePosition(e) {
+		e = e || window.event;
+		var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+		var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+
+		var x = parseFloat(e.pageX || e.clientX + scrollX);
+		var y = parseFloat(e.pageY || e.clientY + scrollY);
+
+		return { x: x, y: y };
+	},
+	handleMouseDown: function handleMouseDown(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var className = target.className;
+		var startPosition = this.getMousePosition(e);
+		this.clearSelect();
+		if (className.indexOf("nw-resize") != -1) {
+			this.setState({
+				direction: "nw-resize",
+				startPosition: startPosition
+			});
+		}
+		if (className.indexOf("ne-resize") != -1) {
+			this.setState({
+				direction: "ne-resize",
+				startPosition: startPosition
+			});
+		}
+		if (className.indexOf("sw-resize") != -1) {
+			this.setState({
+				direction: "sw-resize",
+				startPosition: startPosition
+			});
+		}
+		if (className.indexOf("se-resize") != -1) {
+			this.setState({
+				direction: "se-resize",
+				startPosition: startPosition
+			});
+		}
+
+		window.removeEventListener("mouseup", this.handleMouseUp);
+		window.removeEventListener("mousemove", this.handleMouseMove);
+		window.addEventListener("mouseup", this.handleMouseUp);
+		window.addEventListener("mousemove", this.handleMouseMove);
+
+		this.stopPropagation(e);
+	},
+	handleMouseMove: function handleMouseMove(e) {
+		if (!this.state.direction) return;
+		this.clearSelect();
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var curPosition = this.getMousePosition(e);
+		var startPosition = this.state.startPosition;
+		var dx = curPosition.x - startPosition.x;
+		var dy = curPosition.y - startPosition.y;
+		var width = this.state.width;
+		var height = this.state.height;
+
+		switch (this.state.direction) {
+			case "nw-resize":
+				width -= dx;
+				height -= dy;
+				break;
+			case "ne-resize":
+				width += dx;
+				height -= dy;
+				break;
+			case "sw-resize":
+				width -= dx;
+				height += dy;
+				break;
+			case "se-resize":
+				width += dx;
+				height += dy;
+				break;
+		}
+		startPosition = curPosition;
+		if (width < minWidth) width = minWidth;
+		if (height < minHeight) height = minHeight;
+
+		if (this.state.target) {
+			this.state.target.style.width = width + "px";
+			this.state.target.style.height = height + "px";
+		}
+
+		this.setState({
+			startPosition: startPosition,
+			width: width,
+			height: height
+		});
+
+		this.stopPropagation(e);
+	},
+	handleMouseUp: function handleMouseUp(e) {
+		if (!this.state.direction) return;
+		this.clearSelect();
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var curPosition = this.getMousePosition(e);
+		var startPosition = this.state.startPosition;
+		var dx = curPosition.x - startPosition.x;
+		var dy = curPosition.y - startPosition.y;
+		var width = this.state.width;
+		var height = this.state.height;
+
+		switch (this.state.direction) {
+			case "nw-resize":
+				width -= dx;
+				height -= dy;
+				break;
+			case "ne-resize":
+				width += dx;
+				height -= dy;
+				break;
+			case "sw-resize":
+				width -= dx;
+				height += dy;
+				break;
+			case "se-resize":
+				width += dx;
+				height += dy;
+				break;
+		}
+		startPosition = curPosition;
+
+		if (width < minWidth) width = minWidth;
+		if (height < minHeight) height = minHeight;
+
+		window.removeEventListener("mouseup", this.handleMouseUp);
+		window.removeEventListener("mousemove", this.handleMouseMove);
+		if (this.state.target) {
+			this.state.target.style.width = width + "px";
+			this.state.target.style.height = height + "px";
+		}
+		this.setState({
+			startPosition: startPosition,
+			height: height,
+			width: width,
+			direction: null
+		});
+
+		this.stopPropagation(e);
+	},
+	render: function render() {
+		var style = {
+			width: this.state.width,
+			height: this.state.height,
+			left: this.state.position.x,
+			top: this.state.position.y,
+			display: this.state.show ? "block" : "none",
+			positoin: "absolute"
+		};
+		return React.createElement(
+			'div',
+			{ className: 'editor-resize', style: style },
+			React.createElement('div', { className: 'block-resize nw-resize', onMouseDown: this.handleMouseDown, onMouseMove: this.handleMouseMove, onMouseUp: this.handleMouseUp }),
+			React.createElement('div', { className: 'block-resize ne-resize', onMouseDown: this.handleMouseDown, onMouseMove: this.handleMouseMove, onMouseUp: this.handleMouseUp }),
+			React.createElement('div', { className: 'block-resize sw-resize', onMouseDown: this.handleMouseDown, onMouseMove: this.handleMouseMove, onMouseUp: this.handleMouseUp }),
+			React.createElement('div', { className: 'block-resize se-resize', onMouseDown: this.handleMouseDown, onMouseMove: this.handleMouseMove, onMouseUp: this.handleMouseUp })
+		);
+	}
+});
+
+module.exports = EditorResize;
+
+},{"react":undefined,"react-dom":undefined}],16:[function(require,module,exports){
 "use strict";
 
 var EditorSelection = {
@@ -1707,18 +1707,19 @@ var EditorIconTypes = _require.EditorIconTypes;
 var EditorHistory = require('./utils/EditorHistory');
 var EditorSelection = require('./utils/EditorSelection');
 var EditorDOM = require('./utils/EditorDOM');
+var EditorResize = require('./utils/EditorResize.react');
 // dialog & dropdown
-var ColorDropdown = require('./components/ColorDropdown.react');
-var FormulaDropdown = require('./components/FormulaDropdown.react');
-var TablePickerDropdown = require('./components/TablePickerDropdown.react');
-var ImageDialog = require('./components/ImageDialog.react');
-// image resize
-var EditorResize = require('./components/EditorResize.react');
-// base components
-var EditorToolbar = require('./components/EditorToolbar.react');
-var EditorTextArea = require('./components/EditorTextArea.react');
-var EditorContentEditableDiv = require('./components/EditorContentEditableDiv.react');
+var ColorDropdown = require('./components/plugins/ColorDropdown.react');
+var FormulaDropdown = require('./components/plugins/FormulaDropdown.react');
+var TablePickerDropdown = require('./components/plugins/TablePickerDropdown.react');
+var ImageDialog = require('./components/plugins/ImageDialog.react');
 
+// base components
+var EditorToolbar = require('./components/core/EditorToolbar.react');
+var EditorTextArea = require('./components/core/EditorTextArea.react');
+var EditorContentEditableDiv = require('./components/core/EditorContentEditableDiv.react');
+
+// 需要外部引用MathQuill
 var MQ = MathQuill.getInterface(2);
 
 // key down context
@@ -1741,6 +1742,7 @@ var keycont = 0;
 var Editor = React.createClass({
 	displayName: 'Editor',
 
+	// init & update
 	getInitialState: function getInitialState() {
 		return {
 			editorState: {
@@ -1759,9 +1761,24 @@ var Editor = React.createClass({
 		editarea.addEventListener('keydown', this.handleKeyDown);
 		editarea.addEventListener('keyup', this.handleKeyUp);
 	},
-	autoSave: function autoSave() {
-		EditorHistory.execCommand('autosave', false, null);
+	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+		// update value
+		if (this.props.value != nextProps.value) {
+			this.setContent(nextProps.value ? nextProps.value : nextProps.defaultValue);
+		}
 	},
+	componentDidUpdate: function componentDidUpdate() {
+		var editorState = this.state.editorState;
+		switch (editorState.icon) {
+			case "source":
+				this.setContent(editorState.content);
+				break;
+			case "cleardoc":
+				this.setContent(editorState.content);
+				break;
+		}
+	},
+	// event handler
 	handleKeyDown: function handleKeyDown(evt) {
 		evt = evt || event;
 		var keyCode = evt.keyCode || evt.which;
@@ -1791,31 +1808,6 @@ var Editor = React.createClass({
 		var keyCode = evt.keyCode || evt.which;
 		if (!evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
 			// some handle
-		}
-	},
-	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-		// update value
-		if (this.props.value != nextProps.value) {
-			this.setContent(nextProps.value ? nextProps.value : nextProps.defaultValue);
-		}
-	},
-	componentDidUpdate: function componentDidUpdate() {
-		var editorState = this.state.editorState;
-		switch (editorState.icon) {
-			case "source":
-				this.setContent(editorState.content);
-				break;
-			case "cleardoc":
-				this.setContent(editorState.content);
-				break;
-		}
-	},
-	genEditArea: function genEditArea() {
-		var showHtml = this.state.editorState.showHtml;
-		if (showHtml) {
-			return React.createElement(EditorTextArea, { ref: 'editarea' });
-		} else {
-			return React.createElement(EditorContentEditableDiv, { ref: 'editarea', onRangeChange: this.handleRangeChange });
 		}
 	},
 	handleFocus: function handleFocus(e) {
@@ -1858,43 +1850,6 @@ var Editor = React.createClass({
 					break;
 			}
 		}
-	},
-	getOffsetRootParentPosition: function getOffsetRootParentPosition(target) {
-		var position = { x: 0, y: 0, w: 0, h: 0 };
-		var root = ReactDOM.findDOMNode(this.refs.root);
-		position.w = target.offsetWidth;
-		position.h = target.offsetHeight;
-		position.x = target.offsetLeft;
-		position.y = target.offsetTop;
-		var offsetParent = target.offsetParent;
-		while (offsetParent && offsetParent != root) {
-			position.x += offsetParent.offsetLeft;
-			position.y += offsetParent.offsetTop;
-			offsetParent = offsetParent.offsetParent;
-		}
-		return position;
-	},
-	addFormula: function addFormula(id, latex) {
-		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
-		var htmlElement = document.getElementById(id);
-		var config = {
-			handlers: { edit: function edit() {} },
-			restrictMismatchedBrackets: true
-		};
-		var mathField = MQ.MathField(htmlElement, config);
-		mathField.latex(latex);
-		var $htmlElement = $(htmlElement);
-
-		$htmlElement.keydown(EditorDOM.stopPropagation);
-		$htmlElement.keyup(EditorDOM.stopPropagation);
-		$htmlElement.mouseup(function (e) {
-			editarea.blur();
-			EditorDOM.stopPropagation(e);
-		});
-		$htmlElement.mousedown(EditorDOM.stopPropagation);
-		$(editarea).mousedown(function (e) {
-			mathField.blur();
-		});
 	},
 	handleToolbarIconClick: function handleToolbarIconClick(e, state) {
 		e = e || event;
@@ -2025,6 +1980,48 @@ var Editor = React.createClass({
 			e.cancelBubble = true;
 		}
 	},
+	// utils
+	getOffsetRootParentPosition: function getOffsetRootParentPosition(target) {
+		var position = { x: 0, y: 0, w: 0, h: 0 };
+		var root = ReactDOM.findDOMNode(this.refs.root);
+		position.w = target.offsetWidth;
+		position.h = target.offsetHeight;
+		position.x = target.offsetLeft;
+		position.y = target.offsetTop;
+		var offsetParent = target.offsetParent;
+		while (offsetParent && offsetParent != root) {
+			position.x += offsetParent.offsetLeft;
+			position.y += offsetParent.offsetTop;
+			offsetParent = offsetParent.offsetParent;
+		}
+		return position;
+	},
+	addFormula: function addFormula(id, latex) {
+		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
+		var htmlElement = document.getElementById(id);
+		var config = {
+			handlers: { edit: function edit() {} },
+			restrictMismatchedBrackets: true
+		};
+		var mathField = MQ.MathField(htmlElement, config);
+		mathField.latex(latex);
+		var $htmlElement = $(htmlElement);
+
+		$htmlElement.keydown(EditorDOM.stopPropagation);
+		$htmlElement.keyup(EditorDOM.stopPropagation);
+		$htmlElement.mouseup(function (e) {
+			editarea.blur();
+			EditorDOM.stopPropagation(e);
+		});
+		$htmlElement.mousedown(EditorDOM.stopPropagation);
+		$(editarea).mousedown(function (e) {
+			mathField.blur();
+		});
+	},
+	autoSave: function autoSave() {
+		EditorHistory.execCommand('autosave', false, null);
+	},
+	// public functions
 	findDOMNode: function findDOMNode(refName) {
 		// 对外公布方法
 		var keys = ["root", "editarea", "toolbar", "color"];
@@ -2061,6 +2058,15 @@ var Editor = React.createClass({
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		editarea.focus();
 	},
+	// render functions 
+	genEditArea: function genEditArea() {
+		var showHtml = this.state.editorState.showHtml;
+		if (showHtml) {
+			return React.createElement(EditorTextArea, { ref: 'editarea' });
+		} else {
+			return React.createElement(EditorContentEditableDiv, { ref: 'editarea', onRangeChange: this.handleRangeChange });
+		}
+	},
 	render: function render() {
 		var editArea = this.genEditArea();
 		var _props = this.props;
@@ -2090,4 +2096,4 @@ var Editor = React.createClass({
 
 module.exports = Editor;
 
-},{"./components/ColorDropdown.react":1,"./components/EditorContentEditableDiv.react":4,"./components/EditorResize.react":6,"./components/EditorTextArea.react":7,"./components/EditorToolbar.react":8,"./components/FormulaDropdown.react":9,"./components/ImageDialog.react":10,"./components/TablePickerDropdown.react":12,"./constants/EditorConstants":13,"./utils/EditorDOM":14,"./utils/EditorHistory":15,"./utils/EditorSelection":16,"react":undefined,"react-dom":undefined}]},{},[]);
+},{"./components/core/EditorContentEditableDiv.react":4,"./components/core/EditorTextArea.react":6,"./components/core/EditorToolbar.react":7,"./components/plugins/ColorDropdown.react":8,"./components/plugins/FormulaDropdown.react":9,"./components/plugins/ImageDialog.react":10,"./components/plugins/TablePickerDropdown.react":11,"./constants/EditorConstants":12,"./utils/EditorDOM":13,"./utils/EditorHistory":14,"./utils/EditorResize.react":15,"./utils/EditorSelection":16,"react":undefined,"react-dom":undefined}]},{},[]);

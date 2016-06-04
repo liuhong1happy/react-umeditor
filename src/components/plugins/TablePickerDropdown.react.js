@@ -1,5 +1,5 @@
 var React = require('react');
-var Dropdown = require('./Dropdown.react');
+var Dropdown = require('../base/Dropdown.react');
 
 var TablePickerDropdown = React.createClass({
     getInitialState:function(){

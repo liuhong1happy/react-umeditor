@@ -2,8 +2,8 @@ var React = require('react');
 var EditorIcon = require('./EditorIcon.react');
 var { 
 	EditorIconTypes
-} = require('../constants/EditorConstants');
-var EditorHistory = require('../utils/EditorHistory');
+} = require('../../constants/EditorConstants');
+var EditorHistory = require('../../utils/EditorHistory');
 
 var EditorToolbar = React.createClass({
 	getInitialState:function(){

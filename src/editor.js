@@ -8,18 +8,19 @@ var {
 var EditorHistory = require('./utils/EditorHistory');
 var EditorSelection = require('./utils/EditorSelection');
 var EditorDOM = require('./utils/EditorDOM');
+var EditorResize = require('./utils/EditorResize.react');
 // dialog & dropdown
-var ColorDropdown = require('./components/ColorDropdown.react');
-var FormulaDropdown = require('./components/FormulaDropdown.react');
-var TablePickerDropdown = require('./components/TablePickerDropdown.react');
-var ImageDialog = require('./components/ImageDialog.react');
-// image resize
-var EditorResize = require('./components/EditorResize.react');
-// base components
-var EditorToolbar = require('./components/EditorToolbar.react');
-var EditorTextArea = require('./components/EditorTextArea.react');
-var EditorContentEditableDiv = require('./components/EditorContentEditableDiv.react');
+var ColorDropdown = require('./components/plugins/ColorDropdown.react');
+var FormulaDropdown = require('./components/plugins/FormulaDropdown.react');
+var TablePickerDropdown = require('./components/plugins/TablePickerDropdown.react');
+var ImageDialog = require('./components/plugins/ImageDialog.react');
 
+// base components
+var EditorToolbar = require('./components/core/EditorToolbar.react');
+var EditorTextArea = require('./components/core/EditorTextArea.react');
+var EditorContentEditableDiv = require('./components/core/EditorContentEditableDiv.react');
+
+// 需要外部引用MathQuill
 var MQ = MathQuill.getInterface(2);
 
 // key down context
@@ -40,6 +41,7 @@ var keycont = 0;
 **/
 
 var Editor = React.createClass({
+    // init & update
 	getInitialState:function(){
 		return {
 			editorState:{
@@ -58,9 +60,24 @@ var Editor = React.createClass({
     	editarea.addEventListener('keydown', this.handleKeyDown);
     	editarea.addEventListener('keyup', this.handleKeyUp);
 	},
-	autoSave:function(){
-		EditorHistory.execCommand('autosave',false,null);
+	componentWillReceiveProps:function(nextProps){
+		// update value
+		if(this.props.value!=nextProps.value){
+			this.setContent(nextProps.value?nextProps.value:nextProps.defaultValue);
+		}
 	},
+	componentDidUpdate:function(){
+		var editorState = this.state.editorState;
+		switch(editorState.icon){
+			case "source":
+				this.setContent(editorState.content)
+				break;
+			case "cleardoc":
+				this.setContent(editorState.content)
+				break;
+		}
+	},
+    // event handler
 	handleKeyDown:function(evt){
 		evt = evt || event;
         var keyCode = evt.keyCode || evt.which;
@@ -91,31 +108,6 @@ var Editor = React.createClass({
         if (!evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
 			// some handle
         }
-	},
-	componentWillReceiveProps:function(nextProps){
-		// update value
-		if(this.props.value!=nextProps.value){
-			this.setContent(nextProps.value?nextProps.value:nextProps.defaultValue);
-		}
-	},
-	componentDidUpdate:function(){
-		var editorState = this.state.editorState;
-		switch(editorState.icon){
-			case "source":
-				this.setContent(editorState.content)
-				break;
-			case "cleardoc":
-				this.setContent(editorState.content)
-				break;
-		}
-	},
-	genEditArea:function(){
-		var showHtml = this.state.editorState.showHtml;
-		if(showHtml){
-			return (<EditorTextArea ref="editarea" />)
-		}else{
-			return (<EditorContentEditableDiv ref="editarea" onRangeChange={this.handleRangeChange}/>)		
-		}
 	},
 	handleFocus:function(e){
 		if(this.props.onFocus){
@@ -160,44 +152,7 @@ var Editor = React.createClass({
 			}
 		}
 	},
-	getOffsetRootParentPosition:function(target){
-		var position = {x:0,y:0,w:0,h:0}
-		var root = ReactDOM.findDOMNode(this.refs.root);
-		position.w = target.offsetWidth;
-		position.h = target.offsetHeight;
-		position.x = target.offsetLeft;
-		position.y = target.offsetTop;
-		var offsetParent = target.offsetParent;
-		while(offsetParent && offsetParent!=root){
-			 position.x+= offsetParent.offsetLeft;
-			 position.y+=offsetParent.offsetTop;
-			 offsetParent = offsetParent.offsetParent;
-		}
-		return position;
-	},
-	addFormula:function(id,latex){
-		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
-		var htmlElement = document.getElementById(id);
-		var config = {
-		  handlers: { edit: function(){ } },
-		  restrictMismatchedBrackets: true
-		};
-		var mathField = MQ.MathField(htmlElement, config);
-		mathField.latex(latex); 
-		var $htmlElement = $(htmlElement);
-
-		$htmlElement.keydown(EditorDOM.stopPropagation);
-		$htmlElement.keyup(EditorDOM.stopPropagation);
-		$htmlElement.mouseup(function(e){
-			editarea.blur();
-			EditorDOM.stopPropagation(e);
-		});
-		$htmlElement.mousedown(EditorDOM.stopPropagation);
-		$(editarea).mousedown(function(e){
-			mathField.blur();
-		})
-	},
-	handleToolbarIconClick:function(e,state){
+    handleToolbarIconClick:function(e,state){
 		e = e || event;
 		var target = e.target || e.srcElement;
 		var offsetPosition = this.getOffsetRootParentPosition(target);
@@ -326,6 +281,48 @@ var Editor = React.createClass({
 			e.cancelBubble = true;
 		}
 	},
+    // utils
+	getOffsetRootParentPosition:function(target){
+		var position = {x:0,y:0,w:0,h:0}
+		var root = ReactDOM.findDOMNode(this.refs.root);
+		position.w = target.offsetWidth;
+		position.h = target.offsetHeight;
+		position.x = target.offsetLeft;
+		position.y = target.offsetTop;
+		var offsetParent = target.offsetParent;
+		while(offsetParent && offsetParent!=root){
+			 position.x+= offsetParent.offsetLeft;
+			 position.y+=offsetParent.offsetTop;
+			 offsetParent = offsetParent.offsetParent;
+		}
+		return position;
+	},
+	addFormula:function(id,latex){
+		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
+		var htmlElement = document.getElementById(id);
+		var config = {
+		  handlers: { edit: function(){ } },
+		  restrictMismatchedBrackets: true
+		};
+		var mathField = MQ.MathField(htmlElement, config);
+		mathField.latex(latex); 
+		var $htmlElement = $(htmlElement);
+
+		$htmlElement.keydown(EditorDOM.stopPropagation);
+		$htmlElement.keyup(EditorDOM.stopPropagation);
+		$htmlElement.mouseup(function(e){
+			editarea.blur();
+			EditorDOM.stopPropagation(e);
+		});
+		$htmlElement.mousedown(EditorDOM.stopPropagation);
+		$(editarea).mousedown(function(e){
+			mathField.blur();
+		})
+	},
+	autoSave:function(){
+		EditorHistory.execCommand('autosave',false,null);
+	},
+    // public functions
 	findDOMNode:function(refName){
 		// 对外公布方法
 		var keys = [ "root","editarea","toolbar","color"];
@@ -362,6 +359,15 @@ var Editor = React.createClass({
 	focusEditor:function(){
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		editarea.focus();
+	},
+    // render functions  
+	genEditArea:function(){
+		var showHtml = this.state.editorState.showHtml;
+		if(showHtml){
+			return (<EditorTextArea ref="editarea" />)
+		}else{
+			return (<EditorContentEditableDiv ref="editarea" onRangeChange={this.handleRangeChange}/>)		
+		}
 	},
 	render:function(){
 		var editArea = this.genEditArea();

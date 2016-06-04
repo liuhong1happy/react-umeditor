@@ -1,9 +1,9 @@
 var React = require('react');
 var ReactDOM =  require('react-dom');
 
-var TabGroup = require('./TabGroup.react');
-var Dropdown = require('./Dropdown.react');
-var {FormulaTypes} = require('../constants/EditorConstants');
+var TabGroup = require('../base/TabGroup.react');
+var Dropdown = require('../base/Dropdown.react');
+var {FormulaTypes} = require('../../constants/EditorConstants');
 
 var FormulaIcons = React.createClass({
 	handleClick:function(e){

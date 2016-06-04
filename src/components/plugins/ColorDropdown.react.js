@@ -1,6 +1,6 @@
 var React = require('react');
-var Dropdown = require('./Dropdown.react');
-var {ColorTypes} = require('../constants/EditorConstants');
+var Dropdown = require('../base/Dropdown.react');
+var {ColorTypes} = require('../../constants/EditorConstants');
 
 var ColorDropdown = React.createClass({
 	getInitialState:function(){
