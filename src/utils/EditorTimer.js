@@ -1,0 +1,113 @@
+var INTERVAL_MS = 1000/60;
+if(!window.requestAnimationFrame){
+	window.requestAnimationFrame = function(callback){
+		setTimeout(callback,INTERVAL_MS);
+	}
+}
+
+var timeouts = [];
+var intervals = [];
+var animites = [];
+var running = false;
+var count = 0;
+
+var EditorTimer = {
+	addCount:function(){
+		count = count +1;
+	},
+	setTimeout:function(callback,ms){
+		callback.prototype.ms = ms?ms:INTERVAL_MS;
+		callback.prototype.key = "timeout"+new Date().valueOf()+"-"+Math.round(Math.random()*1000);
+		callback.prototype.startTime = new Date().valueOf();
+		callback.prototype.endTime = new Date().valueOf();
+		timeouts.push(callback);
+		return callback.prototype.key;
+	},
+	clearTimeout:function(key){
+		var _timeouts = timeouts.filter(function(ele,pos){
+			return ele.prototype.key == key;
+		})
+		if(_timeouts.length>0){
+			var index = timeouts.indexOf(_timeouts[0]);
+			if(index!=-1) timeouts.disabled = true;
+			return _timeouts[0];
+		}else{
+			return null;
+		}
+	},
+	setInterval:function(callback,ms){
+		callback.prototype.ms = ms?ms:INTERVAL_MS;
+		callback.prototype.key = "interval"+new Date().valueOf()+"-"+Math.round(Math.random()*1000);
+		callback.prototype.startTime = new Date().valueOf();
+		callback.prototype.endTime = new Date().valueOf();
+		callback.prototype.lastTime = new Date().valueOf();
+		intervals.push(callback);
+		return callback.prototype.key;
+	},
+	clearInterval:function(key){
+		var _intervals = intervals.filter(function(ele,pos){
+			return ele.prototype.key == key;
+		})
+		if(_intervals.length>0){
+			var index = intervals.indexOf(_intervals[0]);
+			if(index!=-1) intervals.disabled = true;
+			return _intervals[0];
+		}else{
+			return null;
+		}
+	},
+	animate:function(callback){
+		window.requestAnimationFrame(EditorTimer.animate);
+		if(running){
+			for(var i=0;i<animites.length;i++){
+				animites[i]({
+					count:count
+				})
+			}
+			EditorTimer.addCount(); // count++
+		}
+		for(var i=0;i<timeouts.length;i++){
+			timeouts[i].prototype.endTime = new Date().valueOf();
+			if((timeouts[i].prototype.endTime-timeouts[i].prototype.startTime)>=timeouts[i].prototype.ms && !timeouts[i].prototype.disabled){
+				timeouts[i].call(timeouts[i].prototype,timeouts[i].prototype.endTime);
+				timeouts[i].prototype.disabled = true;
+			}
+		}
+		for(var i=0;i<intervals.length;i++){
+			intervals[i].prototype.endTime = new Date().valueOf();
+			if((intervals[i].prototype.endTime-intervals[i].prototype.lastTime)>=intervals[i].prototype.ms && !intervals[i].prototype.disabled){
+				intervals[i].call(intervals[i].prototype,intervals[i].prototype.endTime);
+				intervals[i].prototype.lastTime = intervals[i].prototype.endTime;
+			}
+		}
+		timeouts = timeouts.filter(function(ele,pos){return !ele.disabled});
+		intervals = intervals.filter(function(ele,pos){return !ele.disabled});
+	},
+	startAnimation:function(){
+		running = true;
+	},
+	stopAnimation:function(){
+		running = false;
+	},
+	addAnimationHandler:function(handler){
+		var _running = running;
+		EditorTimer.stopAnimation(handler);
+		window.requestAnimationFrame(function(){
+			animites.push(handler);
+			if(_running) EditorTimer.startAnimation(handler)
+		})
+	},
+	removeAnimationHandler:function(handler){
+		var _running = running;
+		EditorTimer.stopAnimation(handler);
+		window.requestAnimationFrame(function(){
+			var index = animites.indexOf(handler);
+			if(index!=-1) animites.splice(handler,index);
+			if(_running) EditorTimer.startAnimation(handler);
+		})
+	}
+}
+
+EditorTimer.animate();
+
+module.exports = EditorTimer;
