@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Editor Demo</title>
+	<link rel="stylesheet" href="../../dist/third-part/mathquill/mathquill.css"/>
+</head>
+<body>
+	<div id="react-container" contenteditable="true">
+		<div id="mathquill-latex-001"></div>
+	</div>
+	
+	<script src="../../dist/third-part/jquery.min.js"></script>
+	<script src="../../dist/third-part/mathquill/mathquill.min.js"></script>
+	<script>
+		var MQ = MathQuill.getInterface(2);
+		var config = {
+			handlers: { edit: function edit() {} },
+			restrictMismatchedBrackets: true
+		};
+		var htmlElement = document.getElementById('mathquill-latex-001');
+		var mathField = MQ.MathField(htmlElement, config);
+		mathField.latex('^{2}');
+		
+	</script>
+</body>
+</html>

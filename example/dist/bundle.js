@@ -251,6 +251,7 @@ module.exports = TabGroup;
 var React = require('react');
 var ReactDOM = require('react-dom');
 var EditorSelection = require('../../utils/EditorSelection');
+var EditorDOM = require('../../utils/EditorDOM');
 
 var EditorContentEditableDiv = React.createClass({
 	displayName: 'EditorContentEditableDiv',
@@ -287,12 +288,14 @@ var EditorContentEditableDiv = React.createClass({
 	handleMouseDown: function handleMouseDown(e) {
 		EditorSelection.clearRange();
 		window.addEventListener("mouseup", this.handleMouseUp);
+		EditorDOM.stopPropagation(e);
 	},
 	handleMouseUp: function handleMouseUp(e) {
 		EditorSelection.createRange();
 		window.removeEventListener("mouseup", this.handleMouseUp);
 
 		if (this.props.onRangeChange) this.props.onRangeChange(e);
+		EditorDOM.stopPropagation(e);
 	},
 	render: function render() {
 		return React.createElement('div', { ref: 'root', className: 'editor-contenteditable-div',
@@ -303,7 +306,7 @@ var EditorContentEditableDiv = React.createClass({
 });
 module.exports = EditorContentEditableDiv;
 
-},{"../../utils/EditorSelection":16,"react":undefined,"react-dom":undefined}],5:[function(require,module,exports){
+},{"../../utils/EditorDOM":13,"../../utils/EditorSelection":16,"react":undefined,"react-dom":undefined}],5:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -1689,10 +1692,10 @@ var EditorTimer = {
 			}
 		}
 		timeouts = timeouts.filter(function (ele, pos) {
-			return !ele.disabled;
+			return !ele.prototype.disabled;
 		});
 		intervals = intervals.filter(function (ele, pos) {
-			return !ele.disabled;
+			return !ele.prototype.disabled;
 		});
 	},
 	startAnimation: function startAnimation() {
@@ -1903,33 +1906,40 @@ var Editor = React.createClass({
 	// event handler
 	handleKeyDown: function handleKeyDown(evt) {
 		evt = evt || event;
-		var keyCode = evt.keyCode || evt.which;
-		var autoSave = this.autoSave;
-		if (!evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
-			if (EditorHistory.getCommandStack().length == 0) {
-				autoSave();
-				keycont = 0;
-			}
-			clearTimeout(saveSceneTimer);
-			saveSceneTimer = EditorTimer.setTimeout(function () {
-				var interalTimer = EditorTimer.setInterval(function () {
+		var target = evt.target || evt.srcElement;
+		if (target.className && target.className.indexOf('editor-contenteditable-div') != -1) {
+			var keyCode = evt.keyCode || evt.which;
+			var autoSave = this.autoSave;
+			if (!evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
+				if (EditorHistory.getCommandStack().length == 0) {
 					autoSave();
 					keycont = 0;
-					EditorTimer.clearInterval(interalTimer);
-				}, 300);
-			}, 200);
-			lastKeyCode = keyCode;
-			keycont++;
-			if (keycont >= maxInputCount) {
-				autoSave();
-				keycont = 0;
+				}
+				clearTimeout(saveSceneTimer);
+				saveSceneTimer = EditorTimer.setTimeout(function () {
+					var interalTimer = EditorTimer.setInterval(function () {
+						autoSave();
+						keycont = 0;
+						EditorTimer.clearInterval(interalTimer);
+					}, 300);
+				}, 200);
+				lastKeyCode = keyCode;
+				keycont++;
+				if (keycont >= maxInputCount) {
+					autoSave();
+					keycont = 0;
+				}
 			}
 		}
 	},
 	handleKeyUp: function handleKeyUp(evt) {
-		var keyCode = evt.keyCode || evt.which;
-		if (!evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
-			// some handle
+		evt = evt || event;
+		var target = evt.target || evt.srcElement;
+		if (target.className && target.className.indexOf('editor-contenteditable-div') != -1) {
+			var keyCode = evt.keyCode || evt.which;
+			if (!evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
+				// some handle
+			}
 		}
 	},
 	handleFocus: function handleFocus(e) {
@@ -2128,14 +2138,19 @@ var Editor = React.createClass({
 		var mathField = MQ.MathField(htmlElement, config);
 		mathField.latex(latex);
 		var $htmlElement = $(htmlElement);
-
-		$htmlElement.keydown(EditorDOM.stopPropagation);
-		$htmlElement.keyup(EditorDOM.stopPropagation);
+		$htmlElement.keydown(function () {
+			mathField.focus();
+		});
+		$htmlElement.keyup(function () {
+			mathField.focus();
+		});
 		$htmlElement.mouseup(function (e) {
-			editarea.blur();
+			mathField.focus();
 			EditorDOM.stopPropagation(e);
 		});
-		$htmlElement.mousedown(EditorDOM.stopPropagation);
+		$htmlElement.mousedown(function (e) {
+			EditorDOM.stopPropagation(e);
+		});
 		$(editarea).mousedown(function (e) {
 			mathField.blur();
 		});

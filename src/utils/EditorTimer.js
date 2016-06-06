@@ -80,8 +80,8 @@ var EditorTimer = {
 				intervals[i].prototype.lastTime = intervals[i].prototype.endTime;
 			}
 		}
-		timeouts = timeouts.filter(function(ele,pos){return !ele.disabled});
-		intervals = intervals.filter(function(ele,pos){return !ele.disabled});
+		timeouts = timeouts.filter(function(ele,pos){return !ele.prototype.disabled});
+		intervals = intervals.filter(function(ele,pos){return !ele.prototype.disabled});
 	},
 	startAnimation:function(){
 		running = true;

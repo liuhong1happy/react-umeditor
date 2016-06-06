@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var EditorSelection = require('../../utils/EditorSelection');
+var EditorDOM = require('../../utils/EditorDOM');
 
 var EditorContentEditableDiv = React.createClass({
 	getInitialState:function(){
@@ -35,6 +36,7 @@ var EditorContentEditableDiv = React.createClass({
 	handleMouseDown:function(e){
 		EditorSelection.clearRange();
 		window.addEventListener("mouseup",this.handleMouseUp);
+		EditorDOM.stopPropagation(e);
 	},
 	handleMouseUp:function(e){
 		EditorSelection.createRange();
@@ -42,6 +44,7 @@ var EditorContentEditableDiv = React.createClass({
 		
 		if(this.props.onRangeChange) 
 			this.props.onRangeChange(e);
+		EditorDOM.stopPropagation(e);
 	},
 	render:function(){
 		return (<div ref="root" className="editor-contenteditable-div" 
