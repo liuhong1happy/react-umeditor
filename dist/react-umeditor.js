@@ -1362,7 +1362,10 @@ var Editor = React.createClass({
 		return {
 			"plugins": {
 				"image": {
-					"uploader": null
+					"uploader": {
+						name: "file",
+						url: "/upload"
+					}
 				}
 			}
 		};
