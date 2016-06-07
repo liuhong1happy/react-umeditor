@@ -200,6 +200,13 @@
   height: 330px;
   width: 100%;
   position: relative;
+  border: 1px solid  transparent;
+  opacity: 1;
+}
+.editor-container .image-dialog .tab-panel .image-content.drag-enter {
+  background-color: #769DD4;
+  border: 1px solid #D6E1F1;
+  opacity: 0.5;
 }
 .editor-container .image-dialog .tab-panel .image-content .image-item {
   position: relative;

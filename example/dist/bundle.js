@@ -685,47 +685,51 @@ var ImageUpload = React.createClass({
 
 	getInitialState: function getInitialState() {
 		return {
-			images: []
+			images: [],
+			dragEnter: false
 		};
+	},
+	handleUploadFile: function handleUploadFile(file) {
+		var _self = this;
+		var images = this.state.images;
+		var mask = ReactDOM.findDOMNode(this.refs.mask);
+		Uploader.uploadFile({
+			file: file,
+			onLoad: function onLoad(e) {
+				mask.style.display = "block";
+				mask.innerHTML = "Loading...";
+			},
+			onSuccess: function onSuccess(res) {
+				mask.style.display = "block";
+				mask.innerHTML = "Load Success";
+
+				if (res && res.status == "success") {
+					images.push({
+						src: res.image_src
+					});
+					_self.setState({
+						images: images
+					});
+					if (_self.props.onChange) _self.props.onChange(0, images);
+				}
+				setTimeout(function () {
+					mask.style.display = "none";
+				}, 200);
+			},
+			onError: function onError(e) {
+				mask.style.display = "block";
+				mask.innerHTML = "Load Error";
+				setTimeout(function () {
+					mask.style.display = "none";
+				}, 200);
+			}
+		});
 	},
 	handleChange: function handleChange(e) {
 		e = e || event;
 		var target = e.target || e.srcElement;
-		var mask = ReactDOM.findDOMNode(this.refs.mask);
-		var _self = this;
-		var images = this.state.images;
 		if (target.files.length > 0) {
-			Uploader.uploadFile({
-				file: target.files[0],
-				onLoad: function onLoad(e) {
-					mask.style.display = "block";
-					mask.innerHTML = "Loading...";
-				},
-				onSuccess: function onSuccess(res) {
-					mask.style.display = "block";
-					mask.innerHTML = "Load Success";
-
-					if (res && res.status == "success") {
-						images.push({
-							src: res.image_src
-						});
-						_self.setState({
-							images: images
-						});
-						if (_self.props.onChange) _self.props.onChange(0, images);
-					}
-					setTimeout(function () {
-						mask.style.display = "none";
-					}, 200);
-				},
-				onError: function onError(e) {
-					mask.style.display = "block";
-					mask.innerHTML = "Load Error";
-					setTimeout(function () {
-						mask.style.display = "none";
-					}, 200);
-				}
-			});
+			this.handleUploadFile(target.files[0]);
 			// clear value
 			target.value = "";
 		}
@@ -749,8 +753,36 @@ var ImageUpload = React.createClass({
 		});
 		if (this.props.onChange) this.props.onChange(0, images);
 	},
+	handleDrop: function handleDrop(e) {
+		e.preventDefault();
+		var files = e.dataTransfer.files;
+		if (files.length > 0) {
+			this.handleUploadFile(files[0]);
+		}
+		this.setState({
+			dragEnter: false
+		});
+		console.log(e.type);
+	},
+	handleDragOver: function handleDragOver(e) {
+		e.preventDefault();
+		console.log(e.type);
+	},
+	handleDragEnter: function handleDragEnter(e) {
+		this.setState({
+			dragEnter: true
+		});
+		console.log(e.type);
+	},
+	handleDragLeave: function handleDragLeave(e) {
+		this.setState({
+			dragEnter: false
+		});
+		console.log(e.type);
+	},
 	render: function render() {
 		var images = this.state.images;
+		var dragEnter = this.state.dragEnter;
 		var handleRemoveImage = this.handleRemoveImage;
 		var action = this.props.action ? this.props.action : "/upload";
 		var showStyle = {
@@ -759,13 +791,19 @@ var ImageUpload = React.createClass({
 		var hideStyle = {
 			"display": "none"
 		};
+
 		var hasImages = images.length > 0;
 		return React.createElement(
 			'div',
 			{ className: 'tab-panel' },
 			React.createElement(
 				'div',
-				{ className: 'image-content' },
+				{ className: "image-content" + (dragEnter ? " drag-enter" : ""), onDrop: this.handleDrop,
+					onDragOver: this.handleDragOver,
+					onDragEnter: this.handleDragEnter,
+					onDragLeave: this.handleDragLeave,
+					onDragEnd: this.handleDragLeave,
+					onDragStart: this.handleDragEnter },
 				images.map(function (ele, pos) {
 					return React.createElement(
 						'div',
@@ -1518,9 +1556,11 @@ var EditorSelection = {
 	selection: null,
 	storedRange: false,
 	getSelection: function getSelection() {
+		console.log("EditorSelection-getSelection");
 		if (window.getSelection) return window.getSelection();else if (document.getSelection) return document.getSelection();else if (document.selection) return document.selection.createRange();else return null;
 	},
 	addRange: function addRange() {
+		console.log("EditorSelection-addRange");
 		if (this.storedRange) return;
 		this.selection = this.getSelection();
 		this.selection.removeAllRanges();
@@ -1530,6 +1570,7 @@ var EditorSelection = {
 		}
 	},
 	createRange: function createRange() {
+		console.log("EditorSelection-createRange");
 		if (this.storedRange) return;
 		this.selection = this.getSelection();
 		if (this.selection && this.selection.rangeCount > 0) {
@@ -1539,11 +1580,13 @@ var EditorSelection = {
 		}
 	},
 	clearRange: function clearRange() {
+		console.log("EditorSelection-clearRange");
 		if (this.storedRange) return;
 		this.selection = this.getSelection();
 		this.selection.removeAllRanges();
 	},
 	getRangeState: function getRangeState() {
+		console.log("EditorSelection-getRangeState");
 		var rangeState = {};
 		// init icons state
 		var canActiveIcons = "bold italic underline strikethrough";
@@ -1596,9 +1639,11 @@ var EditorSelection = {
 		return rangeState;
 	},
 	storeRange: function storeRange() {
+		console.log("EditorSelection-storeRange");
 		this.storedRange = this.range ? this.range.cloneRange() : null;
 	},
 	restoreRange: function restoreRange() {
+		console.log("EditorSelection-restoreRange");
 		this.range = this.storedRange ? this.storedRange.cloneRange() : null;
 		this.storedRange = null;
 		this.addRange();
@@ -2138,11 +2183,13 @@ var Editor = React.createClass({
 		var mathField = MQ.MathField(htmlElement, config);
 		mathField.latex(latex);
 		var $htmlElement = $(htmlElement);
-		$htmlElement.keydown(function () {
+		$htmlElement.keydown(function (e) {
 			mathField.focus();
+			EditorDOM.stopPropagation(e);
 		});
-		$htmlElement.keyup(function () {
+		$htmlElement.keyup(function (e) {
 			mathField.focus();
+			EditorDOM.stopPropagation(e);
 		});
 		$htmlElement.mouseup(function (e) {
 			mathField.focus();
@@ -2151,8 +2198,15 @@ var Editor = React.createClass({
 		$htmlElement.mousedown(function (e) {
 			EditorDOM.stopPropagation(e);
 		});
+		$htmlElement.mousemove(function (e) {
+			EditorDOM.stopPropagation(e);
+		});
 		$(editarea).mousedown(function (e) {
 			mathField.blur();
+			EditorDOM.stopPropagation(e);
+		});
+		$(editarea).mousemove(function (e) {
+			EditorDOM.stopPropagation(e);
 		});
 	},
 	autoSave: function autoSave() {

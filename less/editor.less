@@ -206,60 +206,67 @@
 	.image-dialog{
 		.tab-panel{
 			.image-content{
-			height: 330px;
-			width: 100%;
-			position: relative;
-			.image-item{
+				height: 330px;
+				width: 100%;
 				position: relative;
-				float: left;
-				width: 120px;
-				height: 120px;
-				border: 1px solid #d8d8d8;
-				cursor: default;
-				margin: 5px 0 0 5px;
-				background-color: #ccc;
-				.image-close{
-					position: absolute;
-					right: 0;
-					background: url('images/close2.png');
-					width: 17px;
-					height: 17px;
-					cursor: pointer;
-					z-index: 1;
+				border:1px solid  transparent;
+				opacity: 1;
+				&.drag-enter{
+					background-color: #769DD4;
+					border:1px solid #D6E1F1;
+					opacity: 0.5;
 				}
-				.image-pic{
-					margin-top: 22.5px;
-					background-color: #fff;
-				}
-			}
-			.image-upload2{
-				position: relative;
-				float: left;
-				width: 120px;
-				height: 120px;
-				margin: 5px 0 0 5px;
-				.image-icon{
-					display: inline-block;
+				.image-item{
+					position: relative;
+					float: left;
 					width: 120px;
 					height: 120px;
-					background-image: url('images/upload2.png');
+					border: 1px solid #d8d8d8;
+					cursor: default;
+					margin: 5px 0 0 5px;
+					background-color: #ccc;
+					.image-close{
+						position: absolute;
+						right: 0;
+						background: url('images/close2.png');
+						width: 17px;
+						height: 17px;
+						cursor: pointer;
+						z-index: 1;
+					}
+					.image-pic{
+						margin-top: 22.5px;
+						background-color: #fff;
+					}
 				}
-				.image-form{
-					position: absolute;
-					left: 0px;
-					top: 0px;
-					width: 100%;
-					height: 100%;
-					opacity: 0;
-					cursor: pointer;
-					.image-file{
+				.image-upload2{
+					position: relative;
+					float: left;
+					width: 120px;
+					height: 120px;
+					margin: 5px 0 0 5px;
+					.image-icon{
+						display: inline-block;
+						width: 120px;
+						height: 120px;
+						background-image: url('images/upload2.png');
+					}
+					.image-form{
+						position: absolute;
+						left: 0px;
+						top: 0px;
 						width: 100%;
 						height: 100%;
-						filter: alpha(opacity=0);
+						opacity: 0;
+						cursor: pointer;
+						.image-file{
+							width: 100%;
+							height: 100%;
+							filter: alpha(opacity=0);
+						}
 					}
 				}
 			}
-		}
 			.image-dragTip{
 				position: absolute;
 				top: 50%;

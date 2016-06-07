@@ -8,18 +8,16 @@ var Uploader = require('../../utils/FileUpload');
 var ImageUpload = React.createClass({
 	getInitialState:function(){
 		return {
-			images:[]
+			images:[],
+			dragEnter:false
 		}
 	},
-	handleChange:function(e){
-		e = e || event;
-		var target = e.target || e.srcElement;
-		var mask = ReactDOM.findDOMNode(this.refs.mask);
+	handleUploadFile:function(file){
 		var _self = this;
 		var images = this.state.images;
-		if(target.files.length>0){
-			Uploader.uploadFile({
-				file:target.files[0],
+		var mask = ReactDOM.findDOMNode(this.refs.mask);
+		Uploader.uploadFile({
+				file:file,
 				onLoad:function(e){
 					mask.style.display = "block";
 					mask.innerHTML = "Loading...";
@@ -50,6 +48,12 @@ var ImageUpload = React.createClass({
 					},200)
 				}
 			});
+	},
+	handleChange:function(e){
+		e = e || event;
+		var target = e.target || e.srcElement;
+		if(target.files.length>0){
+			this.handleUploadFile(target.files[0])
 			// clear value
 			target.value = "";
 		}
@@ -74,8 +78,36 @@ var ImageUpload = React.createClass({
 		if(this.props.onChange)
 			this.props.onChange(0,images);
 	},
+	handleDrop:function(e){
+		e.preventDefault();
+		var files = e.dataTransfer.files;
+		if(files.length>0){
+			this.handleUploadFile(files[0]);
+		}
+		this.setState({
+			dragEnter:false
+		})
+		console.log(e.type);
+	},
+	handleDragOver:function(e){
+		e.preventDefault();
+		console.log(e.type);
+	},
+	handleDragEnter:function(e){
+		this.setState({
+			dragEnter:true
+		})
+		console.log(e.type);
+	},
+	handleDragLeave:function(e){
+		this.setState({
+			dragEnter:false
+		})
+		console.log(e.type);
+	},
 	render:function(){
 			var images = this.state.images;
+			var dragEnter = this.state.dragEnter;
 			var handleRemoveImage = this.handleRemoveImage;
 			var action = this.props.action?this.props.action:"/upload";
 			var showStyle = {
@@ -84,9 +116,15 @@ var ImageUpload = React.createClass({
 			var hideStyle = {
 				"display":"none"
 			}
+
 			var hasImages = images.length > 0;
 			return (<div className="tab-panel">
-						<div className="image-content">
+						<div className={"image-content" +(dragEnter?" drag-enter":"")}  onDrop={this.handleDrop} 
+									onDragOver={this.handleDragOver} 
+									onDragEnter={this.handleDragEnter} 
+									onDragLeave={this.handleDragLeave}
+									onDragEnd={this.handleDragLeave} 
+									onDragStart={this.handleDragEnter}>
 							{
 								images.map(function(ele,pos){
 									return (<div className="image-item">

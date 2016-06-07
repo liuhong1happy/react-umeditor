@@ -315,11 +315,13 @@ var Editor = React.createClass({
 		var mathField = MQ.MathField(htmlElement, config);
 		mathField.latex(latex); 
 		var $htmlElement = $(htmlElement);
-		$htmlElement.keydown(function(){
+		$htmlElement.keydown(function(e){
 			mathField.focus();
+			EditorDOM.stopPropagation(e);
 		});
-		$htmlElement.keyup(function(){
+		$htmlElement.keyup(function(e){
 			mathField.focus();
+			EditorDOM.stopPropagation(e);
 		});
 		$htmlElement.mouseup(function(e){
 			mathField.focus();
@@ -328,8 +330,15 @@ var Editor = React.createClass({
 		$htmlElement.mousedown(function(e){
 			EditorDOM.stopPropagation(e);
 		});
+		$htmlElement.mousemove(function(e){
+			EditorDOM.stopPropagation(e);
+		});
 		$(editarea).mousedown(function(e){
 			mathField.blur();
+			EditorDOM.stopPropagation(e);
+		})
+		$(editarea).mousemove(function(e){
+			EditorDOM.stopPropagation(e);
 		})
 	},
 	autoSave:function(){
