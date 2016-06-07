@@ -6,15 +6,17 @@ var {
 var EditorHistory = require('../../utils/EditorHistory');
 
 var EditorToolbar = React.createClass({
-	getInitialState:function(){
+	propTypes:{
+		icons:React.PropTypes.array
+	},
+	getDefaultProps:function(){
 		// paragraph fontfamily fontsize  emotion video map print preview drafts link unlink
 		return {
 			icons:[
 				"source | undo redo | bold italic underline strikethrough | superscript subscript | ",
 				"forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ",
 				"cleardoc  | justifyleft justifycenter justifyright | horizontal | image formula | inserttable"
-		    ],
-			selection:null
+		    ]
 		}
 	},
 	handleIconClick:function(e,state){
@@ -27,7 +29,7 @@ var EditorToolbar = React.createClass({
 		editorState.icons["undo"] = { disabled:!EditorHistory.canUndo()}
 		editorState.icons["redo"] = { disabled:!EditorHistory.canRedo()}
 		
-		var icons = this.state.icons;
+		var icons = this.props.icons;
 		var _icons = icons.join(" ").replace(/\|/gm,"separator").split(" ");
 		_icons = _icons.filter(function(ico){ return ico!=""});
 		var returnArray = [];

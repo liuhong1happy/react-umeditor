@@ -18,6 +18,8 @@ var ImageUpload = React.createClass({
 		var mask = ReactDOM.findDOMNode(this.refs.mask);
 		Uploader.uploadFile({
 				file:file,
+				filename:this.props.name,
+				url:this.props.url,
 				onLoad:function(e){
 					mask.style.display = "block";
 					mask.innerHTML = "Loading...";
@@ -229,6 +231,17 @@ var ImageDialog = React.createClass({
 			handle:function(){}
 		}
 	},
+	propTypes:{
+		uploader:React.PropTypes.object
+	},
+	getDefaultProps:function(){
+		return {
+			uploader:{
+				url:"/upload",
+				name:"file"
+			}
+		}
+	},
 	open:function(handle){
 		this.setState({
 			handle:handle
@@ -268,12 +281,13 @@ var ImageDialog = React.createClass({
 		})
 	},
 	render:function(){
+		var uploader = this.props.uploader;
 		var buttons = [
 			{ name:"btn-ok", content:"确定", onClick:this.handleOkClick},
 			{ name:"btn-cancel", content:"取消", onClick:this.close}
 		];
 		var tabs = [
-			{title:"本地上传",component:(<ImageUpload ref="image" onChange={this.handleChange}/>)},
+			{title:"本地上传",component:(<ImageUpload ref="image" onChange={this.handleChange} name={uploader.name} url={uploader.url}/>)},
 			{title:"网络图片",component:(<ImageSearch ref="image" onChange={this.handleChange}/>)},		
 		]
 		return (<Dialog ref="modal" className="image-dialog" width={700} height={508} title="图片" buttons={buttons} onClose={this.close}>

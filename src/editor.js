@@ -53,6 +53,18 @@ var Editor = React.createClass({
 			value:this.props.value
 		}
 	},
+	propTypes:{
+		"plugins":React.PropTypes.object
+	},
+	getDefaultProps:function(){
+		return {
+			"plugins":{
+				"image":{
+					"uploader":null
+				}
+			}
+		}
+	},
 	componentDidMount:function(){
 		EditorHistory.clear();
 		this.setContent(this.state.value?this.state.value:this.state.defaultValue);
@@ -395,9 +407,9 @@ var Editor = React.createClass({
 		var editArea = this.genEditArea();
 		var {onBlur,className,id,onFocus,...props} = this.props;
 		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
-				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick}>
-					<ImageDialog ref="image" />
-					<ColorDropdown ref="color"/>
+				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick} icons={this.props.icons}>
+					<ImageDialog ref="image" uploader={this.props.plugins.image.uploader} />
+					<ColorDropdown ref="color" />
 					<FormulaDropdown ref="formula"/>
 					<TablePickerDropdown ref="table" />
 				</EditorToolbar>

@@ -442,11 +442,13 @@ var EditorHistory = require('../../utils/EditorHistory');
 var EditorToolbar = React.createClass({
 	displayName: 'EditorToolbar',
 
-	getInitialState: function getInitialState() {
+	propTypes: {
+		icons: React.PropTypes.array
+	},
+	getDefaultProps: function getDefaultProps() {
 		// paragraph fontfamily fontsize  emotion video map print preview drafts link unlink
 		return {
-			icons: ["source | undo redo | bold italic underline strikethrough | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | justifyleft justifycenter justifyright | horizontal | image formula | inserttable"],
-			selection: null
+			icons: ["source | undo redo | bold italic underline strikethrough | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | justifyleft justifycenter justifyright | horizontal | image formula | inserttable"]
 		};
 	},
 	handleIconClick: function handleIconClick(e, state) {
@@ -459,7 +461,7 @@ var EditorToolbar = React.createClass({
 		editorState.icons["undo"] = { disabled: !EditorHistory.canUndo() };
 		editorState.icons["redo"] = { disabled: !EditorHistory.canRedo() };
 
-		var icons = this.state.icons;
+		var icons = this.props.icons;
 		var _icons = icons.join(" ").replace(/\|/gm, "separator").split(" ");
 		_icons = _icons.filter(function (ico) {
 			return ico != "";
@@ -714,6 +716,8 @@ var ImageUpload = React.createClass({
 		var mask = ReactDOM.findDOMNode(this.refs.mask);
 		Uploader.uploadFile({
 			file: file,
+			filename: this.props.name,
+			url: this.props.url,
 			onLoad: function onLoad(e) {
 				mask.style.display = "block";
 				mask.innerHTML = "Loading...";
@@ -962,6 +966,17 @@ var ImageDialog = React.createClass({
 			handle: function handle() {}
 		};
 	},
+	propTypes: {
+		uploader: React.PropTypes.object
+	},
+	getDefaultProps: function getDefaultProps() {
+		return {
+			uploader: {
+				url: "/upload",
+				name: "file"
+			}
+		};
+	},
 	open: function open(handle) {
 		this.setState({
 			handle: handle
@@ -1001,8 +1016,9 @@ var ImageDialog = React.createClass({
 		});
 	},
 	render: function render() {
+		var uploader = this.props.uploader;
 		var buttons = [{ name: "btn-ok", content: "确定", onClick: this.handleOkClick }, { name: "btn-cancel", content: "取消", onClick: this.close }];
-		var tabs = [{ title: "本地上传", component: React.createElement(ImageUpload, { ref: 'image', onChange: this.handleChange }) }, { title: "网络图片", component: React.createElement(ImageSearch, { ref: 'image', onChange: this.handleChange }) }];
+		var tabs = [{ title: "本地上传", component: React.createElement(ImageUpload, { ref: 'image', onChange: this.handleChange, name: uploader.name, url: uploader.url }) }, { title: "网络图片", component: React.createElement(ImageSearch, { ref: 'image', onChange: this.handleChange }) }];
 		return React.createElement(
 			Dialog,
 			{ ref: 'modal', className: 'image-dialog', width: 700, height: 508, title: '图片', buttons: buttons, onClose: this.close },
@@ -1337,6 +1353,18 @@ var Editor = React.createClass({
 			},
 			defaultValue: this.props.defaultValue ? this.props.defaultValue : "<p>This is an Editor</p>",
 			value: this.props.value
+		};
+	},
+	propTypes: {
+		"plugins": React.PropTypes.object
+	},
+	getDefaultProps: function getDefaultProps() {
+		return {
+			"plugins": {
+				"image": {
+					"uploader": null
+				}
+			}
 		};
 	},
 	componentDidMount: function componentDidMount() {
@@ -1689,8 +1717,8 @@ var Editor = React.createClass({
 			_extends({ ref: 'root', id: id, className: "editor-container editor-default" + (className ? " " + className : ""), onBlur: this.handleRangeChange, onFocus: this.handleFocus }, props),
 			React.createElement(
 				EditorToolbar,
-				{ ref: 'toolbar', editorState: this.state.editorState, onIconClick: this.handleToolbarIconClick },
-				React.createElement(ImageDialog, { ref: 'image' }),
+				{ ref: 'toolbar', editorState: this.state.editorState, onIconClick: this.handleToolbarIconClick, icons: this.props.icons },
+				React.createElement(ImageDialog, { ref: 'image', uploader: this.props.plugins.image.uploader }),
 				React.createElement(ColorDropdown, { ref: 'color' }),
 				React.createElement(FormulaDropdown, { ref: 'formula' }),
 				React.createElement(TablePickerDropdown, { ref: 'table' })
