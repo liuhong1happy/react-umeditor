@@ -30,10 +30,10 @@ You can `this.refs.editor.xxx()`! The `xxx` maybe is as follows:
 * value: value of editor
 * icons: icons of toolbar
 * plugins: settings of plugins
-		* image: settings of image dialog 
-				* uploader: settings of image uploader
-						* name:  form name of xhr
-						* url:  url of server
+	* image: settings of image dialog 
+		* uploader: settings of image uploader
+			* name:  form name of xhr
+			* url:  url of server
 
 ## Snapshot
 
