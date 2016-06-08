@@ -28,6 +28,11 @@ You can `this.refs.editor.xxx()`! The `xxx` maybe is as follows:
 * focusEditor: focus the editor
 * defaultValue: default value of editor
 * value: value of editor
+
+## Props
+
+You can set the `props`!The `props` maybe is as follows:
+
 * icons: icons of toolbar
 * plugins: settings of plugins
 	* image: settings of image dialog 
