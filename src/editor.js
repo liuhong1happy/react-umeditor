@@ -209,7 +209,23 @@ var Editor = React.createClass({
 			case "justifyleft":
 			case "justifyright":
 			case "justifycenter":
+			case "indent":
+			case "outdent":
 				EditorHistory.execCommand(state.icon,false,null);
+				break;
+			case "touppercase":
+			case "tolowercase":
+				EditorSelection.storeRange();
+				var textNodes = EditorSelection.getTextNodes();
+				for(var i=0;i<textNodes.length;i++){
+					var node = textNodes[i].childNode;
+					var start = textNodes[i].startOffset;
+					var end = textNodes[i].endOffset;
+					node.nodeValue = node.nodeValue.substring(0,start) + 
+							( state.icon=="touppercase"?node.nodeValue.substring(start,end).toUpperCase():node.nodeValue.substring(start,end).toLowerCase() ) + 
+							node.nodeValue.substring(end,node.length);
+				}
+				EditorSelection.restoreRange();
 				break;
 			case "forecolor":
 				EditorSelection.storeRange();

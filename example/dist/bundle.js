@@ -435,7 +435,7 @@ var EditorToolbar = React.createClass({
 	getDefaultProps: function getDefaultProps() {
 		// paragraph fontfamily fontsize  emotion video map print preview drafts link unlink
 		return {
-			icons: ["source | undo redo | bold italic underline strikethrough | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | justifyleft justifycenter justifyright | horizontal | image formula | inserttable"]
+			icons: ["source | undo redo | bold italic underline strikethrough | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal | image formula | inserttable"]
 		};
 	},
 	handleIconClick: function handleIconClick(e, state) {
@@ -1248,13 +1248,28 @@ var EditorIconTypes = {
 	"inserttable": {
 		title: "插入表格",
 		disabled: false
+	},
+	"touppercase": {
+		title: "转换大写",
+		disabled: false
+	},
+	"tolowercase": {
+		title: "转换小写",
+		disabled: false
+	},
+	"indent": {
+		title: "增加缩进",
+		disabled: false
+	},
+	"outdent": {
+		title: "减少缩进",
+		disabled: false
 	}
 };
 var ColorTypes = {
 	themeColors: [["#fff", "#000", "#eeece1", "#1f497d", "#4f81bd", "#c0504d", "#9bbb59", "#8064a2", "#4bacc6", "#f79646"], ["#f2f2f2", "7f7f7f", "#ddd9c3", "#c6d9f0", "#dbe5f1", "#f2dcdb", "#ebf1dd", "#e5e0ec", "#dbeef3", "#fdeada"], ["#d8d8d8", "#595959", "#c4bd97", "#8db3e2", "#b8cce4", "#e5b9b7", "#d7e3bc", "#ccc1d9", "#b7dde8", "#fbd5b5"], ["#bfbfbf", "#3f3f3f", "#938953", "#548dd4", "#95b3d7", "#d99694", "#c3d69b", "#b2a2c7", "#92cddc", "#fac08f"], ["#a5a5a5", "#262626", "#494429", "#17365d", "#366092", "#953734", "#76923c", "#5f497a", "#31859b", "#e36c09"], ["#7f7f7f", "#0c0c0c", "#1d1b10", "#0f243e", "#244061", "#632423", "#4f6128", "#3f3151", "#205867", "#974806"]],
 	standardColors: ["#c00000", "#ff0000", "#ffc000", "#ffff00", "#92d050", "#00b050", "#00b0f0", "#0070c0", "#002060", "#7030a0"]
 };
-
 var FormulaTypes = {
 	commonFormulas: [{ backgroundPosition: "-0px -0px", latex: "\\frac{ }{ }" }, { backgroundPosition: "-30px -0px", latex: "^{ }/_{ }" }, { backgroundPosition: "-60px -0px", latex: "x^{ }" }, { backgroundPosition: "-90px -0px", latex: "x_{ }" }, { backgroundPosition: "-120px -0px", latex: "x^{ }_{ }" }, { backgroundPosition: "-150px -0px", latex: "\\bar{ }" }, { backgroundPosition: "-180px -0px", latex: "\\sqrt{ }" }, { backgroundPosition: "-210px -0px", latex: "\\nthroot{ }{ }" }, { backgroundPosition: "-0px -30px", latex: "\\sum^{ }_{n=}" }, { backgroundPosition: "-60px -30px", latex: "\\log_{ }" }, { backgroundPosition: "-90px -30px", latex: "\\ln" }, { backgroundPosition: "-120px -30px", latex: "\\int_{ }^{ }" }, { backgroundPosition: "-150px -30px", latex: "\\oint_{ }^{ }" }],
 	symbolFormulas: [{ backgroundPosition: "-0px -60px", latex: "+" }, { backgroundPosition: "-30px -60px", latex: "-" }, { backgroundPosition: "-60px -60px", latex: "\\pm" }, { backgroundPosition: "-90px -60px", latex: "\\times" }, { backgroundPosition: "-120px -60px", latex: "\\ast" }, { backgroundPosition: "-150px -60px", latex: "\\div" }, { backgroundPosition: "-180px -60px", latex: "/" }, { backgroundPosition: "-210px -60px", latex: "\\bigtriangleup" }, { backgroundPosition: "-0px -90px", latex: "=" }, { backgroundPosition: "-30px -90px", latex: "\\ne" }, { backgroundPosition: "-60px -90px", latex: "\\approx" }, { backgroundPosition: "-90px -90px", latex: ">" }, { backgroundPosition: "-120px -90px", latex: "<" }, { backgroundPosition: "-150px -90px", latex: "\\ge" }, { backgroundPosition: "-180px -90px", latex: "\\le" }, { backgroundPosition: "-210px -90px", latex: "\\infty" }, { backgroundPosition: "-0px -120px", latex: "\\cap" }, { backgroundPosition: "-30px -120px", latex: "\\cup" }, { backgroundPosition: "-60px -120px", latex: "\\because" }, { backgroundPosition: "-90px -120px", latex: "\\therefore" }, { backgroundPosition: "-120px -120px", latex: "\\subset" }, { backgroundPosition: "-150px -120px", latex: "\\supset" }, { backgroundPosition: "-180px -120px", latex: "\\subseteq" }, { backgroundPosition: "-210px -120px", latex: "\\supseteq" }, { backgroundPosition: "-0px -150px", latex: "\\nsubseteq" }, { backgroundPosition: "-30px -150px", latex: "\\nsupseteq" }, { backgroundPosition: "-60px -150px", latex: "\\in" }, { backgroundPosition: "-90px -150px", latex: "\\ni" }, { backgroundPosition: "-120px -150px", latex: "\\notin" }, { backgroundPosition: "-150px -150px", latex: "\\mapsto" }, { backgroundPosition: "-180px -150px", latex: "\\leftarrow" }, { backgroundPosition: "-210px -150px", latex: "\\rightarrow" }, { backgroundPosition: "-0px -180px", latex: "\\Leftarrow" }, { backgroundPosition: "-30px -180px", latex: "\\Rightarrow" }, { backgroundPosition: "-60px -180px", latex: "\\leftrightarrow" }, { backgroundPosition: "-90px -180px", latex: "\\Leftrightarrow" }],
@@ -1567,6 +1582,14 @@ module.exports = EditorResize;
 },{"react":undefined,"react-dom":undefined}],16:[function(require,module,exports){
 "use strict";
 
+NodeList.prototype.toArray = function () {
+	var nodes = [];
+	for (var i = 0; i < this.length; i++) {
+		nodes.push(this[i]);
+	}
+	return nodes;
+};
+
 var EditorSelection = {
 	range: null,
 	selection: null,
@@ -1582,6 +1605,56 @@ var EditorSelection = {
 			this.selection.addRange(this.range.cloneRange());
 			this.range = this.range.cloneRange();
 		}
+	},
+	getTextNodes: function getTextNodes() {
+		if (this.range.collapsed) return [];
+		var parent = this.range.commonAncestorContainer;
+		var startNode = this.range.startContainer;
+		var startOffset = this.range.startOffset;
+		var endNode = this.range.endContainer;
+		var endOffset = this.range.endOffset;
+		var textNodes = [];
+
+		if (startNode === endNode && (startNode.nodeType == 3 || startNode.nodeName == "#text")) {
+			textNodes.push({
+				childNode: startNode,
+				startOffset: startOffset,
+				endOffset: endOffset
+			});
+		} else {
+			var childNodes = parent.childNodes.toArray(),
+			    i = 0;
+			while (childNodes[i]) {
+				var childNode = childNodes[i];
+				if (childNode.nodeType == 3 || childNode.nodeName == "#text") {
+					if (childNode === startNode) {
+						textNodes.push({
+							childNode: childNode,
+							startOffset: startOffset,
+							endOffset: childNode.length
+						});
+					} else if (childNode === endNode) {
+						textNodes.push({
+							childNode: childNode,
+							startOffset: 0,
+							endOffset: endOffset
+						});
+					} else {
+						textNodes.push({
+							childNode: childNode,
+							startOffset: 0,
+							endOffset: childNode.length
+						});
+					}
+				}
+				if (childNode == endNode) {
+					break;
+				}
+				childNodes = childNodes.concat(childNodes[i].childNodes.toArray());
+				i++;
+			}
+		}
+		return textNodes;
 	},
 	createRange: function createRange() {
 		if (this.storedRange) return;
@@ -2086,7 +2159,21 @@ var Editor = React.createClass({
 			case "justifyleft":
 			case "justifyright":
 			case "justifycenter":
+			case "indent":
+			case "outdent":
 				EditorHistory.execCommand(state.icon, false, null);
+				break;
+			case "touppercase":
+			case "tolowercase":
+				EditorSelection.storeRange();
+				var textNodes = EditorSelection.getTextNodes();
+				for (var i = 0; i < textNodes.length; i++) {
+					var node = textNodes[i].childNode;
+					var start = textNodes[i].startOffset;
+					var end = textNodes[i].endOffset;
+					node.nodeValue = node.nodeValue.substring(0, start) + (state.icon == "touppercase" ? node.nodeValue.substring(start, end).toUpperCase() : node.nodeValue.substring(start, end).toLowerCase()) + node.nodeValue.substring(end, node.length);
+				}
+				EditorSelection.restoreRange();
 				break;
 			case "forecolor":
 				EditorSelection.storeRange();

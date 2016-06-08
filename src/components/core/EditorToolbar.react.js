@@ -15,7 +15,7 @@ var EditorToolbar = React.createClass({
 			icons:[
 				"source | undo redo | bold italic underline strikethrough | superscript subscript | ",
 				"forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ",
-				"cleardoc  | justifyleft justifycenter justifyright | horizontal | image formula | inserttable"
+				"cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal | image formula | inserttable"
 		    ]
 		}
 	},

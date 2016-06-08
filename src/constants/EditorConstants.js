@@ -137,7 +137,23 @@ var EditorIconTypes = {
     "inserttable":{
 		title:"插入表格",
 		disabled:false
-    }
+    },
+	"touppercase":{
+		title:"转换大写",
+		disabled:false
+	},
+	"tolowercase":{
+		title:"转换小写",
+		disabled:false
+	},
+	"indent":{
+		title:"增加缩进",
+		disabled:false
+	},
+	"outdent":{
+		title:"减少缩进",
+		disabled:false
+	},
 }
 var ColorTypes = {
 	themeColors:[
@@ -150,7 +166,6 @@ var ColorTypes = {
 	],
 	standardColors:["#c00000","#ff0000","#ffc000","#ffff00","#92d050","#00b050","#00b0f0","#0070c0","#002060","#7030a0"]
 }
-
 var FormulaTypes = {
 	commonFormulas:[
 		{backgroundPosition:"-0px -0px",latex:"\\frac{ }{ }"},
