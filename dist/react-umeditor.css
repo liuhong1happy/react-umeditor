@@ -1,3 +1,6 @@
+blockquote {
+  font-size: inherit;
+}
 .editor-container {
   width: auto;
   height: auto;

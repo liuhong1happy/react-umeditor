@@ -131,6 +131,10 @@ var EditorSelection = {
 						rangeState["justifyleft"] = { active:textAlign=="left",icon:"subscript"}
 						rangeState["justifyright"] = { active:textAlign=="right",icon:"subscript"}
 						break;
+					case "BLOCKQUOTE":
+						rangeState["indent"] = { active:true,icon:"indent"}
+						rangeState["outdent"] = { active:false,icon:"indent"}
+						break;
 					
 				}
 				parentElement = parentElement.parentElement;
@@ -139,7 +143,10 @@ var EditorSelection = {
 		
 		if(!rangeState["forecolor"]) rangeState["forecolor"] = {color: 'transparent', icon:"forecolor"}
 		if(!rangeState["backcolor"]) rangeState["backcolor"] = {color: 'transparent', icon:"backcolor"}
-		
+		if(!rangeState["indent"]) {
+			rangeState["outdent"] = { active:true,icon:"indent"}
+			rangeState["indent"] = { active:false,icon:"indent"}
+		}
 		return rangeState;
 	},
 	storeRange:function(){
