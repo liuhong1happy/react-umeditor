@@ -2042,11 +2042,9 @@ var EditorSelection = {
 	selection: null,
 	storedRange: false,
 	getSelection: function getSelection() {
-		console.log("EditorSelection-getSelection");
 		if (window.getSelection) return window.getSelection();else if (document.getSelection) return document.getSelection();else if (document.selection) return document.selection.createRange();else return null;
 	},
 	addRange: function addRange() {
-		console.log("EditorSelection-addRange");
 		if (this.storedRange) return;
 		this.selection = this.getSelection();
 		this.selection.removeAllRanges();
@@ -2056,7 +2054,6 @@ var EditorSelection = {
 		}
 	},
 	createRange: function createRange() {
-		console.log("EditorSelection-createRange");
 		if (this.storedRange) return;
 		this.selection = this.getSelection();
 		if (this.selection && this.selection.rangeCount > 0) {
@@ -2066,16 +2063,14 @@ var EditorSelection = {
 		}
 	},
 	clearRange: function clearRange() {
-		console.log("EditorSelection-clearRange");
 		if (this.storedRange) return;
 		this.selection = this.getSelection();
 		this.selection.removeAllRanges();
 	},
 	getRangeState: function getRangeState() {
-		console.log("EditorSelection-getRangeState");
 		var rangeState = {};
 		// init icons state
-		var canActiveIcons = "bold italic underline strikethrough";
+		var canActiveIcons = "bold italic underline strikethrough superscript subscript justifycenter justifyleft justifyright";
 		var icons = canActiveIcons.split(" ");
 		for (var i = 0; i < icons.length; i++) {
 			rangeState[icons[i]] = { icon: icons[i], active: false };
@@ -2125,11 +2120,9 @@ var EditorSelection = {
 		return rangeState;
 	},
 	storeRange: function storeRange() {
-		console.log("EditorSelection-storeRange");
 		this.storedRange = this.range ? this.range.cloneRange() : null;
 	},
 	restoreRange: function restoreRange() {
-		console.log("EditorSelection-restoreRange");
 		this.range = this.storedRange ? this.storedRange.cloneRange() : null;
 		this.storedRange = null;
 		this.addRange();
