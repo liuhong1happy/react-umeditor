@@ -314,7 +314,7 @@ var EditorContentEditableDiv = React.createClass({
 module.exports = EditorContentEditableDiv;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/EditorDOM":14,"../../utils/EditorSelection":17,"react-dom":undefined}],5:[function(require,module,exports){
+},{"../../utils/EditorDOM":15,"../../utils/EditorSelection":18,"react-dom":undefined}],5:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -448,7 +448,7 @@ var EditorToolbar = React.createClass({
 	getDefaultProps: function getDefaultProps() {
 		// paragraph fontfamily fontsize  emotion video map print preview drafts link unlink
 		return {
-			icons: ["source | undo redo | bold italic underline strikethrough | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal | image formula | inserttable"]
+			icons: ["source | undo redo | bold italic underline strikethrough | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal | image formula spechars | inserttable"]
 		};
 	},
 	handleIconClick: function handleIconClick(e, state) {
@@ -497,7 +497,7 @@ var EditorToolbar = React.createClass({
 module.exports = EditorToolbar;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../constants/EditorConstants":12,"../../utils/EditorHistory":15,"./EditorIcon.react":5}],8:[function(require,module,exports){
+},{"../../constants/EditorConstants":13,"../../utils/EditorHistory":16,"./EditorIcon.react":5}],8:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -605,7 +605,7 @@ var ColorDropdown = React.createClass({
 module.exports = ColorDropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../constants/EditorConstants":12,"../base/Dropdown.react":2}],9:[function(require,module,exports){
+},{"../../constants/EditorConstants":13,"../base/Dropdown.react":2}],9:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -690,7 +690,7 @@ var FormulaDropdown = React.createClass({
 module.exports = FormulaDropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../constants/EditorConstants":12,"../base/Dropdown.react":2,"../base/TabGroup.react":3,"react-dom":undefined}],10:[function(require,module,exports){
+},{"../../constants/EditorConstants":13,"../base/Dropdown.react":2,"../base/TabGroup.react":3,"react-dom":undefined}],10:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1030,7 +1030,103 @@ var ImageDialog = React.createClass({
 module.exports = ImageDialog;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/FileUpload":19,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],11:[function(require,module,exports){
+},{"../../utils/FileUpload":20,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],11:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var React = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
+var ReactDOM = require('react-dom');
+
+var TabGroup = require('../base/TabGroup.react');
+var Dialog = require('../base/Dialog.react');
+
+var _require = require('../../constants/EditorConstants');
+
+var SpecialChars = _require.SpecialChars;
+
+var SCChars = React.createClass({
+	displayName: 'SCChars',
+
+	handleClick: function handleClick(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var char = target.getAttribute("data-char");
+		var id = 'char-' + new Date().valueOf();
+		if (this.props.onSelectChar) {
+			this.props.onSelectChar(e, char);
+		}
+	},
+	render: function render() {
+		var chars = this.props.chars;
+		var handleClick = this.handleClick;
+		return React.createElement(
+			'ul',
+			{ className: "special-chars " + this.props.name },
+			chars.map(function (ele, pos) {
+				return React.createElement(
+					'li',
+					{ className: 'special-char', key: pos, 'data-char': ele, onClick: handleClick },
+					ele
+				);
+			})
+		);
+	}
+});
+
+var SCDropdown = React.createClass({
+	displayName: 'SCDropdown',
+
+	getInitialState: function getInitialState() {
+		return {
+			handle: function handle() {}
+		};
+	},
+	open: function open(position, handle) {
+		this.setState({
+			handle: handle
+		});
+		this.refs.root.open(position);
+	},
+	close: function close() {
+		this.refs.root.close();
+	},
+	toggle: function toggle(position) {
+		this.refs.root.toggle(position);
+	},
+	handleSelectChar: function handleSelectChar(e, char) {
+		e = e || event;
+		if (this.state.handle) {
+			this.state.handle(e, char);
+		}
+		if (e.stopPropagation) {
+			e.stopPropagation();
+		} else {
+			e.cancelBubble = true;
+		}
+		this.close();
+	},
+	render: function render() {
+		var tabs = [];
+		for (var i = 0; i < SpecialChars.length; i++) {
+			tabs.push({
+				title: SpecialChars[i].title,
+				chars: SpecialChars[i].chars,
+				component: React.createElement(SCChars, { chars: SpecialChars[i].chars, name: 'common-chars', onSelectChar: this.handleSelectChar })
+			});
+		}
+		var buttons = [];
+		return React.createElement(
+			Dialog,
+			{ ref: 'root', className: 'special-chars-dialog', width: 700, height: 508, title: '特殊字符', buttons: buttons, onClose: this.close },
+			React.createElement(TabGroup, { tabs: tabs })
+		);
+	}
+});
+
+module.exports = SCDropdown;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../constants/EditorConstants":13,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],12:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1128,7 +1224,7 @@ var TablePickerDropdown = React.createClass({
 module.exports = TablePickerDropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../base/Dropdown.react":2}],12:[function(require,module,exports){
+},{"../base/Dropdown.react":2}],13:[function(require,module,exports){
 "use strict";
 
 var EditorIconTypes = {
@@ -1286,6 +1382,10 @@ var EditorIconTypes = {
 	"outdent": {
 		title: "减少缩进",
 		disabled: false
+	},
+	"spechars": {
+		title: "特殊符号",
+		disabled: false
 	}
 };
 var ColorTypes = {
@@ -1297,14 +1397,18 @@ var FormulaTypes = {
 	symbolFormulas: [{ backgroundPosition: "-0px -60px", latex: "+" }, { backgroundPosition: "-30px -60px", latex: "-" }, { backgroundPosition: "-60px -60px", latex: "\\pm" }, { backgroundPosition: "-90px -60px", latex: "\\times" }, { backgroundPosition: "-120px -60px", latex: "\\ast" }, { backgroundPosition: "-150px -60px", latex: "\\div" }, { backgroundPosition: "-180px -60px", latex: "/" }, { backgroundPosition: "-210px -60px", latex: "\\bigtriangleup" }, { backgroundPosition: "-0px -90px", latex: "=" }, { backgroundPosition: "-30px -90px", latex: "\\ne" }, { backgroundPosition: "-60px -90px", latex: "\\approx" }, { backgroundPosition: "-90px -90px", latex: ">" }, { backgroundPosition: "-120px -90px", latex: "<" }, { backgroundPosition: "-150px -90px", latex: "\\ge" }, { backgroundPosition: "-180px -90px", latex: "\\le" }, { backgroundPosition: "-210px -90px", latex: "\\infty" }, { backgroundPosition: "-0px -120px", latex: "\\cap" }, { backgroundPosition: "-30px -120px", latex: "\\cup" }, { backgroundPosition: "-60px -120px", latex: "\\because" }, { backgroundPosition: "-90px -120px", latex: "\\therefore" }, { backgroundPosition: "-120px -120px", latex: "\\subset" }, { backgroundPosition: "-150px -120px", latex: "\\supset" }, { backgroundPosition: "-180px -120px", latex: "\\subseteq" }, { backgroundPosition: "-210px -120px", latex: "\\supseteq" }, { backgroundPosition: "-0px -150px", latex: "\\nsubseteq" }, { backgroundPosition: "-30px -150px", latex: "\\nsupseteq" }, { backgroundPosition: "-60px -150px", latex: "\\in" }, { backgroundPosition: "-90px -150px", latex: "\\ni" }, { backgroundPosition: "-120px -150px", latex: "\\notin" }, { backgroundPosition: "-150px -150px", latex: "\\mapsto" }, { backgroundPosition: "-180px -150px", latex: "\\leftarrow" }, { backgroundPosition: "-210px -150px", latex: "\\rightarrow" }, { backgroundPosition: "-0px -180px", latex: "\\Leftarrow" }, { backgroundPosition: "-30px -180px", latex: "\\Rightarrow" }, { backgroundPosition: "-60px -180px", latex: "\\leftrightarrow" }, { backgroundPosition: "-90px -180px", latex: "\\Leftrightarrow" }],
 	arabicFormulas: [{ backgroundPosition: "-0px -210px", latex: "\\alpha" }, { backgroundPosition: "-30px -210px", latex: "\\beta" }, { backgroundPosition: "-60px -210px", latex: "\\gamma" }, { backgroundPosition: "-90px -210px", latex: "\\delta" }, { backgroundPosition: "-120px -210px", latex: "\\varepsilon" }, { backgroundPosition: "-150px -210px", latex: "\\varphi" }, { backgroundPosition: "-180px -210px", latex: "\\lambda" }, { backgroundPosition: "-210px -210px", latex: "\\mu" }, { backgroundPosition: "-0px -240px", latex: "\\rho" }, { backgroundPosition: "-30px -240px", latex: "\\sigma" }, { backgroundPosition: "-60px -240px", latex: "\\omega" }, { backgroundPosition: "-90px -240px", latex: "\\Gamma" }, { backgroundPosition: "-120px -240px", latex: "\\Delta" }, { backgroundPosition: "-150px -240px", latex: "\\Theta" }, { backgroundPosition: "-180px -240px", latex: "\\Lambda" }, { backgroundPosition: "-210px -240px", latex: "\\Xi" }, { backgroundPosition: "-0px -270px", latex: "\\Pi" }, { backgroundPosition: "-30px -270px", latex: "\\Sigma" }, { backgroundPosition: "-60px -270px", latex: "\\Upsilon" }, { backgroundPosition: "-90px -270px", latex: "\\Phi" }, { backgroundPosition: "-120px -270px", latex: "\\Psi" }, { backgroundPosition: "-150px -270px", latex: "\\Omega" }]
 };
-
+var toArray = function toArray(str) {
+	return str.split(",");
+};
+var SpecialChars = [{ name: "tsfh", title: "特殊字符", chars: toArray("、,。,·,ˉ,ˇ,¨,〃,々,—,～,‖,…,‘,’,“,”,〔,〕,〈,〉,《,》,「,」,『,』,〖,〗,【,】,±,×,÷,∶,∧,∨,∑,∏,∪,∩,∈,∷,√,⊥,∥,∠,⌒,⊙,∫,∮,≡,≌,≈,∽,∝,≠,≮,≯,≤,≥,∞,∵,∴,♂,♀,°,′,″,℃,＄,¤,￠,￡,‰,§,№,☆,★,○,●,◎,◇,◆,□,■,△,▲,※,→,←,↑,↓,〓,〡,〢,〣,〤,〥,〦,〧,〨,〩,㊣,㎎,㎏,㎜,㎝,㎞,㎡,㏄,㏎,㏑,㏒,㏕,︰,￢,￤,℡,ˊ,ˋ,˙,–,―,‥,‵,℅,℉,↖,↗,↘,↙,∕,∟,∣,≒,≦,≧,⊿,═,║,╒,╓,╔,╕,╖,╗,╘,╙,╚,╛,╜,╝,╞,╟,╠,╡,╢,╣,╤,╥,╦,╧,╨,╩,╪,╫,╬,╭,╮,╯,╰,╱,╲,╳,▁,▂,▃,▄,▅,▆,▇,�,█,▉,▊,▋,▌,▍,▎,▏,▓,▔,▕,▼,▽,◢,◣,◤,◥,☉,⊕,〒,〝,〞") }, { name: "lmsz", title: "罗马字符", chars: toArray("ⅰ,ⅱ,ⅲ,ⅳ,ⅴ,ⅵ,ⅶ,ⅷ,ⅸ,ⅹ,Ⅰ,Ⅱ,Ⅲ,Ⅳ,Ⅴ,Ⅵ,Ⅶ,Ⅷ,Ⅸ,Ⅹ,Ⅺ,Ⅻ") }, { name: "szfh", title: "数学字符", chars: toArray("⒈,⒉,⒊,⒋,⒌,⒍,⒎,⒏,⒐,⒑,⒒,⒓,⒔,⒕,⒖,⒗,⒘,⒙,⒚,⒛,⑴,⑵,⑶,⑷,⑸,⑹,⑺,⑻,⑼,⑽,⑾,⑿,⒀,⒁,⒂,⒃,⒄,⒅,⒆,⒇,①,②,③,④,⑤,⑥,⑦,⑧,⑨,⑩,㈠,㈡,㈢,㈣,㈤,㈥,㈦,㈧,㈨,㈩") }, { name: "rwfh", title: "日文字符", chars: toArray("ぁ,あ,ぃ,い,ぅ,う,ぇ,え,ぉ,お,か,が,き,ぎ,く,ぐ,け,げ,こ,ご,さ,ざ,し,じ,す,ず,せ,ぜ,そ,ぞ,た,だ,ち,ぢ,っ,つ,づ,て,で,と,ど,な,に,ぬ,ね,の,は,ば,ぱ,ひ,び,ぴ,ふ,ぶ,ぷ,へ,べ,ぺ,ほ,ぼ,ぽ,ま,み,む,め,も,ゃ,や,ゅ,ゆ,ょ,よ,ら,り,る,れ,ろ,ゎ,わ,ゐ,ゑ,を,ん,ァ,ア,ィ,イ,ゥ,ウ,ェ,エ,ォ,オ,カ,ガ,キ,ギ,ク,グ,ケ,ゲ,コ,ゴ,サ,ザ,シ,ジ,ス,ズ,セ,ゼ,ソ,ゾ,タ,ダ,チ,ヂ,ッ,ツ,ヅ,テ,デ,ト,ド,ナ,ニ,ヌ,ネ,ノ,ハ,バ,パ,ヒ,ビ,ピ,フ,ブ,プ,ヘ,ベ,ペ,ホ,ボ,ポ,マ,ミ,ム,メ,モ,ャ,ヤ,ュ,ユ,ョ,ヨ,ラ,リ,ル,レ,ロ,ヮ,ワ,ヰ,ヱ,ヲ,ン,ヴ,ヵ,ヶ") }, { name: "xlzm", title: "希腊字符", chars: toArray("Α,Β,Γ,Δ,Ε,Ζ,Η,Θ,Ι,Κ,Λ,Μ,Ν,Ξ,Ο,Π,Ρ,Σ,Τ,Υ,Φ,Χ,Ψ,Ω,α,β,γ,δ,ε,ζ,η,θ,ι,κ,λ,μ,ν,ξ,ο,π,ρ,σ,τ,υ,φ,χ,ψ,ω") }, { name: "ewzm", title: "俄文字符", chars: toArray("А,Б,В,Г,Д,Е,Ё,Ж,З,И,Й,К,Л,М,Н,О,П,Р,С,Т,У,Ф,Х,Ц,Ч,Ш,Щ,Ъ,Ы,Ь,Э,Ю,Я,а,б,в,г,д,е,ё,ж,з,и,й,к,л,м,н,о,п,р,с,т,у,ф,х,ц,ч,ш,щ,ъ,ы,ь,э,ю,я") }, { name: "pyzm", title: "拼音字母", chars: toArray("ā,á,ǎ,à,ē,é,ě,è,ī,í,ǐ,ì,ō,ó,ǒ,ò,ū,ú,ǔ,ù,ǖ,ǘ,ǚ,ǜ,ü") }, { name: "yyyb", title: "英语音标", chars: toArray("i:,i,e,æ,ʌ,ə:,ə,u:,u,ɔ:,ɔ,a:,ei,ai,ɔi,əu,au,iə,εə,uə,p,t,k,b,d,g,f,s,ʃ,θ,h,v,z,ʒ,ð,tʃ,tr,ts,dʒ,dr,dz,m,n,ŋ,l,r,w,j,") }, { name: "zyzf", title: "其它", chars: toArray("ㄅ,ㄆ,ㄇ,ㄈ,ㄉ,ㄊ,ㄋ,ㄌ,ㄍ,ㄎ,ㄏ,ㄐ,ㄑ,ㄒ,ㄓ,ㄔ,ㄕ,ㄖ,ㄗ,ㄘ,ㄙ,ㄚ,ㄛ,ㄜ,ㄝ,ㄞ,ㄟ,ㄠ,ㄡ,ㄢ,ㄣ,ㄤ,ㄥ,ㄦ,ㄧ,ㄨ") }];
 module.exports = {
 	EditorIconTypes: EditorIconTypes,
 	ColorTypes: ColorTypes,
-	FormulaTypes: FormulaTypes
+	FormulaTypes: FormulaTypes,
+	SpecialChars: SpecialChars
 };
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1329,6 +1433,7 @@ var EditorTimer = require('./utils/EditorTimer');
 var ColorDropdown = require('./components/plugins/ColorDropdown.react');
 var FormulaDropdown = require('./components/plugins/FormulaDropdown.react');
 var TablePickerDropdown = require('./components/plugins/TablePickerDropdown.react');
+var SpecialCharsDropdown = require('./components/plugins/SpecialCharsDropdown.react');
 var ImageDialog = require('./components/plugins/ImageDialog.react');
 
 // base components
@@ -1616,6 +1721,17 @@ var Editor = React.createClass({
 					handleRangeChange();
 				});
 				break;
+			case "spechars":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h + 5;
+				offsetPosition.x -= offsetPosition.w / 2;
+				this.refs.special.open(offsetPosition, function (e, char) {
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('inserthtml', false, char);
+					handleRangeChange();
+				});
+				break;
 		}
 		// setState
 		editorState.icons[state.icon] = state;
@@ -1753,7 +1869,8 @@ var Editor = React.createClass({
 				React.createElement(ImageDialog, { ref: 'image', uploader: this.props.plugins.image.uploader }),
 				React.createElement(ColorDropdown, { ref: 'color' }),
 				React.createElement(FormulaDropdown, { ref: 'formula' }),
-				React.createElement(TablePickerDropdown, { ref: 'table' })
+				React.createElement(TablePickerDropdown, { ref: 'table' }),
+				React.createElement(SpecialCharsDropdown, { ref: 'special' })
 			),
 			editArea,
 			React.createElement(EditorResize, { ref: 'resize' })
@@ -1764,7 +1881,7 @@ var Editor = React.createClass({
 module.exports = Editor;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./components/core/EditorContentEditableDiv.react":4,"./components/core/EditorTextArea.react":6,"./components/core/EditorToolbar.react":7,"./components/plugins/ColorDropdown.react":8,"./components/plugins/FormulaDropdown.react":9,"./components/plugins/ImageDialog.react":10,"./components/plugins/TablePickerDropdown.react":11,"./constants/EditorConstants":12,"./utils/EditorDOM":14,"./utils/EditorHistory":15,"./utils/EditorResize.react":16,"./utils/EditorSelection":17,"./utils/EditorTimer":18,"react-dom":undefined}],14:[function(require,module,exports){
+},{"./components/core/EditorContentEditableDiv.react":4,"./components/core/EditorTextArea.react":6,"./components/core/EditorToolbar.react":7,"./components/plugins/ColorDropdown.react":8,"./components/plugins/FormulaDropdown.react":9,"./components/plugins/ImageDialog.react":10,"./components/plugins/SpecialCharsDropdown.react":11,"./components/plugins/TablePickerDropdown.react":12,"./constants/EditorConstants":13,"./utils/EditorDOM":15,"./utils/EditorHistory":16,"./utils/EditorResize.react":17,"./utils/EditorSelection":18,"./utils/EditorTimer":19,"react-dom":undefined}],15:[function(require,module,exports){
 "use strict";
 
 var EditorDOM = {
@@ -1779,7 +1896,7 @@ var EditorDOM = {
 };
 module.exports = EditorDOM;
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 var EditorHistory = {
@@ -1834,7 +1951,7 @@ var EditorHistory = {
 };
 module.exports = EditorHistory;
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2063,7 +2180,7 @@ var EditorResize = React.createClass({
 module.exports = EditorResize;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"react-dom":undefined}],17:[function(require,module,exports){
+},{"react-dom":undefined}],18:[function(require,module,exports){
 "use strict";
 
 NodeList.prototype.toArray = function () {
@@ -2217,7 +2334,7 @@ var EditorSelection = {
 };
 module.exports = EditorSelection;
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 var INTERVAL_MS = 1000 / 60;
@@ -2338,7 +2455,7 @@ EditorTimer.animate();
 
 module.exports = EditorTimer;
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 var getError = function getError(options, xhr) {
@@ -2424,5 +2541,5 @@ module.exports = {
     uploadFiles: function uploadFiles(options) {}
 };
 
-},{}]},{},[13])(13)
+},{}]},{},[14])(14)
 });

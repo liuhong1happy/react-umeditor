@@ -417,6 +417,18 @@
   height: 0px;
   background: url("images/highlighted.gif") repeat;
 }
+.editor-container .special-chars-dialog .common-chars {
+  padding: 0px;
+}
+.editor-container .special-chars-dialog .common-chars .special-char {
+  margin: 5px 3px;
+  text-align: center;
+  display: inline-block;
+  width: 40px;
+  height: 16px;
+  line-height: 16px;
+  cursor: pointer;
+}
 .editor-container table {
   margin-bottom: 10px;
   border-collapse: collapse;

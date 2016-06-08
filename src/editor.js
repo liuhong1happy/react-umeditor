@@ -14,6 +14,7 @@ var EditorTimer = require('./utils/EditorTimer')
 var ColorDropdown = require('./components/plugins/ColorDropdown.react');
 var FormulaDropdown = require('./components/plugins/FormulaDropdown.react');
 var TablePickerDropdown = require('./components/plugins/TablePickerDropdown.react');
+var SpecialCharsDropdown = require('./components/plugins/SpecialCharsDropdown.react');
 var ImageDialog = require('./components/plugins/ImageDialog.react');
 
 // base components
@@ -303,6 +304,17 @@ var Editor = React.createClass({
 					handleRangeChange();
 				});
 				break;
+			case "spechars":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h+5;
+                offsetPosition.x -= offsetPosition.w/2;
+				this.refs.special.open(offsetPosition,function(e,char){
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('inserthtml',false,char);
+					handleRangeChange();
+				});
+				break;
 		}
 		// setState
 		editorState.icons[state.icon] = state;
@@ -431,6 +443,7 @@ var Editor = React.createClass({
 					<ColorDropdown ref="color" />
 					<FormulaDropdown ref="formula"/>
 					<TablePickerDropdown ref="table" />
+					<SpecialCharsDropdown ref="special" />
 				</EditorToolbar>
 				{editArea}
 				<EditorResize ref="resize" />
