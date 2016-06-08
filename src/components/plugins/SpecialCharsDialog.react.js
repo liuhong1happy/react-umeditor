@@ -28,7 +28,7 @@ var SCChars = React.createClass({
 	}
 })
 
-var SCDropdown = React.createClass({
+var SpecialCharsDialog = React.createClass({
 	getInitialState:function(){
 		return {
 			handle:function(){}
@@ -75,4 +75,4 @@ var SCDropdown = React.createClass({
 	}
 })
 		
-module.exports = SCDropdown;
+module.exports = SpecialCharsDialog;

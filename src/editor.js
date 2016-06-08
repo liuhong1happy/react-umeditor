@@ -14,7 +14,7 @@ var EditorTimer = require('./utils/EditorTimer')
 var ColorDropdown = require('./components/plugins/ColorDropdown.react');
 var FormulaDropdown = require('./components/plugins/FormulaDropdown.react');
 var TablePickerDropdown = require('./components/plugins/TablePickerDropdown.react');
-var SpecialCharsDropdown = require('./components/plugins/SpecialCharsDropdown.react');
+var SpecialCharsDialog = require('./components/plugins/SpecialCharsDialog.react');
 var ImageDialog = require('./components/plugins/ImageDialog.react');
 
 // base components
@@ -443,7 +443,7 @@ var Editor = React.createClass({
 					<ColorDropdown ref="color" />
 					<FormulaDropdown ref="formula"/>
 					<TablePickerDropdown ref="table" />
-					<SpecialCharsDropdown ref="special" />
+					<SpecialCharsDialog ref="special" />
 				</EditorToolbar>
 				{editArea}
 				<EditorResize ref="resize" />

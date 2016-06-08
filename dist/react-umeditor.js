@@ -1073,8 +1073,8 @@ var SCChars = React.createClass({
 	}
 });
 
-var SCDropdown = React.createClass({
-	displayName: 'SCDropdown',
+var SpecialCharsDialog = React.createClass({
+	displayName: 'SpecialCharsDialog',
 
 	getInitialState: function getInitialState() {
 		return {
@@ -1123,7 +1123,7 @@ var SCDropdown = React.createClass({
 	}
 });
 
-module.exports = SCDropdown;
+module.exports = SpecialCharsDialog;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":13,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],12:[function(require,module,exports){
@@ -1433,7 +1433,7 @@ var EditorTimer = require('./utils/EditorTimer');
 var ColorDropdown = require('./components/plugins/ColorDropdown.react');
 var FormulaDropdown = require('./components/plugins/FormulaDropdown.react');
 var TablePickerDropdown = require('./components/plugins/TablePickerDropdown.react');
-var SpecialCharsDropdown = require('./components/plugins/SpecialCharsDropdown.react');
+var SpecialCharsDialog = require('./components/plugins/SpecialCharsDialog.react');
 var ImageDialog = require('./components/plugins/ImageDialog.react');
 
 // base components
@@ -1870,7 +1870,7 @@ var Editor = React.createClass({
 				React.createElement(ColorDropdown, { ref: 'color' }),
 				React.createElement(FormulaDropdown, { ref: 'formula' }),
 				React.createElement(TablePickerDropdown, { ref: 'table' }),
-				React.createElement(SpecialCharsDropdown, { ref: 'special' })
+				React.createElement(SpecialCharsDialog, { ref: 'special' })
 			),
 			editArea,
 			React.createElement(EditorResize, { ref: 'resize' })
@@ -1881,7 +1881,7 @@ var Editor = React.createClass({
 module.exports = Editor;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./components/core/EditorContentEditableDiv.react":4,"./components/core/EditorTextArea.react":6,"./components/core/EditorToolbar.react":7,"./components/plugins/ColorDropdown.react":8,"./components/plugins/FormulaDropdown.react":9,"./components/plugins/ImageDialog.react":10,"./components/plugins/SpecialCharsDropdown.react":11,"./components/plugins/TablePickerDropdown.react":12,"./constants/EditorConstants":13,"./utils/EditorDOM":15,"./utils/EditorHistory":16,"./utils/EditorResize.react":17,"./utils/EditorSelection":18,"./utils/EditorTimer":19,"react-dom":undefined}],15:[function(require,module,exports){
+},{"./components/core/EditorContentEditableDiv.react":4,"./components/core/EditorTextArea.react":6,"./components/core/EditorToolbar.react":7,"./components/plugins/ColorDropdown.react":8,"./components/plugins/FormulaDropdown.react":9,"./components/plugins/ImageDialog.react":10,"./components/plugins/SpecialCharsDialog.react":11,"./components/plugins/TablePickerDropdown.react":12,"./constants/EditorConstants":13,"./utils/EditorDOM":15,"./utils/EditorHistory":16,"./utils/EditorResize.react":17,"./utils/EditorSelection":18,"./utils/EditorTimer":19,"react-dom":undefined}],15:[function(require,module,exports){
 "use strict";
 
 var EditorDOM = {
