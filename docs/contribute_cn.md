@@ -1,10 +1,10 @@
-[中文](contribute_cn.md)
+[英文](contribute_en.md)
 
-This document will help you Implement the plugin of the editor. OK,let's go!
+本文将会帮助你自定义实现编辑器的`插件`，让我们开始吧！
 
-## Implement two plugin `indent` and `outdent`
+## 实现插件 `indent`(增加缩进) 和 `outdent`(减少缩进)
 
-1. Please change the file `constants\EditorConstants.js`, add content as follow:
+1.请修改文件 `constants\EditorConstants.js`,添加如下内容:
 
         var EditorIconTypes = {
             \\...
@@ -19,7 +19,7 @@ This document will help you Implement the plugin of the editor. OK,let's go!
             \\...
         }
         
-2. we have the icon's constant, so we have the toolbar to show. Please change the file  `components/core/EditorToolbar`,add content as follow:
+2. 我们有了控件的常量描述, 我们要让其显示在工具栏上. 请修改文件  `components/core/EditorToolbar`,添加如下内容:
 
         var EditorToolbar = React.createClass({
             //...
@@ -35,7 +35,7 @@ This document will help you Implement the plugin of the editor. OK,let's go!
             //...
         }
         
-3. When we click the icon,we can do some action. Open the file `editor.js`,we are writing  the implementation code:
+3.当我们点击工具栏上的图标,我们需要其响应相应的动作. 打开文件 `editor.js`,我们写入如下的实现代码:
 
         var Editor = React.createClass({
             //...
@@ -52,14 +52,13 @@ This document will help you Implement the plugin of the editor. OK,let's go!
             }
             //..
         }
+是的，就是如此简单。我们已经实现了插件的全部功能。
 
-Yes! It is just that simple.We had implemented the function.
+## 实现插件 `spechars`(添加特殊字符)
 
-## Implement a plugin `spechars`
-
- It is so simple that we implement two plugin `indent` and `outdent`.But, This time,we implement a plugin `spechars`.The plugin contains a dialog and the dialog's stylesheet.
+我们添加了 `indent` 和 `outdent`插件，可以看出是多么的简单.但是，这一次我们将添加插件 `spechars`.该插件包含一个弹出框和弹出框的样式。
  
- 1. OK,we do same things!
+ 1. 当然，这一次我们还是做相应的事情。
  
         `constants\EditorConstants.js`
  
@@ -119,11 +118,11 @@ Yes! It is just that simple.We had implemented the function.
             //..
         }
         
-2. we next job is implementing the dialog:
+2. 我们接下来的工作就是添加弹出框。
 
-    Create a new file in `components/plugins/SpecialCharsDialog.react.js`.
+    在目录下添加文件 `components/plugins/SpecialCharsDialog.react.js`.
 
-    Write content as follow:
+    写入如下内容:
 
         var React = require('react');
         var ReactDOM =  require('react-dom');
@@ -205,7 +204,7 @@ Yes! It is just that simple.We had implemented the function.
         module.exports = SpecialCharsDialog;
 
 
-3. There is a constant `SpecialChars`. The constant's implement as follow:
+3. 这里提到了常量 `SpecialChars`. 如下实现这个常量:
 
         `constants\EditorConstants.js`
         
@@ -230,7 +229,7 @@ Yes! It is just that simple.We had implemented the function.
             SpecialChars:SpecialChars
         }
         
-4. Of course! We must create the stylesheet of the dialog:
+4. 当然，我们还要实现弹出框的样式。
 
         `less/editor.less`
     
