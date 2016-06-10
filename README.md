@@ -42,7 +42,7 @@ You can set the `props`!The `props` maybe is as follows:
 
 ## Snapshot
 
-![](snapshot/editor.png)
+![snapshot](https://github.com/liuhong1happy/react-umeditor/blob/master/snapshot/editor.png)
 
 ## Develop
 
@@ -52,3 +52,9 @@ You can set the `props`!The `props` maybe is as follows:
 	npm run build
 
 open the file `example/dist/index.html`
+
+## Contribute
+
+Changes and improvements are more than welcome! Feel free to fork and open a pull request. Please make your changes in a specific branch and request to pull into master! If you can, please make sure the editor fully works before sending the PR, as that will help speed up the process.
+
+See more [document](https://github.com/liuhong1happy/react-umeditor/blob/master/docs/contribute.md)
