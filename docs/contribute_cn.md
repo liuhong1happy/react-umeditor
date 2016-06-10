@@ -4,7 +4,7 @@
 
 ## 实现插件 `indent`(增加缩进) 和 `outdent`(减少缩进)
 
-1.请修改文件 `constants\EditorConstants.js`,添加如下内容:
+1. 请修改文件 `constants\EditorConstants.js`,添加如下内容:
 
         var EditorIconTypes = {
             \\...
@@ -35,7 +35,7 @@
             //...
         }
         
-3.当我们点击工具栏上的图标,我们需要其响应相应的动作. 打开文件 `editor.js`,我们写入如下的实现代码:
+3. 当我们点击工具栏上的图标,我们需要其响应相应的动作. 打开文件 `editor.js`,我们写入如下的实现代码:
 
         var Editor = React.createClass({
             //...
