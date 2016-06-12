@@ -198,6 +198,7 @@ var Editor = React.createClass({
 				EditorHistory.redo();
 				break;
 			case "removeformat":
+                EditorHistory.execCommand(state.icon,false,null);
 				EditorSelection.storeRange();
 				var spanNodes = EditorSelection.getSpanNodes();
 				for(var i=0;i<spanNodes.length;i++){
@@ -208,14 +209,12 @@ var Editor = React.createClass({
 							var nextSibling = spanNode.nextSibling;
 							
 							for(var c=0;c<spanNode.childNodes.length;c++){
-								parentNode.insertBefore(spanNode.childNodes[c],nextSibling);
+								parentNode.insertBefore(spanNode.childNodes[c].cloneNode(),nextSibling);
 							}
-							
 							parentNode.removeChild(spanNodes[i]);
 							break;
 					}
 				}
-				EditorHistory.execCommand(state.icon,false,null);
 				EditorSelection.restoreRange();
 				break;
 			case "bold":
@@ -298,14 +297,14 @@ var Editor = React.createClass({
 					var spanNode = spanNodes[i];
 					var parentNode = spanNodes[i].parentNode;
 					
-					if(EditorDOM.isNullOfTextNode(spanNode.nextSibing)){
+					if(EditorDOM.isNullOfTextNode(spanNode.nextSibling)){
 						// 移除空元素
-						parentNode.removeChild(spanNode.nextSibing);
+						parentNode.removeChild(spanNode.nextSibling);
 					}
 					if(spanNode.nextSibling===spanNodes[i+1]){
 						var nextSiblingChildNodes = spanNodes[i+1].childNodes;
 						for(var c=0;c<nextSiblingChildNodes.length;c++){
-							spanNode.appendChild(nextSiblingChildNodes[c]);
+							spanNode.appendChild(nextSiblingChildNodes[c].cloneNode());
 						}
 						// 移除老元素
 						parentNode.removeChild(spanNodes[i+1]);

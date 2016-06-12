@@ -1747,9 +1747,9 @@ var EditorSelection = {
 			});
 		} else {
 			var childNodes = parent.childNodes.toArray(),
-			    i = 0;
-			while (childNodes[i]) {
-				var childNode = childNodes[i];
+			    startFlag = false;
+			var childNode = childNodes.shift();
+			while (childNode) {
 				if (EditorDOM.isTextNode(childNode)) {
 					if (childNode === startNode) {
 						textNodes.push({
@@ -1757,6 +1757,7 @@ var EditorSelection = {
 							startOffset: startOffset,
 							endOffset: childNode.length
 						});
+						startFlag = true;
 					} else if (childNode === endNode) {
 						textNodes.push({
 							childNode: childNode,
@@ -1764,7 +1765,6 @@ var EditorSelection = {
 							endOffset: endOffset
 						});
 					} else if (textNodes.length > 0) {
-
 						textNodes.push({
 							childNode: childNode,
 							startOffset: 0,
@@ -1775,8 +1775,10 @@ var EditorSelection = {
 				if (childNode == endNode) {
 					break;
 				}
-				childNodes = childNodes.concat(childNodes[i].childNodes.toArray());
-				i++;
+				var newChildNodes = childNode.childNodes.toArray();
+
+				childNodes = newChildNodes.concat(childNodes);
+				childNode = childNodes.shift();
 			}
 		}
 		return textNodes;
@@ -1794,8 +1796,8 @@ var EditorSelection = {
 			var childNodes = parent.childNodes.toArray(),
 			    i = 0,
 			    startFlag = false;
-			while (childNodes[i]) {
-				var childNode = childNodes[i];
+			var childNode = childNodes.shift();
+			while (childNode) {
 				if (childNode === startNode) {
 					startFlag = true;
 					if (EditorDOM.isSpanNode(childNode.parentNode)) {
@@ -1808,8 +1810,10 @@ var EditorSelection = {
 				if (childNode == endNode) {
 					break;
 				}
-				childNodes = childNodes.concat(childNodes[i].childNodes.toArray());
-				i++;
+				var newChildNodes = childNode.childNodes.toArray();
+
+				childNodes = newChildNodes.concat(childNodes);
+				childNode = childNodes.shift();
 			}
 		}
 		return spanNodes;
@@ -2329,6 +2333,7 @@ var Editor = React.createClass({
 				EditorHistory.redo();
 				break;
 			case "removeformat":
+				EditorHistory.execCommand(state.icon, false, null);
 				EditorSelection.storeRange();
 				var spanNodes = EditorSelection.getSpanNodes();
 				for (var i = 0; i < spanNodes.length; i++) {
@@ -2339,14 +2344,12 @@ var Editor = React.createClass({
 							var nextSibling = spanNode.nextSibling;
 
 							for (var c = 0; c < spanNode.childNodes.length; c++) {
-								parentNode.insertBefore(spanNode.childNodes[c], nextSibling);
+								parentNode.insertBefore(spanNode.childNodes[c].cloneNode(), nextSibling);
 							}
-
 							parentNode.removeChild(spanNodes[i]);
 							break;
 					}
 				}
-				EditorHistory.execCommand(state.icon, false, null);
 				EditorSelection.restoreRange();
 				break;
 			case "bold":
@@ -2430,14 +2433,14 @@ var Editor = React.createClass({
 					var spanNode = spanNodes[i];
 					var parentNode = spanNodes[i].parentNode;
 
-					if (EditorDOM.isNullOfTextNode(spanNode.nextSibing)) {
+					if (EditorDOM.isNullOfTextNode(spanNode.nextSibling)) {
 						// 移除空元素
-						parentNode.removeChild(spanNode.nextSibing);
+						parentNode.removeChild(spanNode.nextSibling);
 					}
 					if (spanNode.nextSibling === spanNodes[i + 1]) {
 						var nextSiblingChildNodes = spanNodes[i + 1].childNodes;
 						for (var c = 0; c < nextSiblingChildNodes.length; c++) {
-							spanNode.appendChild(nextSiblingChildNodes[c]);
+							spanNode.appendChild(nextSiblingChildNodes[c].cloneNode());
 						}
 						// 移除老元素
 						parentNode.removeChild(spanNodes[i + 1]);
