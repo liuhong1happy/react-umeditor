@@ -157,6 +157,10 @@ var EditorIconTypes = {
 	"spechars":{
 		title:"特殊符号",
 		disabled:false
+	},
+	"fontborder":{
+		title:"字体边框",
+		disabled:false
 	}
 }
 var ColorTypes = {

@@ -1,3 +1,5 @@
+var EditorDOM = require('./EditorDOM');
+
 NodeList.prototype.toArray = function(){
 	var nodes = [];
 	for(var i=0;i<this.length;i++){
@@ -16,7 +18,7 @@ var EditorSelection = {
 		else if(document.selection) return document.selection.createRange();
 		else return null;
 	},
-	addRange:function(){
+	cloneRange:function(){ // cloneRange
 		if(this.storedRange) return;
 		this.selection = this.getSelection();
 		this.selection.removeAllRanges();
@@ -34,7 +36,7 @@ var EditorSelection = {
 		var endOffset = this.range.endOffset;
 		var textNodes = [];
 
-		if(startNode===endNode && (startNode.nodeType==3 || startNode.nodeName=="#text")){
+		if(startNode===endNode && EditorDOM.isTextNode(startNode)){
 			textNodes.push({
 				childNode:startNode,
 				startOffset:startOffset,
@@ -45,7 +47,7 @@ var EditorSelection = {
 			var childNodes = parent.childNodes.toArray(),i=0;
 			while(childNodes[i]){
 				var childNode = childNodes[i];
-				if(childNode.nodeType==3 || childNode.nodeName=="#text"){
+				if(EditorDOM.isTextNode(childNode)){
 					if(childNode===startNode){
 						textNodes.push({
 							childNode:childNode,
@@ -59,7 +61,8 @@ var EditorSelection = {
 							startOffset:0,
 							endOffset:endOffset
 						})
-					}else{
+					}else if(textNodes.length>0){
+						
 						textNodes.push({
 							childNode:childNode,
 							startOffset:0,
@@ -75,6 +78,53 @@ var EditorSelection = {
 			}
 		}
 		return textNodes;
+	},
+	getSpanNodes:function(){
+		if(this.range.collapsed) return [];
+		var parent = this.range.commonAncestorContainer;
+		var startNode = this.range.startContainer;
+		var endNode = this.range.endContainer;
+		var spanNodes = [];
+
+		if(startNode===endNode && EditorDOM.isSpanNode(startNode)){
+			spanNodes.push(startNode)
+		}
+		else{
+			var childNodes = parent.childNodes.toArray(),i=0,startFlag = false;
+			while(childNodes[i]){
+				var childNode = childNodes[i];
+				if(childNode===startNode){
+					startFlag = true;
+					if(EditorDOM.isSpanNode(childNode.parentNode)){
+						spanNodes.push(childNode.parentNode)
+					}
+				}
+				if(EditorDOM.isSpanNode(childNode) && startFlag){
+					spanNodes.push(childNode)
+				}
+				if(childNode==endNode){
+					break;
+				}
+				childNodes = childNodes.concat(childNodes[i].childNodes.toArray());
+				i++;
+			}
+		}
+		return spanNodes;
+	},
+	getCommonAncestor:function(){
+		if(this.range.collapsed) return null;
+		var parent = this.range.commonAncestorContainer;
+		return parent;
+	},
+	addRange:function(startContainer,startOffset,endContainer,endOffset){  // addRange
+		this.selection = this.getSelection();
+		this.selection.removeAllRanges();
+		if(this.selection && this.range){
+			this.range.setStart(startContainer,startOffset);
+			this.range.setEnd(endContainer,endOffset);
+			this.selection.addRange(this.range.cloneRange());
+			this.range = this.range.cloneRange();
+		}
 	},
 	createRange:function(){
 		if(this.storedRange) return;
@@ -155,7 +205,7 @@ var EditorSelection = {
 	restoreRange:function(){
 		this.range = this.storedRange?this.storedRange.cloneRange():null;
 		this.storedRange = null;
-		this.addRange();
+		this.cloneRange();
 	}
 }
 module.exports = EditorSelection;

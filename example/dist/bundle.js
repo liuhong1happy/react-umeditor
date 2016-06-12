@@ -265,10 +265,10 @@ var EditorContentEditableDiv = React.createClass({
 		window.addEventListener("mousedown", this.handleWindowMouseDown);
 	},
 	componentWillUpdate: function componentWillUpdate(e) {
-		EditorSelection.addRange();
+		EditorSelection.cloneRange();
 	},
 	componentDidUpdate: function componentDidUpdate(e) {
-		EditorSelection.addRange();
+		EditorSelection.cloneRange();
 	},
 	getContent: function getContent() {
 		var target = ReactDOM.findDOMNode(this.refs.root);
@@ -435,7 +435,7 @@ var EditorToolbar = React.createClass({
 	getDefaultProps: function getDefaultProps() {
 		// paragraph fontfamily fontsize  emotion video map print preview drafts link unlink
 		return {
-			icons: ["source | undo redo | bold italic underline strikethrough | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal | image formula spechars | inserttable"]
+			icons: ["source | undo redo | bold italic underline strikethrough fontborder | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal | image formula spechars | inserttable"]
 		};
 	},
 	handleIconClick: function handleIconClick(e, state) {
@@ -1362,6 +1362,10 @@ var EditorIconTypes = {
 	"spechars": {
 		title: "特殊符号",
 		disabled: false
+	},
+	"fontborder": {
+		title: "字体边框",
+		disabled: false
 	}
 };
 var ColorTypes = {
@@ -1394,6 +1398,21 @@ var EditorDOM = {
 			e.stopPropagation();
 		} else {
 			e.cancelBubble = true;
+		}
+	},
+	isTextNode: function isTextNode(node) {
+		if (!node) return false;
+		return node.nodeType == 3 || node.nodeName == "#text";
+	},
+	isSpanNode: function isSpanNode(node) {
+		if (!node) return false;
+		return node.nodeType == 1 && node.nodeName == "SPAN";
+	},
+	isNullOfTextNode: function isNullOfTextNode(node) {
+		if (this.isTextNode(node)) {
+			return node.nodeValue == "";
+		} else {
+			return false;
 		}
 	}
 };
@@ -1684,6 +1703,8 @@ module.exports = EditorResize;
 },{"react":undefined,"react-dom":undefined}],17:[function(require,module,exports){
 "use strict";
 
+var EditorDOM = require('./EditorDOM');
+
 NodeList.prototype.toArray = function () {
 	var nodes = [];
 	for (var i = 0; i < this.length; i++) {
@@ -1699,7 +1720,8 @@ var EditorSelection = {
 	getSelection: function getSelection() {
 		if (window.getSelection) return window.getSelection();else if (document.getSelection) return document.getSelection();else if (document.selection) return document.selection.createRange();else return null;
 	},
-	addRange: function addRange() {
+	cloneRange: function cloneRange() {
+		// cloneRange
 		if (this.storedRange) return;
 		this.selection = this.getSelection();
 		this.selection.removeAllRanges();
@@ -1717,7 +1739,7 @@ var EditorSelection = {
 		var endOffset = this.range.endOffset;
 		var textNodes = [];
 
-		if (startNode === endNode && (startNode.nodeType == 3 || startNode.nodeName == "#text")) {
+		if (startNode === endNode && EditorDOM.isTextNode(startNode)) {
 			textNodes.push({
 				childNode: startNode,
 				startOffset: startOffset,
@@ -1728,7 +1750,7 @@ var EditorSelection = {
 			    i = 0;
 			while (childNodes[i]) {
 				var childNode = childNodes[i];
-				if (childNode.nodeType == 3 || childNode.nodeName == "#text") {
+				if (EditorDOM.isTextNode(childNode)) {
 					if (childNode === startNode) {
 						textNodes.push({
 							childNode: childNode,
@@ -1741,7 +1763,8 @@ var EditorSelection = {
 							startOffset: 0,
 							endOffset: endOffset
 						});
-					} else {
+					} else if (textNodes.length > 0) {
+
 						textNodes.push({
 							childNode: childNode,
 							startOffset: 0,
@@ -1757,6 +1780,55 @@ var EditorSelection = {
 			}
 		}
 		return textNodes;
+	},
+	getSpanNodes: function getSpanNodes() {
+		if (this.range.collapsed) return [];
+		var parent = this.range.commonAncestorContainer;
+		var startNode = this.range.startContainer;
+		var endNode = this.range.endContainer;
+		var spanNodes = [];
+
+		if (startNode === endNode && EditorDOM.isSpanNode(startNode)) {
+			spanNodes.push(startNode);
+		} else {
+			var childNodes = parent.childNodes.toArray(),
+			    i = 0,
+			    startFlag = false;
+			while (childNodes[i]) {
+				var childNode = childNodes[i];
+				if (childNode === startNode) {
+					startFlag = true;
+					if (EditorDOM.isSpanNode(childNode.parentNode)) {
+						spanNodes.push(childNode.parentNode);
+					}
+				}
+				if (EditorDOM.isSpanNode(childNode) && startFlag) {
+					spanNodes.push(childNode);
+				}
+				if (childNode == endNode) {
+					break;
+				}
+				childNodes = childNodes.concat(childNodes[i].childNodes.toArray());
+				i++;
+			}
+		}
+		return spanNodes;
+	},
+	getCommonAncestor: function getCommonAncestor() {
+		if (this.range.collapsed) return null;
+		var parent = this.range.commonAncestorContainer;
+		return parent;
+	},
+	addRange: function addRange(startContainer, startOffset, endContainer, endOffset) {
+		// addRange
+		this.selection = this.getSelection();
+		this.selection.removeAllRanges();
+		if (this.selection && this.range) {
+			this.range.setStart(startContainer, startOffset);
+			this.range.setEnd(endContainer, endOffset);
+			this.selection.addRange(this.range.cloneRange());
+			this.range = this.range.cloneRange();
+		}
 	},
 	createRange: function createRange() {
 		if (this.storedRange) return;
@@ -1837,12 +1909,12 @@ var EditorSelection = {
 	restoreRange: function restoreRange() {
 		this.range = this.storedRange ? this.storedRange.cloneRange() : null;
 		this.storedRange = null;
-		this.addRange();
+		this.cloneRange();
 	}
 };
 module.exports = EditorSelection;
 
-},{}],18:[function(require,module,exports){
+},{"./EditorDOM":14}],18:[function(require,module,exports){
 "use strict";
 
 var INTERVAL_MS = 1000 / 60;
@@ -2243,7 +2315,7 @@ var Editor = React.createClass({
 		var handleRangeChange = this.handleRangeChange;
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var editorState = this.state.editorState;
-		EditorSelection.addRange();
+		EditorSelection.cloneRange();
 		switch (state.icon) {
 			case "source":
 				editorState.showHtml = !editorState.showHtml;
@@ -2256,13 +2328,33 @@ var Editor = React.createClass({
 			case "redo":
 				EditorHistory.redo();
 				break;
+			case "removeformat":
+				EditorSelection.storeRange();
+				var spanNodes = EditorSelection.getSpanNodes();
+				for (var i = 0; i < spanNodes.length; i++) {
+					switch (spanNodes[i].className) {
+						case "font-border":
+							var spanNode = spanNodes[i];
+							var parentNode = spanNode.parentNode;
+							var nextSibling = spanNode.nextSibling;
+
+							for (var c = 0; c < spanNode.childNodes.length; c++) {
+								parentNode.insertBefore(spanNode.childNodes[c], nextSibling);
+							}
+
+							parentNode.removeChild(spanNodes[i]);
+							break;
+					}
+				}
+				EditorHistory.execCommand(state.icon, false, null);
+				EditorSelection.restoreRange();
+				break;
 			case "bold":
 			case "italic":
 			case "underline":
 			case "strikethrough":
 			case "subscript":
 			case "superscript":
-			case "removeformat":
 			case "insertorderedlist":
 			case "insertunorderedlist":
 			case "selectall":
@@ -2283,7 +2375,77 @@ var Editor = React.createClass({
 					var end = textNodes[i].endOffset;
 					node.nodeValue = node.nodeValue.substring(0, start) + (state.icon == "touppercase" ? node.nodeValue.substring(start, end).toUpperCase() : node.nodeValue.substring(start, end).toLowerCase()) + node.nodeValue.substring(end, node.length);
 				}
+				EditorHistory.execCommand(state.icon, false, null);
 				EditorSelection.restoreRange();
+				break;
+			case "fontborder":
+				var textNodes = EditorSelection.getTextNodes();
+				var startNode = null,
+				    endNode = null,
+				    startOffset = 0,
+				    endOffset = 0;
+				for (var i = 0; i < textNodes.length; i++) {
+					// 获取
+					var node = textNodes[i].childNode;
+					var start = textNodes[i].startOffset;
+					var end = textNodes[i].endOffset;
+					// 拷贝
+					var cloneNode = node.cloneNode();
+					var startText = cloneNode.nodeValue.substring(0, start);
+					var endText = cloneNode.nodeValue.substring(end, cloneNode.length);
+					var borderText = cloneNode.nodeValue.substring(start, end);
+					var span = null;
+					var textParentNode = textNodes[i].childNode.parentNode;
+					if (textParentNode && textParentNode.className && textParentNode.className == "font-border") {
+						if (i == 0) {
+							startNode = textNodes[i].childNode;
+							startOffset = start;
+						}
+						if (i == textNodes.length - 1) {
+							endNode = textNodes[i].childNode;
+							endOffset = end;
+						}
+					} else {
+						// 重新赋值
+						node.nodeValue = startText;
+						span = document.createElement("span");
+						span.className = "font-border";
+						span.innerHTML = borderText;
+						span.style.border = "1px solid #000";
+						node.parentNode.insertBefore(span, node.nextSibling);
+						if (endText != "") {
+							node.parentNode.insertBefore(document.createTextNode(endText), span.nextSibling);
+						}
+						if (i == 0) startNode = span.childNodes[0];
+						if (i == textNodes.length - 1) {
+							endNode = span.childNodes[0];
+							endOffset = span.childNodes[0].length;
+						}
+					}
+				}
+				EditorSelection.addRange(startNode, startOffset, endNode, endOffset);
+				// 合并相同font-border元素
+				var spanNodes = EditorSelection.getSpanNodes();
+				for (var i = 0; i < spanNodes.length - 1; i++) {
+					var spanNode = spanNodes[i];
+					var parentNode = spanNodes[i].parentNode;
+
+					if (EditorDOM.isNullOfTextNode(spanNode.nextSibing)) {
+						// 移除空元素
+						parentNode.removeChild(spanNode.nextSibing);
+					}
+					if (spanNode.nextSibling === spanNodes[i + 1]) {
+						var nextSiblingChildNodes = spanNodes[i + 1].childNodes;
+						for (var c = 0; c < nextSiblingChildNodes.length; c++) {
+							spanNode.appendChild(nextSiblingChildNodes[c]);
+						}
+						// 移除老元素
+						parentNode.removeChild(spanNodes[i + 1]);
+						// 删除过后，重新指向
+						spanNodes[i + 1] = spanNodes[i];
+					}
+				}
+				EditorHistory.execCommand(state.icon, false, null);
 				break;
 			case "forecolor":
 				EditorSelection.storeRange();

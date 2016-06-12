@@ -13,7 +13,7 @@ var EditorToolbar = React.createClass({
 		// paragraph fontfamily fontsize  emotion video map print preview drafts link unlink
 		return {
 			icons:[
-				"source | undo redo | bold italic underline strikethrough | superscript subscript | ",
+				"source | undo redo | bold italic underline strikethrough fontborder | superscript subscript | ",
 				"forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ",
 				"cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal | image formula spechars | inserttable"
 		    ]

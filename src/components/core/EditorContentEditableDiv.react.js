@@ -13,10 +13,10 @@ var EditorContentEditableDiv = React.createClass({
 		window.addEventListener("mousedown",this.handleWindowMouseDown);
 	},
 	componentWillUpdate:function(e){
-		EditorSelection.addRange();
+		EditorSelection.cloneRange();
 	},
 	componentDidUpdate:function(e){
-		EditorSelection.addRange();
+		EditorSelection.cloneRange();
 	},
 	getContent:function(){
 		var target = ReactDOM.findDOMNode(this.refs.root);
