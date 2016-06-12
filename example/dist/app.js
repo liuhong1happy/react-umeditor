@@ -33,7 +33,7 @@ var FormPanel = React.createClass({
 	},
 	render: function render() {
 		var value = this.state.value;
-		return React.createElement('input', { type: 'text', value: value, onChange: this.handleChange });
+		return React.createElement('input', { type: 'text', value: value, onChange: this.handleChange, style: { "marginBottom": "10px" } });
 	}
 });
 

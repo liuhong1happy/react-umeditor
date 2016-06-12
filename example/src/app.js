@@ -28,7 +28,7 @@ var FormPanel = React.createClass({
 	},
 	render:function(){
 		var value = this.state.value;
-		return (<input type="text" value={value} onChange={this.handleChange}/>)
+		return (<input type="text" value={value} onChange={this.handleChange} style={{"marginBottom":"10px"}} />)
 	}
 })
 
