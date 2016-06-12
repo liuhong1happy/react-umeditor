@@ -42,7 +42,7 @@ You can set the `props`!The `props` maybe is as follows:
 
 ## Snapshot
 
-![snapshot](https://github.com/liuhong1happy/react-umeditor/blob/master/snapshot/editor.png)
+![snapshot](https://raw.githubusercontent.com/liuhong1happy/react-umeditor/cfedda64f6e19830936d323c2e4d836bb14576b2/snapshot/editor.png)
 
 ## Develop
 
