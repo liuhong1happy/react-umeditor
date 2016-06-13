@@ -399,7 +399,15 @@ blockquote {
 .editor-container .mathquill-embedded-latex {
   border: 0px;
   padding: 0px;
-  margin: 4px;
+  margin: 0px;
+}
+.editor-container .mathquill-embedded-latex .mq-root-block {
+  padding: 0px;
+  margin: 0px;
+}
+.editor-container .mathquill-embedded-latex .mq-root-block .mq-non-leaf {
+  padding: 0px;
+  margin: 0px;
 }
 .editor-container .tablepicker-dropdown .infoarea {
   height: 14px;
