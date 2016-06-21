@@ -53,6 +53,13 @@ You can set the `props`!The `props` maybe is as follows:
 
 open the file `example/dist/index.html`
 
+## Todo
+
+- [ ] paragraph fontsize fontfamily [liuhong1happy](https://github.com/liuhong1happy)
+- [ ] table-edit [wskongdesheng](https://github.com/wskongdesheng)
+- [ ] insert time date video audio etc. [liuhong1happy](https://github.com/liuhong1happy)
+
+
 ## Contribute
 
 Changes and improvements are more than welcome! Feel free to fork and open a pull request. Please make your changes in a specific branch and request to pull into master! If you can, please make sure the editor fully works before sending the PR, as that will help speed up the process.
