@@ -695,7 +695,8 @@ var ImageUpload = React.createClass({
 		var _self = this;
 		var images = this.state.images;
 		var mask = ReactDOM.findDOMNode(this.refs.mask);
-		Uploader.uploadFile({
+		var uploader = this.props.customUploader ? this.props.customUploader : Uploader;
+		uploader.uploadFile({
 			file: file,
 			filename: this.props.name,
 			url: this.props.url,
@@ -948,14 +949,16 @@ var ImageDialog = React.createClass({
 		};
 	},
 	propTypes: {
-		uploader: React.PropTypes.object
+		uploader: React.PropTypes.object,
+		customUploader: React.PropTypes.object
 	},
 	getDefaultProps: function getDefaultProps() {
 		return {
 			uploader: {
 				url: "/upload",
 				name: "file"
-			}
+			},
+			customUploader: null
 		};
 	},
 	open: function open(handle) {
@@ -2175,6 +2178,7 @@ var keycont = 0;
 * @focusEditor: 聚焦到Editor上
 * @defaultValue: 默认内容
 * @value: 编辑器的值
+* @icons: 工具条上需要显示的图标
 **/
 
 var Editor = React.createClass({
@@ -2201,7 +2205,8 @@ var Editor = React.createClass({
 					"uploader": {
 						name: "file",
 						url: "/upload"
-					}
+					},
+					"customUploader": null
 				}
 			}
 		};
@@ -2671,7 +2676,7 @@ var Editor = React.createClass({
 			React.createElement(
 				EditorToolbar,
 				{ ref: 'toolbar', editorState: this.state.editorState, onIconClick: this.handleToolbarIconClick, icons: this.props.icons },
-				React.createElement(ImageDialog, { ref: 'image', uploader: this.props.plugins.image.uploader }),
+				React.createElement(ImageDialog, { ref: 'image', uploader: this.props.plugins.image.uploader, customUploader: this.props.plugins.image.customUploader }),
 				React.createElement(ColorDropdown, { ref: 'color' }),
 				React.createElement(FormulaDropdown, { ref: 'formula' }),
 				React.createElement(TablePickerDropdown, { ref: 'table' }),

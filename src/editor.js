@@ -40,6 +40,7 @@ var keycont = 0;
 * @focusEditor: 聚焦到Editor上
 * @defaultValue: 默认内容
 * @value: 编辑器的值
+* @icons: 工具条上需要显示的图标
 **/
 
 var Editor = React.createClass({
@@ -64,7 +65,8 @@ var Editor = React.createClass({
 					"uploader":{
 						name:"file",
 						url:"/upload"
-					}
+					},
+					"customUploader":null
 				}
 			}
 		}
@@ -525,7 +527,7 @@ var Editor = React.createClass({
 		var {onBlur,className,id,onFocus,...props} = this.props;
 		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
 				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick} icons={this.props.icons}>
-					<ImageDialog ref="image" uploader={this.props.plugins.image.uploader} />
+					<ImageDialog ref="image" uploader={this.props.plugins.image.uploader} customUploader={this.props.plugins.image.customUploader}/>
 					<ColorDropdown ref="color" />
 					<FormulaDropdown ref="formula"/>
 					<TablePickerDropdown ref="table" />
