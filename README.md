@@ -39,6 +39,7 @@ You can set the `props`!The `props` maybe is as follows:
 		* uploader: settings of image uploader
 			* name:  form name of xhr
 			* url:  url of server
+		* customUploader: custom uploader
 
 ## Snapshot
 
