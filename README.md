@@ -59,6 +59,7 @@ open the file `example/dist/index.html`
 - [ ] paragraph fontsize fontfamily [liuhong1happy](https://github.com/liuhong1happy)
 - [ ] table-edit [wskongdesheng](https://github.com/wskongdesheng)
 - [ ] insert time date video audio etc. [liuhong1happy](https://github.com/liuhong1happy)
+- [ ] qiniu iamge uploader & multi image upload [liuhong1happy](https://github.com/liuhong1happy)
 
 
 ## Contribute
