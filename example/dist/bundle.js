@@ -675,7 +675,7 @@ var EmotionDialog = React.createClass({
 			var images = [];
 			var titles = SmileyInfor[key];
 			for (var i = 0; i < titles.length; i++) {
-				var index = i.toString();
+				var index = (i + 1).toString();
 				index = index.length == 1 ? "0" + index : index;
 				var image = {
 					title: titles[i],

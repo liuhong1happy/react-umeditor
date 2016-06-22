@@ -446,13 +446,13 @@ blockquote {
   margin: 5px 3px;
   text-align: center;
   display: inline-block;
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   cursor: pointer;
 }
 .editor-container .emotion-dropdwon .common-images .emotion-image img {
-  width: 40px;
-  height: 40px;
+  max-width: 35px;
+  max-height: 35px;
 }
 .editor-container table {
   margin-bottom: 10px;
