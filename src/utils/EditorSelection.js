@@ -74,7 +74,7 @@ var EditorSelection = {
 					break;
 				}
                 var newChildNodes = childNode.childNodes.toArray()
-                
+
 				childNodes = newChildNodes.concat(childNodes);
 				childNode = childNodes.shift();
 			}
@@ -108,7 +108,7 @@ var EditorSelection = {
 					break;
 				}
                 var newChildNodes = childNode.childNodes.toArray()
-                
+
 				childNodes = newChildNodes.concat(childNodes);
 				childNode = childNodes.shift();
 			}
@@ -145,7 +145,7 @@ var EditorSelection = {
 		this.selection.removeAllRanges();
 	},
 	getRangeState:function(){
-		var rangeState = {}; 
+		var rangeState = {};
 		// init icons state
 		var canActiveIcons = "bold italic underline strikethrough superscript subscript justifycenter justifyleft justifyright";
 		var icons = canActiveIcons.split(" ");
@@ -189,12 +189,13 @@ var EditorSelection = {
 						rangeState["indent"] = { active:true,icon:"indent"}
 						rangeState["outdent"] = { active:false,icon:"indent"}
 						break;
-					
+					case "TABLE":
+
 				}
 				parentElement = parentElement.parentElement;
 			}
 		}
-		
+
 		if(!rangeState["forecolor"]) rangeState["forecolor"] = {color: 'transparent', icon:"forecolor"}
 		if(!rangeState["backcolor"]) rangeState["backcolor"] = {color: 'transparent', icon:"backcolor"}
 		if(!rangeState["indent"]) {
