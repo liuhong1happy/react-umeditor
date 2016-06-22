@@ -39,6 +39,7 @@ You can set the `props`!The `props` maybe is as follows:
 		* uploader: settings of image uploader
 			* name:  form name of xhr
 			* url:  url of server
+		* customUploader: custom uploader
 
 ## Snapshot
 
@@ -58,6 +59,7 @@ open the file `example/dist/index.html`
 - [ ] paragraph fontsize fontfamily [liuhong1happy](https://github.com/liuhong1happy)
 - [ ] table-edit [wskongdesheng](https://github.com/wskongdesheng)
 - [ ] insert time date video audio etc. [liuhong1happy](https://github.com/liuhong1happy)
+- [ ] qiniu iamge uploader & multi image upload [liuhong1happy](https://github.com/liuhong1happy)
 
 
 ## Contribute
