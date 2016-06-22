@@ -439,6 +439,21 @@ blockquote {
   line-height: 16px;
   cursor: pointer;
 }
+.editor-container .emotion-dropdwon .common-images {
+  padding: 0px;
+}
+.editor-container .emotion-dropdwon .common-images .emotion-image {
+  margin: 5px 3px;
+  text-align: center;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+.editor-container .emotion-dropdwon .common-images .emotion-image img {
+  width: 40px;
+  height: 40px;
+}
 .editor-container table {
   margin-bottom: 10px;
   border-collapse: collapse;

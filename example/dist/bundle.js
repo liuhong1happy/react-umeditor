@@ -306,7 +306,7 @@ var EditorContentEditableDiv = React.createClass({
 });
 module.exports = EditorContentEditableDiv;
 
-},{"../../utils/EditorDOM":14,"../../utils/EditorSelection":17,"react":undefined,"react-dom":undefined}],5:[function(require,module,exports){
+},{"../../utils/EditorDOM":15,"../../utils/EditorSelection":18,"react":undefined,"react-dom":undefined}],5:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -433,9 +433,9 @@ var EditorToolbar = React.createClass({
 		icons: React.PropTypes.array
 	},
 	getDefaultProps: function getDefaultProps() {
-		// paragraph fontfamily fontsize  emotion video map print preview drafts link unlink
+		// paragraph fontfamily fontsize video map print preview drafts link unlink
 		return {
-			icons: ["source | undo redo | bold italic underline strikethrough fontborder | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal | image formula spechars | inserttable"]
+			icons: ["source | undo redo | bold italic underline strikethrough fontborder | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal date time  | image emotion formula spechars | inserttable"]
 		};
 	},
 	handleIconClick: function handleIconClick(e, state) {
@@ -483,7 +483,7 @@ var EditorToolbar = React.createClass({
 
 module.exports = EditorToolbar;
 
-},{"../../constants/EditorConstants":13,"../../utils/EditorHistory":15,"./EditorIcon.react":5,"react":undefined}],8:[function(require,module,exports){
+},{"../../constants/EditorConstants":14,"../../utils/EditorHistory":16,"./EditorIcon.react":5,"react":undefined}],8:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -589,7 +589,128 @@ var ColorDropdown = React.createClass({
 
 module.exports = ColorDropdown;
 
-},{"../../constants/EditorConstants":13,"../base/Dropdown.react":2,"react":undefined}],9:[function(require,module,exports){
+},{"../../constants/EditorConstants":14,"../base/Dropdown.react":2,"react":undefined}],9:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var ReactDOM = require('react-dom');
+
+var TabGroup = require('../base/TabGroup.react');
+var Dialog = require('../base/Dialog.react');
+
+var _require = require('../../constants/EditorConstants');
+
+var EmotionImages = _require.EmotionImages;
+
+var EmotionPanel = React.createClass({
+	displayName: 'EmotionPanel',
+
+	handleClick: function handleClick(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var url = target.getAttribute("data-url");
+		var title = target.getAttribute("data-title");
+
+		if (this.props.onSelectImage) {
+			this.props.onSelectImage(e, '<img src="' + url + '" title="' + title + '" />');
+		}
+	},
+	render: function render() {
+		var images = this.props.images;
+		var handleClick = this.handleClick;
+		return React.createElement(
+			'ul',
+			{ className: "emotion-images " + this.props.name },
+			images.map(function (ele, pos) {
+				return React.createElement(
+					'li',
+					{ className: 'emotion-image', key: pos, 'data-url': ele.url, 'data-title': ele.title, onClick: handleClick },
+					React.createElement('img', { src: ele.url, title: ele.title, 'data-url': ele.url, 'data-title': ele.title })
+				);
+			})
+		);
+	}
+});
+
+var EmotionDialog = React.createClass({
+	displayName: 'EmotionDialog',
+
+	getInitialState: function getInitialState() {
+		return {
+			handle: function handle() {}
+		};
+	},
+	open: function open(position, handle) {
+		this.setState({
+			handle: handle
+		});
+		this.refs.root.open(position);
+	},
+	close: function close() {
+		this.refs.root.close();
+	},
+	toggle: function toggle(position) {
+		this.refs.root.toggle(position);
+	},
+	handleSelectImage: function handleSelectImage(e, char) {
+		e = e || event;
+		if (this.state.handle) {
+			this.state.handle(e, char);
+		}
+		if (e.stopPropagation) {
+			e.stopPropagation();
+		} else {
+			e.cancelBubble = true;
+		}
+		this.close();
+	},
+	getEmotionTabs: function getEmotionTabs() {
+		var EmotionTabs = EmotionImages.EmotionTabs;
+		var BaseUrl = EmotionImages.BaseUrl;
+		var SmileyInfor = EmotionImages.SmileyInfor;
+
+		var tabs = [];
+		for (var key in EmotionTabs) {
+			var tab = { title: EmotionTabs[key].name };
+			var images = [];
+			var titles = SmileyInfor[key];
+			for (var i = 0; i < titles.length; i++) {
+				var index = i.toString();
+				index = index.length == 1 ? "0" + index : index;
+				var image = {
+					title: titles[i],
+					url: BaseUrl + EmotionTabs[key].path + EmotionTabs[key].prefix + index + ".gif?v=1.1"
+				};
+				images.push(image);
+			}
+			tab.images = images;
+			tabs.push(tab);
+		}
+		return tabs;
+	},
+	render: function render() {
+		var tabs = [];
+		var EmotionTabs = this.getEmotionTabs();
+
+		for (var i = 0; i < EmotionTabs.length; i++) {
+			tabs.push({
+				title: EmotionTabs[i].title,
+				images: EmotionTabs[i].images,
+				component: React.createElement(EmotionPanel, { images: EmotionTabs[i].images, name: 'common-images', onSelectImage: this.handleSelectImage })
+			});
+		}
+		var buttons = [];
+		return React.createElement(
+			Dialog,
+			{ ref: 'root', className: 'emotion-dropdwon', width: 700, height: 508, title: '表情', buttons: buttons, onClose: this.close },
+			React.createElement(TabGroup, { tabs: tabs })
+		);
+	}
+});
+
+module.exports = EmotionDialog;
+
+},{"../../constants/EditorConstants":14,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],10:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -672,7 +793,7 @@ var FormulaDropdown = React.createClass({
 
 module.exports = FormulaDropdown;
 
-},{"../../constants/EditorConstants":13,"../base/Dropdown.react":2,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],10:[function(require,module,exports){
+},{"../../constants/EditorConstants":14,"../base/Dropdown.react":2,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],11:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -1013,7 +1134,7 @@ var ImageDialog = React.createClass({
 
 module.exports = ImageDialog;
 
-},{"../../utils/FileUpload":19,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],11:[function(require,module,exports){
+},{"../../utils/FileUpload":20,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],12:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -1107,7 +1228,7 @@ var SpecialCharsDialog = React.createClass({
 
 module.exports = SpecialCharsDialog;
 
-},{"../../constants/EditorConstants":13,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],12:[function(require,module,exports){
+},{"../../constants/EditorConstants":14,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],13:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -1203,7 +1324,7 @@ var TablePickerDropdown = React.createClass({
 
 module.exports = TablePickerDropdown;
 
-},{"../base/Dropdown.react":2,"react":undefined}],13:[function(require,module,exports){
+},{"../base/Dropdown.react":2,"react":undefined}],14:[function(require,module,exports){
 "use strict";
 
 var EditorIconTypes = {
@@ -1369,6 +1490,14 @@ var EditorIconTypes = {
 	"fontborder": {
 		title: "字体边框",
 		disabled: false
+	},
+	"date": {
+		title: "插入日期",
+		disabled: false
+	},
+	"time": {
+		title: "插入时间",
+		disabled: false
 	}
 };
 var ColorTypes = {
@@ -1384,14 +1513,39 @@ var toArray = function toArray(str) {
 	return str.split(",");
 };
 var SpecialChars = [{ name: "tsfh", title: "特殊字符", chars: toArray("、,。,·,ˉ,ˇ,¨,〃,々,—,～,‖,…,‘,’,“,”,〔,〕,〈,〉,《,》,「,」,『,』,〖,〗,【,】,±,×,÷,∶,∧,∨,∑,∏,∪,∩,∈,∷,√,⊥,∥,∠,⌒,⊙,∫,∮,≡,≌,≈,∽,∝,≠,≮,≯,≤,≥,∞,∵,∴,♂,♀,°,′,″,℃,＄,¤,￠,￡,‰,§,№,☆,★,○,●,◎,◇,◆,□,■,△,▲,※,→,←,↑,↓,〓,〡,〢,〣,〤,〥,〦,〧,〨,〩,㊣,㎎,㎏,㎜,㎝,㎞,㎡,㏄,㏎,㏑,㏒,㏕,︰,￢,￤,℡,ˊ,ˋ,˙,–,―,‥,‵,℅,℉,↖,↗,↘,↙,∕,∟,∣,≒,≦,≧,⊿,═,║,╒,╓,╔,╕,╖,╗,╘,╙,╚,╛,╜,╝,╞,╟,╠,╡,╢,╣,╤,╥,╦,╧,╨,╩,╪,╫,╬,╭,╮,╯,╰,╱,╲,╳,▁,▂,▃,▄,▅,▆,▇,�,█,▉,▊,▋,▌,▍,▎,▏,▓,▔,▕,▼,▽,◢,◣,◤,◥,☉,⊕,〒,〝,〞") }, { name: "lmsz", title: "罗马字符", chars: toArray("ⅰ,ⅱ,ⅲ,ⅳ,ⅴ,ⅵ,ⅶ,ⅷ,ⅸ,ⅹ,Ⅰ,Ⅱ,Ⅲ,Ⅳ,Ⅴ,Ⅵ,Ⅶ,Ⅷ,Ⅸ,Ⅹ,Ⅺ,Ⅻ") }, { name: "szfh", title: "数学字符", chars: toArray("⒈,⒉,⒊,⒋,⒌,⒍,⒎,⒏,⒐,⒑,⒒,⒓,⒔,⒕,⒖,⒗,⒘,⒙,⒚,⒛,⑴,⑵,⑶,⑷,⑸,⑹,⑺,⑻,⑼,⑽,⑾,⑿,⒀,⒁,⒂,⒃,⒄,⒅,⒆,⒇,①,②,③,④,⑤,⑥,⑦,⑧,⑨,⑩,㈠,㈡,㈢,㈣,㈤,㈥,㈦,㈧,㈨,㈩") }, { name: "rwfh", title: "日文字符", chars: toArray("ぁ,あ,ぃ,い,ぅ,う,ぇ,え,ぉ,お,か,が,き,ぎ,く,ぐ,け,げ,こ,ご,さ,ざ,し,じ,す,ず,せ,ぜ,そ,ぞ,た,だ,ち,ぢ,っ,つ,づ,て,で,と,ど,な,に,ぬ,ね,の,は,ば,ぱ,ひ,び,ぴ,ふ,ぶ,ぷ,へ,べ,ぺ,ほ,ぼ,ぽ,ま,み,む,め,も,ゃ,や,ゅ,ゆ,ょ,よ,ら,り,る,れ,ろ,ゎ,わ,ゐ,ゑ,を,ん,ァ,ア,ィ,イ,ゥ,ウ,ェ,エ,ォ,オ,カ,ガ,キ,ギ,ク,グ,ケ,ゲ,コ,ゴ,サ,ザ,シ,ジ,ス,ズ,セ,ゼ,ソ,ゾ,タ,ダ,チ,ヂ,ッ,ツ,ヅ,テ,デ,ト,ド,ナ,ニ,ヌ,ネ,ノ,ハ,バ,パ,ヒ,ビ,ピ,フ,ブ,プ,ヘ,ベ,ペ,ホ,ボ,ポ,マ,ミ,ム,メ,モ,ャ,ヤ,ュ,ユ,ョ,ヨ,ラ,リ,ル,レ,ロ,ヮ,ワ,ヰ,ヱ,ヲ,ン,ヴ,ヵ,ヶ") }, { name: "xlzm", title: "希腊字符", chars: toArray("Α,Β,Γ,Δ,Ε,Ζ,Η,Θ,Ι,Κ,Λ,Μ,Ν,Ξ,Ο,Π,Ρ,Σ,Τ,Υ,Φ,Χ,Ψ,Ω,α,β,γ,δ,ε,ζ,η,θ,ι,κ,λ,μ,ν,ξ,ο,π,ρ,σ,τ,υ,φ,χ,ψ,ω") }, { name: "ewzm", title: "俄文字符", chars: toArray("А,Б,В,Г,Д,Е,Ё,Ж,З,И,Й,К,Л,М,Н,О,П,Р,С,Т,У,Ф,Х,Ц,Ч,Ш,Щ,Ъ,Ы,Ь,Э,Ю,Я,а,б,в,г,д,е,ё,ж,з,и,й,к,л,м,н,о,п,р,с,т,у,ф,х,ц,ч,ш,щ,ъ,ы,ь,э,ю,я") }, { name: "pyzm", title: "拼音字母", chars: toArray("ā,á,ǎ,à,ē,é,ě,è,ī,í,ǐ,ì,ō,ó,ǒ,ò,ū,ú,ǔ,ù,ǖ,ǘ,ǚ,ǜ,ü") }, { name: "yyyb", title: "英语音标", chars: toArray("i:,i,e,æ,ʌ,ə:,ə,u:,u,ɔ:,ɔ,a:,ei,ai,ɔi,əu,au,iə,εə,uə,p,t,k,b,d,g,f,s,ʃ,θ,h,v,z,ʒ,ð,tʃ,tr,ts,dʒ,dr,dz,m,n,ŋ,l,r,w,j,") }, { name: "zyzf", title: "其它", chars: toArray("ㄅ,ㄆ,ㄇ,ㄈ,ㄉ,ㄊ,ㄋ,ㄌ,ㄍ,ㄎ,ㄏ,ㄐ,ㄑ,ㄒ,ㄓ,ㄔ,ㄕ,ㄖ,ㄗ,ㄘ,ㄙ,ㄚ,ㄛ,ㄜ,ㄝ,ㄞ,ㄟ,ㄠ,ㄡ,ㄢ,ㄣ,ㄤ,ㄥ,ㄦ,ㄧ,ㄨ") }];
+
+var EmotionImages = {
+	DemoUrl: "http://img.baidu.com/hi/tsj/t_0001.gif",
+	BaseUrl: "http://img.baidu.com/hi/",
+	SmileyInfor: {
+		tab0: ['Kiss', 'Love', 'Yeah', '啊！', '背扭', '顶', '抖胸', '88', '汗', '瞌睡', '鲁拉', '拍砖', '揉脸', '生日快乐', '大笑', '瀑布汗~', '惊讶', '臭美', '傻笑', '抛媚眼', '发怒', '打酱油', '俯卧撑', '气愤', '?', '吻', '怒', '胜利', 'HI', 'KISS', '不说', '不要', '扯花', '大心', '顶', '大惊', '飞吻', '鬼脸', '害羞', '口水', '狂哭', '来', '发财了', '吃西瓜', '套牢', '害羞', '庆祝', '我来了', '敲打', '晕了', '胜利', '臭美', '被打了', '贪吃', '迎接', '酷', '微笑', '亲吻', '调皮', '惊恐', '耍酷', '发火', '害羞', '汗水', '大哭', '', '加油', '困', '你NB', '晕倒', '开心', '偷笑', '大哭', '滴汗', '叹气', '超赞', '??', '飞吻', '天使', '撒花', '生气', '被砸', '吓傻', '随意吐'],
+		tab1: ['Kiss', 'Love', 'Yeah', '啊！', '背扭', '顶', '抖胸', '88', '汗', '瞌睡', '鲁拉', '拍砖', '揉脸', '生日快乐', '摊手', '睡觉', '瘫坐', '无聊', '星星闪', '旋转', '也不行', '郁闷', '正Music', '抓墙', '撞墙至死', '歪头', '戳眼', '飘过', '互相拍砖', '砍死你', '扔桌子', '少林寺', '什么？', '转头', '我爱牛奶', '我踢', '摇晃', '晕厥', '在笼子里', '震荡'],
+		tab2: ['大笑', '瀑布汗~', '惊讶', '臭美', '傻笑', '抛媚眼', '发怒', '我错了', 'money', '气愤', '挑逗', '吻', '怒', '胜利', '委屈', '受伤', '说啥呢？', '闭嘴', '不', '逗你玩儿', '飞吻', '眩晕', '魔法', '我来了', '睡了', '我打', '闭嘴', '打', '打晕了', '刷牙', '爆揍', '炸弹', '倒立', '刮胡子', '邪恶的笑', '不要不要', '爱恋中', '放大仔细看', '偷窥', '超高兴', '晕', '松口气', '我跑', '享受', '修养', '哭', '汗', '啊~', '热烈欢迎', '打酱油', '俯卧撑', '?'],
+		tab3: ['HI', 'KISS', '不说', '不要', '扯花', '大心', '顶', '大惊', '飞吻', '鬼脸', '害羞', '口水', '狂哭', '来', '泪眼', '流泪', '生气', '吐舌', '喜欢', '旋转', '再见', '抓狂', '汗', '鄙视', '拜', '吐血', '嘘', '打人', '蹦跳', '变脸', '扯肉', '吃To', '吃花', '吹泡泡糖', '大变身', '飞天舞', '回眸', '可怜', '猛抽', '泡泡', '苹果', '亲', '', '骚舞', '烧香', '睡', '套娃娃', '捅捅', '舞倒', '西红柿', '爱慕', '摇', '摇摆', '杂耍', '招财', '被殴', '被球闷', '大惊', '理想', '欧打', '呕吐', '碎', '吐痰'],
+		tab4: ['发财了', '吃西瓜', '套牢', '害羞', '庆祝', '我来了', '敲打', '晕了', '胜利', '臭美', '被打了', '贪吃', '迎接', '酷', '顶', '幸运', '爱心', '躲', '送花', '选择'],
+		tab5: ['微笑', '亲吻', '调皮', '惊讶', '耍酷', '发火', '害羞', '汗水', '大哭', '得意', '鄙视', '困', '夸奖', '晕倒', '疑问', '媒婆', '狂吐', '青蛙', '发愁', '亲吻', '', '爱心', '心碎', '玫瑰', '礼物', '哭', '奸笑', '可爱', '得意', '呲牙', '暴汗', '楚楚可怜', '困', '哭', '生气', '惊讶', '口水', '彩虹', '夜空', '太阳', '钱钱', '灯泡', '咖啡', '蛋糕', '音乐', '爱', '胜利', '赞', '鄙视', 'OK'],
+		tab6: ['男兜', '女兜', '开心', '乖乖', '偷笑', '大笑', '抽泣', '大哭', '无奈', '滴汗', '叹气', '狂晕', '委屈', '超赞', '??', '疑问', '飞吻', '天使', '撒花', '生气', '被砸', '口水', '泪奔', '吓傻', '吐舌头', '点头', '随意吐', '旋转', '困困', '鄙视', '狂顶', '篮球', '再见', '欢迎光临', '恭喜发财', '稍等', '我在线', '恕不议价', '库房有货', '货在路上']
+	},
+	EmotionTabs: {
+		tab0: { name: "精选", prefix: "j_00", path: "jx2/" },
+		tab1: { name: "兔斯基", prefix: "t_00", path: "tsj/" },
+		tab2: { name: "绿豆蛙", prefix: "w_00", path: "ldw/" },
+		tab3: { name: "BOBO", prefix: "B_00", path: "bobo/" },
+		tab4: { name: "baby猫", prefix: "C_00", path: "babycat/" },
+		tab5: { name: "泡泡", prefix: "i_f", path: "face/" },
+		tab6: { name: "有啊", prefix: "y_00", path: "youa/" }
+	}
+};
+
 module.exports = {
 	EditorIconTypes: EditorIconTypes,
 	ColorTypes: ColorTypes,
 	FormulaTypes: FormulaTypes,
-	SpecialChars: SpecialChars
+	SpecialChars: SpecialChars,
+	EmotionImages: EmotionImages
 };
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 var EditorDOM = {
@@ -1421,7 +1575,7 @@ var EditorDOM = {
 };
 module.exports = EditorDOM;
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 var EditorHistory = {
@@ -1476,7 +1630,7 @@ var EditorHistory = {
 };
 module.exports = EditorHistory;
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -1703,7 +1857,7 @@ var EditorResize = React.createClass({
 
 module.exports = EditorResize;
 
-},{"react":undefined,"react-dom":undefined}],17:[function(require,module,exports){
+},{"react":undefined,"react-dom":undefined}],18:[function(require,module,exports){
 "use strict";
 
 var EditorDOM = require('./EditorDOM');
@@ -1921,7 +2075,7 @@ var EditorSelection = {
 };
 module.exports = EditorSelection;
 
-},{"./EditorDOM":14}],18:[function(require,module,exports){
+},{"./EditorDOM":15}],19:[function(require,module,exports){
 "use strict";
 
 var INTERVAL_MS = 1000 / 60;
@@ -2042,7 +2196,7 @@ EditorTimer.animate();
 
 module.exports = EditorTimer;
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 var getError = function getError(options, xhr) {
@@ -2152,6 +2306,7 @@ var EditorTimer = require('./utils/EditorTimer');
 var ColorDropdown = require('./components/plugins/ColorDropdown.react');
 var FormulaDropdown = require('./components/plugins/FormulaDropdown.react');
 var TablePickerDropdown = require('./components/plugins/TablePickerDropdown.react');
+var EmotionDialog = require('./components/plugins/EmotionDialog.react');
 var SpecialCharsDialog = require('./components/plugins/SpecialCharsDialog.react');
 var ImageDialog = require('./components/plugins/ImageDialog.react');
 
@@ -2168,6 +2323,24 @@ var saveSceneTimer = null;
 var maxInputCount = 20;
 var lastKeyCode = null;
 var keycont = 0;
+
+if (!Date.prototype.Format) {
+	Date.prototype.Format = function (n) {
+		var i = {
+			"M+": this.getMonth() + 1,
+			"d+": this.getDate(),
+			"h+": this.getHours(),
+			"m+": this.getMinutes(),
+			"s+": this.getSeconds(),
+			"q+": Math.floor((this.getMonth() + 3) / 3),
+			S: this.getMilliseconds()
+		},
+		    t;
+		/(y+)/.test(n) && (n = n.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length)));
+		for (t in i) new RegExp("(" + t + ")").test(n) && (n = n.replace(RegExp.$1, RegExp.$1.length == 1 ? i[t] : ("00" + i[t]).substr(("" + i[t]).length)));
+		return n;
+	};
+}
 
 /**
 * 对外接口方法
@@ -2482,6 +2655,14 @@ var Editor = React.createClass({
 			case "horizontal":
 				EditorHistory.execCommand('inserthtml', false, "<hr/><p><br/></p>");
 				break;
+			case "date":
+				var strDate = new Date().Format("yyyy-MM-dd");
+				EditorHistory.execCommand('inserthtml', false, strDate);
+				break;
+			case "time":
+				var strTime = new Date().Format('hh:mm:ss');
+				EditorHistory.execCommand('inserthtml', false, strTime);
+				break;
 			case "image":
 				EditorSelection.storeRange();
 				this.refs.image.open(function (e, html) {
@@ -2539,6 +2720,16 @@ var Editor = React.createClass({
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('inserthtml', false, char);
+					handleRangeChange();
+				});
+				break;
+			case "emotion":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h + 5;
+				this.refs.emotion.open(offsetPosition, function (e, html) {
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('inserthtml', false, html);
 					handleRangeChange();
 				});
 				break;
@@ -2680,7 +2871,8 @@ var Editor = React.createClass({
 				React.createElement(ColorDropdown, { ref: 'color' }),
 				React.createElement(FormulaDropdown, { ref: 'formula' }),
 				React.createElement(TablePickerDropdown, { ref: 'table' }),
-				React.createElement(SpecialCharsDialog, { ref: 'special' })
+				React.createElement(SpecialCharsDialog, { ref: 'special' }),
+				React.createElement(EmotionDialog, { ref: 'emotion' })
 			),
 			editArea,
 			React.createElement(EditorResize, { ref: 'resize' })
@@ -2690,4 +2882,4 @@ var Editor = React.createClass({
 
 module.exports = Editor;
 
-},{"./components/core/EditorContentEditableDiv.react":4,"./components/core/EditorTextArea.react":6,"./components/core/EditorToolbar.react":7,"./components/plugins/ColorDropdown.react":8,"./components/plugins/FormulaDropdown.react":9,"./components/plugins/ImageDialog.react":10,"./components/plugins/SpecialCharsDialog.react":11,"./components/plugins/TablePickerDropdown.react":12,"./constants/EditorConstants":13,"./utils/EditorDOM":14,"./utils/EditorHistory":15,"./utils/EditorResize.react":16,"./utils/EditorSelection":17,"./utils/EditorTimer":18,"react":undefined,"react-dom":undefined}]},{},[]);
+},{"./components/core/EditorContentEditableDiv.react":4,"./components/core/EditorTextArea.react":6,"./components/core/EditorToolbar.react":7,"./components/plugins/ColorDropdown.react":8,"./components/plugins/EmotionDialog.react":9,"./components/plugins/FormulaDropdown.react":10,"./components/plugins/ImageDialog.react":11,"./components/plugins/SpecialCharsDialog.react":12,"./components/plugins/TablePickerDropdown.react":13,"./constants/EditorConstants":14,"./utils/EditorDOM":15,"./utils/EditorHistory":16,"./utils/EditorResize.react":17,"./utils/EditorSelection":18,"./utils/EditorTimer":19,"react":undefined,"react-dom":undefined}]},{},[]);

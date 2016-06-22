@@ -10,12 +10,12 @@ var EditorToolbar = React.createClass({
 		icons:React.PropTypes.array
 	},
 	getDefaultProps:function(){
-		// paragraph fontfamily fontsize  emotion video map print preview drafts link unlink
+		// paragraph fontfamily fontsize video map print preview drafts link unlink
 		return {
 			icons:[
 				"source | undo redo | bold italic underline strikethrough fontborder | superscript subscript | ",
 				"forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ",
-				"cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal | image formula spechars | inserttable"
+				"cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal date time  | image emotion formula spechars | inserttable"
 		    ]
 		}
 	},
