@@ -314,7 +314,7 @@ var EditorContentEditableDiv = React.createClass({
 module.exports = EditorContentEditableDiv;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/EditorDOM":16,"../../utils/EditorSelection":19,"react-dom":undefined}],5:[function(require,module,exports){
+},{"../../utils/EditorDOM":19,"../../utils/EditorSelection":22,"react-dom":undefined}],5:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -377,7 +377,21 @@ var EditorIcon = React.createClass({
 		var props = _objectWithoutProperties(_props2, ['icon', 'active', 'disabled', 'showHtml', 'onClick']);
 
 		var _disabled = showHtml && icon != "source" && icon != "separator";
-		return React.createElement('span', _extends({ ref: 'root', className: "editor-icon icon-" + icon + (active ? " active" : "") + (disabled || _disabled ? " disabled" : ""), onClick: this.handleClick }, props));
+		var _className = "editor-icon icon-" + icon + (active ? " active" : "") + (disabled || _disabled ? " disabled" : "");
+		if (icon == "fontsize" || icon == "fontfamily" || icon == "paragraph") {
+			return React.createElement(
+				'span',
+				_extends({ ref: 'root', className: _className, onClick: this.handleClick }, props),
+				React.createElement(
+					'span',
+					{ className: 'icon-label' },
+					props.value
+				),
+				React.createElement('span', { className: 'icon-caret' })
+			);
+		} else {
+			return React.createElement('span', _extends({ ref: 'root', className: _className, onClick: this.handleClick }, props));
+		}
 	}
 });
 
@@ -446,9 +460,9 @@ var EditorToolbar = React.createClass({
 		icons: React.PropTypes.array
 	},
 	getDefaultProps: function getDefaultProps() {
-		// paragraph fontfamily fontsize video map print preview drafts link unlink
+		// video map print preview drafts link unlink
 		return {
-			icons: ["source | undo redo | bold italic underline strikethrough fontborder | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal date time  | image emotion formula spechars | inserttable"]
+			icons: ["source | undo redo | bold italic underline strikethrough fontborder | paragraph fontfamily fontsize | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal date time  | image emotion formula spechars | inserttable"]
 		};
 	},
 	handleIconClick: function handleIconClick(e, state) {
@@ -475,6 +489,7 @@ var EditorToolbar = React.createClass({
 				returnArray[i].disabled = !!editorState.icons[_icons[i]].disabled;
 				returnArray[i].active = !!editorState.icons[_icons[i]].active;
 				returnArray[i].color = editorState.icons[_icons[i]].color;
+				returnArray[i].value = editorState.icons[_icons[i]].value;
 			}
 			returnArray[i].showHtml = !!editorState.showHtml;
 		}
@@ -497,7 +512,7 @@ var EditorToolbar = React.createClass({
 module.exports = EditorToolbar;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../constants/EditorConstants":14,"../../utils/EditorHistory":17,"./EditorIcon.react":5}],8:[function(require,module,exports){
+},{"../../constants/EditorConstants":17,"../../utils/EditorHistory":20,"./EditorIcon.react":5}],8:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -605,7 +620,7 @@ var ColorDropdown = React.createClass({
 module.exports = ColorDropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../constants/EditorConstants":14,"../base/Dropdown.react":2}],9:[function(require,module,exports){
+},{"../../constants/EditorConstants":17,"../base/Dropdown.react":2}],9:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -728,7 +743,145 @@ var EmotionDialog = React.createClass({
 module.exports = EmotionDialog;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../constants/EditorConstants":14,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],10:[function(require,module,exports){
+},{"../../constants/EditorConstants":17,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],10:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var React = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
+var Dropdown = require('../base/Dropdown.react');
+
+var FontFamilyDropdown = React.createClass({
+	displayName: 'FontFamilyDropdown',
+
+	getInitialState: function getInitialState() {
+		return {
+			handle: function handle() {}
+		};
+	},
+	open: function open(position, handle) {
+		this.setState({
+			handle: handle
+		});
+		this.refs.root.open(position);
+	},
+	close: function close() {
+		this.refs.root.close();
+	},
+	toggle: function toggle(position) {
+		this.refs.root.toggle(position);
+	},
+	handleSelect: function handleSelect(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var value = target.getAttribute('data-value');
+		if (this.state.handle) {
+			this.state.handle(e, value);
+		}
+		if (e.stopPropagation) {
+			e.stopPropagation();
+		} else {
+			e.cancelBubble = true;
+		}
+		this.close();
+	},
+	render: function render() {
+		var handleSelect = this.handleSelect;
+		var paragraph = this.props.paragraph ? this.props.paragraph : [];
+		return React.createElement(
+			Dropdown,
+			{ ref: 'root', className: 'color-dropdown' },
+			React.createElement(
+				'ul',
+				null,
+				paragraph.map(function (ele, pos) {
+					return React.createElement(
+						'li',
+						{ 'data-value': ele.value, onClick: handleSelect },
+						React.createElement(
+							'p',
+							{ 'data-value': ele.value, style: { "fontFamily": ele.value } },
+							ele.name
+						)
+					);
+				})
+			)
+		);
+	}
+});
+
+module.exports = FontFamilyDropdown;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../base/Dropdown.react":2}],11:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var React = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
+var Dropdown = require('../base/Dropdown.react');
+
+var FontSizeDropdown = React.createClass({
+	displayName: 'FontSizeDropdown',
+
+	getInitialState: function getInitialState() {
+		return {
+			handle: function handle() {}
+		};
+	},
+	open: function open(position, handle) {
+		this.setState({
+			handle: handle
+		});
+		this.refs.root.open(position);
+	},
+	close: function close() {
+		this.refs.root.close();
+	},
+	toggle: function toggle(position) {
+		this.refs.root.toggle(position);
+	},
+	handleSelect: function handleSelect(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var value = target.getAttribute('data-value');
+		if (this.state.handle) {
+			this.state.handle(e, value);
+		}
+		if (e.stopPropagation) {
+			e.stopPropagation();
+		} else {
+			e.cancelBubble = true;
+		}
+		this.close();
+	},
+	render: function render() {
+		var handleSelect = this.handleSelect;
+		var fontsize = this.props.fontsize ? this.props.fontsize : [];
+		return React.createElement(
+			Dropdown,
+			{ ref: 'root', className: 'color-dropdown' },
+			React.createElement(
+				'ul',
+				null,
+				fontsize.map(function (ele, pos) {
+					return React.createElement(
+						'li',
+						{ 'data-value': ele.value, onClick: handleSelect },
+						React.createElement(
+							'p',
+							{ 'data-value': ele.value, style: { "fontSize": ele.value } },
+							ele.name
+						)
+					);
+				})
+			)
+		);
+	}
+});
+
+module.exports = FontSizeDropdown;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../base/Dropdown.react":2}],12:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -813,7 +966,7 @@ var FormulaDropdown = React.createClass({
 module.exports = FormulaDropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../constants/EditorConstants":14,"../base/Dropdown.react":2,"../base/TabGroup.react":3,"react-dom":undefined}],11:[function(require,module,exports){
+},{"../../constants/EditorConstants":17,"../base/Dropdown.react":2,"../base/TabGroup.react":3,"react-dom":undefined}],13:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1156,7 +1309,72 @@ var ImageDialog = React.createClass({
 module.exports = ImageDialog;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/FileUpload":21,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],12:[function(require,module,exports){
+},{"../../utils/FileUpload":24,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],14:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var React = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
+var Dropdown = require('../base/Dropdown.react');
+
+var ParagraphDropdown = React.createClass({
+	displayName: 'ParagraphDropdown',
+
+	getInitialState: function getInitialState() {
+		return {
+			handle: function handle() {}
+		};
+	},
+	open: function open(position, handle) {
+		this.setState({
+			handle: handle
+		});
+		this.refs.root.open(position);
+	},
+	close: function close() {
+		this.refs.root.close();
+	},
+	toggle: function toggle(position) {
+		this.refs.root.toggle(position);
+	},
+	handleSelect: function handleSelect(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var value = target.getAttribute('data-value');
+		if (this.state.handle) {
+			this.state.handle(e, value);
+		}
+		if (e.stopPropagation) {
+			e.stopPropagation();
+		} else {
+			e.cancelBubble = true;
+		}
+		this.close();
+	},
+	render: function render() {
+		var handleSelect = this.handleSelect;
+		var paragraph = this.props.paragraph ? this.props.paragraph : [];
+		return React.createElement(
+			Dropdown,
+			{ ref: 'root', className: 'color-dropdown' },
+			React.createElement(
+				'ul',
+				null,
+				paragraph.map(function (ele, pos) {
+					return React.createElement(
+						'li',
+						{ 'data-value': ele.value, onClick: handleSelect },
+						React.createElement(ele.value, { "data-value": ele.value }, ele.name)
+					);
+				})
+			)
+		);
+	}
+});
+
+module.exports = ParagraphDropdown;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../base/Dropdown.react":2}],15:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1252,7 +1470,7 @@ var SpecialCharsDialog = React.createClass({
 module.exports = SpecialCharsDialog;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../constants/EditorConstants":14,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],13:[function(require,module,exports){
+},{"../../constants/EditorConstants":17,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],16:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1350,7 +1568,7 @@ var TablePickerDropdown = React.createClass({
 module.exports = TablePickerDropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../base/Dropdown.react":2}],14:[function(require,module,exports){
+},{"../base/Dropdown.react":2}],17:[function(require,module,exports){
 "use strict";
 
 var EditorIconTypes = {
@@ -1571,7 +1789,7 @@ module.exports = {
 	EmotionImages: EmotionImages
 };
 
-},{}],15:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1596,6 +1814,10 @@ var EditorTimer = require('./utils/EditorTimer');
 var ColorDropdown = require('./components/plugins/ColorDropdown.react');
 var FormulaDropdown = require('./components/plugins/FormulaDropdown.react');
 var TablePickerDropdown = require('./components/plugins/TablePickerDropdown.react');
+var FontSizeDropdown = require('./components/plugins/FontSizeDropdown.react');
+var FontFamilyDropdown = require('./components/plugins/FontFamilyDropdown.react');
+var ParagraphDropdown = require('./components/plugins/ParagraphDropdown.react');
+
 var EmotionDialog = require('./components/plugins/EmotionDialog.react');
 var SpecialCharsDialog = require('./components/plugins/SpecialCharsDialog.react');
 var ImageDialog = require('./components/plugins/ImageDialog.react');
@@ -1659,7 +1881,10 @@ var Editor = React.createClass({
 		};
 	},
 	propTypes: {
-		"plugins": React.PropTypes.object
+		"plugins": React.PropTypes.object,
+		"fontFamily": React.PropTypes.array,
+		"fontSize": React.PropTypes.array,
+		"paragraph": React.PropTypes.array
 	},
 	getDefaultProps: function getDefaultProps() {
 		return {
@@ -1671,7 +1896,10 @@ var Editor = React.createClass({
 					},
 					"customUploader": null
 				}
-			}
+			},
+			"fontFamily": [{ "name": "宋体", value: "宋体,SimSun", defualt: true }, { "name": "隶书", value: "隶书,SimLi" }, { "name": "楷体", value: "楷体,SimKai" }, { "name": "微软雅黑", value: "微软雅黑,Microsoft YaHei" }, { "name": "黑体", value: "黑体,SimHei" }, { "name": "arial", value: "arial,helvetica,sans-serif" }, { "name": "arial black", value: "arial black,avant garde" }, { "name": "omic sans ms", value: "omic sans ms" }, { "name": "impact", value: "impact,chicago" }, { "name": "times new roman", value: "times new roman" }, { "name": "andale mono", value: "andale mono" }],
+			"fontSize": [{ "name": "12px", value: "12px", defualt: true }, { "name": "14px", value: "14px" }, { "name": "16px", value: "16px" }, { "name": "18px", value: "18px" }, { "name": "20px", value: "20px" }, { "name": "24px", value: "24px" }, { "name": "28px", value: "28px" }, { "name": "32px", value: "32px" }, { "name": "36px", value: "32px" }],
+			"paragraph": [{ "name": "段落", value: "p", defualt: true }, { "name": "标题1", value: "h1" }, { "name": "标题2", value: "h2" }, { "name": "标题3", value: "h3" }, { "name": "标题4", value: "h4" }, { "name": "标题5", value: "h5" }, { "name": "标题6", value: "h6" }]
 		};
 	},
 	componentDidMount: function componentDidMount() {
@@ -1751,6 +1979,11 @@ var Editor = React.createClass({
 					case "forecolor":
 					case "backcolor":
 						editorState.icons[icon].color = rangeState[icon].color;
+						break;
+					case "paragraph":
+					case "fontfamily":
+					case "fontsize":
+						editorState.icons[icon].value = rangeState[icon].value;
 						break;
 				}
 				editorState.icons[icon].active = rangeState[icon].active;
@@ -1936,6 +2169,39 @@ var Editor = React.createClass({
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('backcolor', false, color);
+					handleRangeChange();
+				});
+				break;
+			case "fontsize":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h + 5;
+
+				this.refs.fontsize.open(offsetPosition, function (e, fontsize) {
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('fontsize', false, fontsize);
+					handleRangeChange();
+				});
+				break;
+			case "fontfamily":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h + 5;
+
+				this.refs.fontfamily.open(offsetPosition, function (e, fontfamily) {
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('fontfamily', false, fontfamily);
+					handleRangeChange();
+				});
+				break;
+			case "paragraph":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h + 5;
+
+				this.refs.paragraph.open(offsetPosition, function (e, paragraph) {
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('paragraph', false, paragraph);
 					handleRangeChange();
 				});
 				break;
@@ -2156,13 +2422,16 @@ var Editor = React.createClass({
 			_extends({ ref: 'root', id: id, className: "editor-container editor-default" + (className ? " " + className : ""), onBlur: this.handleRangeChange, onFocus: this.handleFocus }, props),
 			React.createElement(
 				EditorToolbar,
-				{ ref: 'toolbar', editorState: this.state.editorState, onIconClick: this.handleToolbarIconClick, icons: this.props.icons },
+				{ ref: 'toolbar', editorState: this.state.editorState, onIconClick: this.handleToolbarIconClick, icons: this.props.icons, paragraph: this.props.paragraph, fontsize: this.props.fontSize, fontfamily: this.props.fontFamily },
 				React.createElement(ImageDialog, { ref: 'image', uploader: this.props.plugins.image.uploader, customUploader: this.props.plugins.image.customUploader }),
 				React.createElement(ColorDropdown, { ref: 'color' }),
 				React.createElement(FormulaDropdown, { ref: 'formula' }),
 				React.createElement(TablePickerDropdown, { ref: 'table' }),
 				React.createElement(SpecialCharsDialog, { ref: 'special' }),
-				React.createElement(EmotionDialog, { ref: 'emotion' })
+				React.createElement(EmotionDialog, { ref: 'emotion' }),
+				React.createElement(FontSizeDropdown, { ref: 'fontsize', fontsize: this.props.fontSize }),
+				React.createElement(FontFamilyDropdown, { ref: 'fontfamily', fontfamily: this.props.fontFamily }),
+				React.createElement(ParagraphDropdown, { ref: 'paragraph', paragraph: this.props.paragraph })
 			),
 			editArea,
 			React.createElement(EditorResize, { ref: 'resize' })
@@ -2173,7 +2442,7 @@ var Editor = React.createClass({
 module.exports = Editor;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./components/core/EditorContentEditableDiv.react":4,"./components/core/EditorTextArea.react":6,"./components/core/EditorToolbar.react":7,"./components/plugins/ColorDropdown.react":8,"./components/plugins/EmotionDialog.react":9,"./components/plugins/FormulaDropdown.react":10,"./components/plugins/ImageDialog.react":11,"./components/plugins/SpecialCharsDialog.react":12,"./components/plugins/TablePickerDropdown.react":13,"./constants/EditorConstants":14,"./utils/EditorDOM":16,"./utils/EditorHistory":17,"./utils/EditorResize.react":18,"./utils/EditorSelection":19,"./utils/EditorTimer":20,"react-dom":undefined}],16:[function(require,module,exports){
+},{"./components/core/EditorContentEditableDiv.react":4,"./components/core/EditorTextArea.react":6,"./components/core/EditorToolbar.react":7,"./components/plugins/ColorDropdown.react":8,"./components/plugins/EmotionDialog.react":9,"./components/plugins/FontFamilyDropdown.react":10,"./components/plugins/FontSizeDropdown.react":11,"./components/plugins/FormulaDropdown.react":12,"./components/plugins/ImageDialog.react":13,"./components/plugins/ParagraphDropdown.react":14,"./components/plugins/SpecialCharsDialog.react":15,"./components/plugins/TablePickerDropdown.react":16,"./constants/EditorConstants":17,"./utils/EditorDOM":19,"./utils/EditorHistory":20,"./utils/EditorResize.react":21,"./utils/EditorSelection":22,"./utils/EditorTimer":23,"react-dom":undefined}],19:[function(require,module,exports){
 "use strict";
 
 var EditorDOM = {
@@ -2203,7 +2472,7 @@ var EditorDOM = {
 };
 module.exports = EditorDOM;
 
-},{}],17:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 
 var EditorHistory = {
@@ -2258,7 +2527,7 @@ var EditorHistory = {
 };
 module.exports = EditorHistory;
 
-},{}],18:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2487,7 +2756,7 @@ var EditorResize = React.createClass({
 module.exports = EditorResize;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"react-dom":undefined}],19:[function(require,module,exports){
+},{"react-dom":undefined}],22:[function(require,module,exports){
 "use strict";
 
 var EditorDOM = require('./EditorDOM');
@@ -2671,10 +2940,20 @@ var EditorSelection = {
 						rangeState["backcolor"] = { color: parentElement.style.backgroundColor, icon: "backcolor" };
 						break;
 					case "P":
+					case "H1":
+					case "H2":
+					case "H3":
+					case "H5":
+					case "H6":
 						var textAlign = parentElement.style.textAlign ? parentElement.style.textAlign : "left";
+						var fontFamily = parentElement.style.fontFamily ? parentElement.style.fontFamily : "宋体,SimSun";
+						var fontSize = parentElement.style.fontSize ? parentElement.style.fontSize : "12px";
 						rangeState["justifycenter"] = { active: textAlign == "center", icon: "subscript" };
 						rangeState["justifyleft"] = { active: textAlign == "left", icon: "subscript" };
 						rangeState["justifyright"] = { active: textAlign == "right", icon: "subscript" };
+						rangeState["paragraph"] = { value: "p", icon: "paragraph" };
+						rangeState["fontfamily"] = { value: fontFamily, icon: "fontfamily" };
+						rangeState["fontsize"] = { value: fontSize, icon: "fontsize" };
 						break;
 					case "BLOCKQUOTE":
 						rangeState["indent"] = { active: true, icon: "indent" };
@@ -2705,7 +2984,7 @@ var EditorSelection = {
 };
 module.exports = EditorSelection;
 
-},{"./EditorDOM":16}],20:[function(require,module,exports){
+},{"./EditorDOM":19}],23:[function(require,module,exports){
 "use strict";
 
 var INTERVAL_MS = 1000 / 60;
@@ -2826,7 +3105,7 @@ EditorTimer.animate();
 
 module.exports = EditorTimer;
 
-},{}],21:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 'use strict';
 
 var getError = function getError(options, xhr) {
@@ -2912,5 +3191,5 @@ module.exports = {
     uploadFiles: function uploadFiles(options) {}
 };
 
-},{}]},{},[15])(15)
+},{}]},{},[18])(18)
 });

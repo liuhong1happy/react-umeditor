@@ -169,7 +169,7 @@ var EditorIconTypes = {
     "time":{
         title:"插入时间",
         disabled:false
-    }
+    },
 }
 var ColorTypes = {
 	themeColors:[

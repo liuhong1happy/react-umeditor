@@ -14,6 +14,10 @@ var EditorTimer = require('./utils/EditorTimer')
 var ColorDropdown = require('./components/plugins/ColorDropdown.react');
 var FormulaDropdown = require('./components/plugins/FormulaDropdown.react');
 var TablePickerDropdown = require('./components/plugins/TablePickerDropdown.react');
+var FontSizeDropdown = require('./components/plugins/FontSizeDropdown.react');
+var FontFamilyDropdown = require('./components/plugins/FontFamilyDropdown.react');
+var ParagraphDropdown = require('./components/plugins/ParagraphDropdown.react');
+
 var EmotionDialog =  require('./components/plugins/EmotionDialog.react');
 var SpecialCharsDialog = require('./components/plugins/SpecialCharsDialog.react');
 var ImageDialog = require('./components/plugins/ImageDialog.react');
@@ -74,7 +78,10 @@ var Editor = React.createClass({
 		}
 	},
 	propTypes:{
-		"plugins":React.PropTypes.object
+		"plugins": React.PropTypes.object,
+		"fontFamily": React.PropTypes.array,
+		"fontSize": React.PropTypes.array,
+		"paragraph": React.PropTypes.array,
 	},
 	getDefaultProps:function(){
 		return {
@@ -86,7 +93,40 @@ var Editor = React.createClass({
 					},
 					"customUploader":null
 				}
-			}
+			},
+			"fontFamily":[
+				{"name":"宋体",value:"宋体,SimSun",defualt:true},
+				{"name":"隶书",value:"隶书,SimLi"},
+				{"name":"楷体",value:"楷体,SimKai"},
+				{"name":"微软雅黑",value:"微软雅黑,Microsoft YaHei"},
+				{"name":"黑体",value:"黑体,SimHei"},
+				{"name":"arial",value:"arial,helvetica,sans-serif"},
+				{"name":"arial black",value:"arial black,avant garde"},
+				{"name":"omic sans ms",value:"omic sans ms"},
+				{"name":"impact",value:"impact,chicago"},
+				{"name":"times new roman",value:"times new roman"},
+				{"name":"andale mono",value:"andale mono"}
+			],
+			"fontSize": [
+				{"name":"12px",value:"12px",defualt:true},
+				{"name":"14px",value:"14px"},
+				{"name":"16px",value:"16px"},
+				{"name":"18px",value:"18px"},
+				{"name":"20px",value:"20px"},
+				{"name":"24px",value:"24px"},
+				{"name":"28px",value:"28px"},
+				{"name":"32px",value:"32px"},
+				{"name":"36px",value:"32px"}
+			],
+			"paragraph": [
+				{"name":"段落",value:"p",defualt:true},
+				{"name":"标题1",value:"h1"},
+				{"name":"标题2",value:"h2"},
+				{"name":"标题3",value:"h3"},
+				{"name":"标题4",value:"h4"},
+				{"name":"标题5",value:"h5"},
+				{"name":"标题6",value:"h6"}
+			]
 		}
 	},
 	componentDidMount:function(){
@@ -168,6 +208,11 @@ var Editor = React.createClass({
 					case "forecolor":
 					case "backcolor":
 						editorState.icons[icon].color = rangeState[icon].color;
+						break;
+					case "paragraph":
+					case "fontfamily":
+					case "fontsize":
+						editorState.icons[icon].value = rangeState[icon].value;
 						break;
 				}
 				editorState.icons[icon].active = rangeState[icon].active;
@@ -352,6 +397,39 @@ var Editor = React.createClass({
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('backcolor',false,color);
+					handleRangeChange();
+				});
+				break;
+			case "fontsize":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h+5;
+				
+				this.refs.fontsize.open(offsetPosition,function(e,fontsize){
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('fontsize',false,fontsize);
+					handleRangeChange();
+				});
+				break;
+			case "fontfamily":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h+5;
+				
+				this.refs.fontfamily.open(offsetPosition,function(e,fontfamily){
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('fontfamily',false,fontfamily);
+					handleRangeChange();
+				});
+				break;
+			case "paragraph":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h+5;
+				
+				this.refs.paragraph.open(offsetPosition,function(e,paragraph){
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('paragraph',false,paragraph);
 					handleRangeChange();
 				});
 				break;
@@ -562,13 +640,16 @@ var Editor = React.createClass({
 		var editArea = this.genEditArea();
 		var {onBlur,className,id,onFocus,...props} = this.props;
 		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
-				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick} icons={this.props.icons}>
+				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick} icons={this.props.icons} paragraph={this.props.paragraph}  fontsize={this.props.fontSize}  fontfamily={this.props.fontFamily}>
 					<ImageDialog ref="image" uploader={this.props.plugins.image.uploader} customUploader={this.props.plugins.image.customUploader}/>
 					<ColorDropdown ref="color" />
 					<FormulaDropdown ref="formula"/>
 					<TablePickerDropdown ref="table" />
 					<SpecialCharsDialog ref="special" />
 					<EmotionDialog ref="emotion" />
+					<FontSizeDropdown ref="fontsize" fontsize={this.props.fontSize} />
+					<FontFamilyDropdown ref="fontfamily" fontfamily={this.props.fontFamily} />
+					<ParagraphDropdown ref="paragraph" paragraph={this.props.paragraph} />
 				</EditorToolbar>
 				{editArea}
 				<EditorResize ref="resize" />
