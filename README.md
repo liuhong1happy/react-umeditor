@@ -1,5 +1,7 @@
 # react-umeditor
 
+[![Version](https://img.shields.io/npm/v/react-native-svg.svg)](https://www.npmjs.com/package/react-native-svg)
+
 React Editor like [Umeditor](https://github.com/fex-team/umeditor)
 
 ## Install 
