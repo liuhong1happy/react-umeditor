@@ -2,6 +2,80 @@
 (function (global){
 "use strict";
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var React = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
+
+var ComboBox = React.createClass({
+	displayName: "ComboBox",
+
+	getInitialState: function getInitialState() {
+		return {
+			show: false,
+			position: {
+				x: 0,
+				y: 0
+			}
+		};
+	},
+	componentDidMount: function componentDidMount() {
+		window.addEventListener("click", this.close);
+	},
+	componentWillUnmount: function componentWillUnmount() {
+		window.removeEventListener("click", this.close);
+	},
+	open: function open(position) {
+		this.setState({
+			show: true,
+			position: position
+		});
+	},
+	close: function close() {
+		this.setState({
+			show: false
+		});
+	},
+	toggle: function toggle(position) {
+		this.setState({
+			show: !this.state.show,
+			position: position
+		});
+	},
+	render: function render() {
+		var _props = this.props;
+		var className = _props.className;
+		var style = _props.style;
+
+		var props = _objectWithoutProperties(_props, ["className", "style"]);
+
+		style = style || {};
+		if (!this.state.show) {
+			style["display"] = "none";
+		} else {
+			style["display"] = "";
+		}
+		if (this.state.position) {
+			style["left"] = this.state.position.x;
+			style["top"] = this.state.position.y;
+		}
+
+		return React.createElement(
+			"div",
+			_extends({ style: style, className: "combobox" + (className ? " " + className : "") }, props),
+			this.props.children
+		);
+	}
+});
+
+module.exports = ComboBox;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],2:[function(require,module,exports){
+(function (global){
+"use strict";
+
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 var React = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
@@ -108,7 +182,7 @@ var Dialog = React.createClass({
 module.exports = Dialog;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -183,7 +257,7 @@ var Dropdown = React.createClass({
 module.exports = Dropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -251,7 +325,7 @@ var TabGroup = React.createClass({
 module.exports = TabGroup;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -314,7 +388,7 @@ var EditorContentEditableDiv = React.createClass({
 module.exports = EditorContentEditableDiv;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/EditorDOM":19,"../../utils/EditorSelection":22,"react-dom":undefined}],5:[function(require,module,exports){
+},{"../../utils/EditorDOM":20,"../../utils/EditorSelection":23,"react-dom":undefined}],6:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -398,7 +472,7 @@ var EditorIcon = React.createClass({
 module.exports = EditorIcon;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"react-dom":undefined}],6:[function(require,module,exports){
+},{"react-dom":undefined}],7:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -438,7 +512,7 @@ var EditorTextArea = React.createClass({
 module.exports = EditorTextArea;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"react-dom":undefined}],7:[function(require,module,exports){
+},{"react-dom":undefined}],8:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -512,7 +586,7 @@ var EditorToolbar = React.createClass({
 module.exports = EditorToolbar;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../constants/EditorConstants":17,"../../utils/EditorHistory":20,"./EditorIcon.react":5}],8:[function(require,module,exports){
+},{"../../constants/EditorConstants":18,"../../utils/EditorHistory":21,"./EditorIcon.react":6}],9:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -620,7 +694,7 @@ var ColorDropdown = React.createClass({
 module.exports = ColorDropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../constants/EditorConstants":17,"../base/Dropdown.react":2}],9:[function(require,module,exports){
+},{"../../constants/EditorConstants":18,"../base/Dropdown.react":3}],10:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -743,12 +817,12 @@ var EmotionDialog = React.createClass({
 module.exports = EmotionDialog;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../constants/EditorConstants":17,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],10:[function(require,module,exports){
+},{"../../constants/EditorConstants":18,"../base/Dialog.react":2,"../base/TabGroup.react":4,"react-dom":undefined}],11:[function(require,module,exports){
 (function (global){
 'use strict';
 
 var React = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
-var Dropdown = require('../base/Dropdown.react');
+var ComboBox = require('../base/ComboBox.react');
 
 var FontFamilyDropdown = React.createClass({
 	displayName: 'FontFamilyDropdown',
@@ -788,8 +862,8 @@ var FontFamilyDropdown = React.createClass({
 		var handleSelect = this.handleSelect;
 		var paragraph = this.props.paragraph ? this.props.paragraph : [];
 		return React.createElement(
-			Dropdown,
-			{ ref: 'root', className: 'color-dropdown' },
+			ComboBox,
+			{ ref: 'root', className: 'color-combobox' },
 			React.createElement(
 				'ul',
 				null,
@@ -812,12 +886,12 @@ var FontFamilyDropdown = React.createClass({
 module.exports = FontFamilyDropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../base/Dropdown.react":2}],11:[function(require,module,exports){
+},{"../base/ComboBox.react":1}],12:[function(require,module,exports){
 (function (global){
 'use strict';
 
 var React = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
-var Dropdown = require('../base/Dropdown.react');
+var ComboBox = require('../base/ComboBox.react');
 
 var FontSizeDropdown = React.createClass({
 	displayName: 'FontSizeDropdown',
@@ -857,8 +931,8 @@ var FontSizeDropdown = React.createClass({
 		var handleSelect = this.handleSelect;
 		var fontsize = this.props.fontsize ? this.props.fontsize : [];
 		return React.createElement(
-			Dropdown,
-			{ ref: 'root', className: 'color-dropdown' },
+			ComboBox,
+			{ ref: 'root', className: 'color-combobox' },
 			React.createElement(
 				'ul',
 				null,
@@ -881,7 +955,7 @@ var FontSizeDropdown = React.createClass({
 module.exports = FontSizeDropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../base/Dropdown.react":2}],12:[function(require,module,exports){
+},{"../base/ComboBox.react":1}],13:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -966,7 +1040,7 @@ var FormulaDropdown = React.createClass({
 module.exports = FormulaDropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../constants/EditorConstants":17,"../base/Dropdown.react":2,"../base/TabGroup.react":3,"react-dom":undefined}],13:[function(require,module,exports){
+},{"../../constants/EditorConstants":18,"../base/Dropdown.react":3,"../base/TabGroup.react":4,"react-dom":undefined}],14:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1309,12 +1383,12 @@ var ImageDialog = React.createClass({
 module.exports = ImageDialog;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/FileUpload":24,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],14:[function(require,module,exports){
+},{"../../utils/FileUpload":25,"../base/Dialog.react":2,"../base/TabGroup.react":4,"react-dom":undefined}],15:[function(require,module,exports){
 (function (global){
 'use strict';
 
 var React = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
-var Dropdown = require('../base/Dropdown.react');
+var ComboBox = require('../base/ComboBox.react');
 
 var ParagraphDropdown = React.createClass({
 	displayName: 'ParagraphDropdown',
@@ -1354,8 +1428,8 @@ var ParagraphDropdown = React.createClass({
 		var handleSelect = this.handleSelect;
 		var paragraph = this.props.paragraph ? this.props.paragraph : [];
 		return React.createElement(
-			Dropdown,
-			{ ref: 'root', className: 'color-dropdown' },
+			ComboBox,
+			{ ref: 'root', className: 'color-combobox' },
 			React.createElement(
 				'ul',
 				null,
@@ -1374,7 +1448,7 @@ var ParagraphDropdown = React.createClass({
 module.exports = ParagraphDropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../base/Dropdown.react":2}],15:[function(require,module,exports){
+},{"../base/ComboBox.react":1}],16:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1470,7 +1544,7 @@ var SpecialCharsDialog = React.createClass({
 module.exports = SpecialCharsDialog;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../constants/EditorConstants":17,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],16:[function(require,module,exports){
+},{"../../constants/EditorConstants":18,"../base/Dialog.react":2,"../base/TabGroup.react":4,"react-dom":undefined}],17:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1568,7 +1642,7 @@ var TablePickerDropdown = React.createClass({
 module.exports = TablePickerDropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../base/Dropdown.react":2}],17:[function(require,module,exports){
+},{"../base/Dropdown.react":3}],18:[function(require,module,exports){
 "use strict";
 
 var EditorIconTypes = {
@@ -1789,7 +1863,7 @@ module.exports = {
 	EmotionImages: EmotionImages
 };
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1814,10 +1888,11 @@ var EditorTimer = require('./utils/EditorTimer');
 var ColorDropdown = require('./components/plugins/ColorDropdown.react');
 var FormulaDropdown = require('./components/plugins/FormulaDropdown.react');
 var TablePickerDropdown = require('./components/plugins/TablePickerDropdown.react');
-var FontSizeDropdown = require('./components/plugins/FontSizeDropdown.react');
-var FontFamilyDropdown = require('./components/plugins/FontFamilyDropdown.react');
-var ParagraphDropdown = require('./components/plugins/ParagraphDropdown.react');
-
+// combobox
+var FontSizeComboBox = require('./components/plugins/FontSizeComboBox.react');
+var FontFamilyComboBox = require('./components/plugins/FontFamilyComboBox.react');
+var ParagraphComboBox = require('./components/plugins/ParagraphComboBox.react');
+// dialog
 var EmotionDialog = require('./components/plugins/EmotionDialog.react');
 var SpecialCharsDialog = require('./components/plugins/SpecialCharsDialog.react');
 var ImageDialog = require('./components/plugins/ImageDialog.react');
@@ -2429,9 +2504,9 @@ var Editor = React.createClass({
 				React.createElement(TablePickerDropdown, { ref: 'table' }),
 				React.createElement(SpecialCharsDialog, { ref: 'special' }),
 				React.createElement(EmotionDialog, { ref: 'emotion' }),
-				React.createElement(FontSizeDropdown, { ref: 'fontsize', fontsize: this.props.fontSize }),
-				React.createElement(FontFamilyDropdown, { ref: 'fontfamily', fontfamily: this.props.fontFamily }),
-				React.createElement(ParagraphDropdown, { ref: 'paragraph', paragraph: this.props.paragraph })
+				React.createElement(FontSizeComboBox, { ref: 'fontsize', fontsize: this.props.fontSize }),
+				React.createElement(FontFamilyComboBox, { ref: 'fontfamily', fontfamily: this.props.fontFamily }),
+				React.createElement(ParagraphComboBox, { ref: 'paragraph', paragraph: this.props.paragraph })
 			),
 			editArea,
 			React.createElement(EditorResize, { ref: 'resize' })
@@ -2442,7 +2517,7 @@ var Editor = React.createClass({
 module.exports = Editor;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./components/core/EditorContentEditableDiv.react":4,"./components/core/EditorTextArea.react":6,"./components/core/EditorToolbar.react":7,"./components/plugins/ColorDropdown.react":8,"./components/plugins/EmotionDialog.react":9,"./components/plugins/FontFamilyDropdown.react":10,"./components/plugins/FontSizeDropdown.react":11,"./components/plugins/FormulaDropdown.react":12,"./components/plugins/ImageDialog.react":13,"./components/plugins/ParagraphDropdown.react":14,"./components/plugins/SpecialCharsDialog.react":15,"./components/plugins/TablePickerDropdown.react":16,"./constants/EditorConstants":17,"./utils/EditorDOM":19,"./utils/EditorHistory":20,"./utils/EditorResize.react":21,"./utils/EditorSelection":22,"./utils/EditorTimer":23,"react-dom":undefined}],19:[function(require,module,exports){
+},{"./components/core/EditorContentEditableDiv.react":5,"./components/core/EditorTextArea.react":7,"./components/core/EditorToolbar.react":8,"./components/plugins/ColorDropdown.react":9,"./components/plugins/EmotionDialog.react":10,"./components/plugins/FontFamilyComboBox.react":11,"./components/plugins/FontSizeComboBox.react":12,"./components/plugins/FormulaDropdown.react":13,"./components/plugins/ImageDialog.react":14,"./components/plugins/ParagraphComboBox.react":15,"./components/plugins/SpecialCharsDialog.react":16,"./components/plugins/TablePickerDropdown.react":17,"./constants/EditorConstants":18,"./utils/EditorDOM":20,"./utils/EditorHistory":21,"./utils/EditorResize.react":22,"./utils/EditorSelection":23,"./utils/EditorTimer":24,"react-dom":undefined}],20:[function(require,module,exports){
 "use strict";
 
 var EditorDOM = {
@@ -2472,7 +2547,7 @@ var EditorDOM = {
 };
 module.exports = EditorDOM;
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 var EditorHistory = {
@@ -2527,7 +2602,7 @@ var EditorHistory = {
 };
 module.exports = EditorHistory;
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2756,7 +2831,7 @@ var EditorResize = React.createClass({
 module.exports = EditorResize;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"react-dom":undefined}],22:[function(require,module,exports){
+},{"react-dom":undefined}],23:[function(require,module,exports){
 "use strict";
 
 var EditorDOM = require('./EditorDOM');
@@ -2984,7 +3059,7 @@ var EditorSelection = {
 };
 module.exports = EditorSelection;
 
-},{"./EditorDOM":19}],23:[function(require,module,exports){
+},{"./EditorDOM":20}],24:[function(require,module,exports){
 "use strict";
 
 var INTERVAL_MS = 1000 / 60;
@@ -3105,7 +3180,7 @@ EditorTimer.animate();
 
 module.exports = EditorTimer;
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 'use strict';
 
 var getError = function getError(options, xhr) {
@@ -3191,5 +3266,5 @@ module.exports = {
     uploadFiles: function uploadFiles(options) {}
 };
 
-},{}]},{},[18])(18)
+},{}]},{},[19])(19)
 });

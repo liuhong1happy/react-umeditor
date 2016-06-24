@@ -1,5 +1,5 @@
 var React = require('react');
-var Dropdown = require('../base/Dropdown.react');
+var ComboBox = require('../base/ComboBox.react');
 
 var ParagraphDropdown = React.createClass({
 	getInitialState:function(){
@@ -36,7 +36,7 @@ var ParagraphDropdown = React.createClass({
 	render:function(){
 		var handleSelect = this.handleSelect;
 		var paragraph = this.props.paragraph?this.props.paragraph:[];
-		return (<Dropdown ref="root" className="color-dropdown">
+		return (<ComboBox ref="root" className="color-combobox">
 			<ul>
 				{
 					paragraph.map(function(ele,pos){
@@ -46,7 +46,7 @@ var ParagraphDropdown = React.createClass({
 					})
 				}
 			</ul>
-		</Dropdown>)
+		</ComboBox>)
 	}
 })
 		

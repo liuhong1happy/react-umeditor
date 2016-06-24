@@ -1,7 +1,7 @@
 var React = require('react');
-var Dropdown = require('../base/Dropdown.react');
+var ComboBox = require('../base/ComboBox.react');
 
-var FontSizeDropdown = React.createClass({
+var FontFamilyDropdown = React.createClass({
 	getInitialState:function(){
 		return {
 			handle:function(){}
@@ -35,19 +35,19 @@ var FontSizeDropdown = React.createClass({
 	},
 	render:function(){
 		var handleSelect = this.handleSelect;
-		var fontsize = this.props.fontsize?this.props.fontsize:[];
-		return (<Dropdown ref="root" className="color-dropdown">
+		var paragraph = this.props.paragraph?this.props.paragraph:[];
+		return (<ComboBox ref="root" className="color-combobox">
 			<ul>
 				{
-					fontsize.map(function(ele,pos){
+					paragraph.map(function(ele,pos){
 						return (<li data-value={ele.value} onClick={handleSelect}>
-								<p data-value={ele.value} style={{"fontSize":ele.value}}>{ele.name}</p>
+								<p data-value={ele.value} style={{"fontFamily":ele.value}}>{ele.name}</p>
 								</li>)
 					})
 				}
 			</ul>
-		</Dropdown>)
+		</ComboBox>)
 	}
 })
 		
-module.exports = FontSizeDropdown;
+module.exports = FontFamilyDropdown;

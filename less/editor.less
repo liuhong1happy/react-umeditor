@@ -84,6 +84,41 @@ blockquote{
 			}
 		}
 	}
+	.combobox{
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		z-index: 999;
+		background-color: #fff;
+		border: 1px solid #d8d8d8;
+		border-radius: 2px;
+		padding: 10px;
+		font-size: 12px;
+		ul{
+			padding:0px;
+			margin: 3px 5px;
+			li{
+				list-style: none;
+				vertical-align: top;
+				border: 1px solid transparent;
+				margin: 0px 1px;
+				padding: 0px;
+				cursor: pointer;
+				width: 160px;
+				p,h1,h2,h3,h4,h5,h6{
+					text-align: center;
+					margin: 0px;
+					padding: 3px 5px;
+					min-height: 25px;
+					vertical-align: middle;
+				}
+				&:hover,&.active{
+					background-color: #d5e1f2;
+					border:1px solid #a3bde3;
+				}
+			}
+		}
+	}
 	.dialog-container{
 		.dialog{
 			z-index: 1001;
@@ -475,18 +510,6 @@ blockquote{
 			}
 		}
 	}
-    table{
-        margin-bottom: 10px;
-        border-collapse: collapse;
-        display: table;
-        td, th {
-            padding: 5px 10px;
-            border: 1px solid #d8d8d8;
-            font-size: 16px;
-            vertical-align: top;
-            height: 18px;
-        }
-    }
 }
 .editor-default{
 	.editor-toolbar{
@@ -893,6 +916,18 @@ blockquote{
 		padding: 0px 10px;
 		p{
 			margin: 5px 0;
+		}
+		table{
+			margin-bottom: 10px;
+			border-collapse: collapse;
+			display: table;
+			td, th {
+				padding: 5px 10px;
+				border: 1px solid #d8d8d8;
+				font-size: 16px;
+				vertical-align: top;
+				height: 18px;
+			}
 		}
 	}
 }

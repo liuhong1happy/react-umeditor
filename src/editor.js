@@ -14,10 +14,11 @@ var EditorTimer = require('./utils/EditorTimer')
 var ColorDropdown = require('./components/plugins/ColorDropdown.react');
 var FormulaDropdown = require('./components/plugins/FormulaDropdown.react');
 var TablePickerDropdown = require('./components/plugins/TablePickerDropdown.react');
-var FontSizeDropdown = require('./components/plugins/FontSizeDropdown.react');
-var FontFamilyDropdown = require('./components/plugins/FontFamilyDropdown.react');
-var ParagraphDropdown = require('./components/plugins/ParagraphDropdown.react');
-
+// combobox
+var FontSizeComboBox= require('./components/plugins/FontSizeComboBox.react');
+var FontFamilyComboBox = require('./components/plugins/FontFamilyComboBox.react');
+var ParagraphComboBox = require('./components/plugins/ParagraphComboBox.react');
+// dialog
 var EmotionDialog =  require('./components/plugins/EmotionDialog.react');
 var SpecialCharsDialog = require('./components/plugins/SpecialCharsDialog.react');
 var ImageDialog = require('./components/plugins/ImageDialog.react');
@@ -647,9 +648,9 @@ var Editor = React.createClass({
 					<TablePickerDropdown ref="table" />
 					<SpecialCharsDialog ref="special" />
 					<EmotionDialog ref="emotion" />
-					<FontSizeDropdown ref="fontsize" fontsize={this.props.fontSize} />
-					<FontFamilyDropdown ref="fontfamily" fontfamily={this.props.fontFamily} />
-					<ParagraphDropdown ref="paragraph" paragraph={this.props.paragraph} />
+					<FontSizeComboBox ref="fontsize" fontsize={this.props.fontSize} />
+					<FontFamilyComboBox ref="fontfamily" fontfamily={this.props.fontFamily} />
+					<ParagraphComboBox ref="paragraph" paragraph={this.props.paragraph} />
 				</EditorToolbar>
 				{editArea}
 				<EditorResize ref="resize" />

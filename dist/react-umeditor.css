@@ -81,6 +81,48 @@ blockquote {
 .editor-container .dropdown table tr.title-row {
   margin-top: 10px;
 }
+.editor-container .combobox {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 999;
+  background-color: #fff;
+  border: 1px solid #d8d8d8;
+  border-radius: 2px;
+  padding: 10px;
+  font-size: 12px;
+}
+.editor-container .combobox ul {
+  padding: 0px;
+  margin: 3px 5px;
+}
+.editor-container .combobox ul li {
+  list-style: none;
+  vertical-align: top;
+  border: 1px solid transparent;
+  margin: 0px 1px;
+  padding: 0px;
+  cursor: pointer;
+  width: 160px;
+}
+.editor-container .combobox ul li p,
+.editor-container .combobox ul li h1,
+.editor-container .combobox ul li h2,
+.editor-container .combobox ul li h3,
+.editor-container .combobox ul li h4,
+.editor-container .combobox ul li h5,
+.editor-container .combobox ul li h6 {
+  text-align: center;
+  margin: 0px;
+  padding: 3px 5px;
+  min-height: 25px;
+  vertical-align: middle;
+}
+.editor-container .combobox ul li:hover,
+.editor-container .combobox ul li.active {
+  background-color: #d5e1f2;
+  border: 1px solid #a3bde3;
+}
 .editor-container .dialog-container .dialog {
   z-index: 1001;
   display: block;
@@ -453,19 +495,6 @@ blockquote {
 .editor-container .emotion-dropdwon .common-images .emotion-image img {
   max-width: 35px;
   max-height: 35px;
-}
-.editor-container table {
-  margin-bottom: 10px;
-  border-collapse: collapse;
-  display: table;
-}
-.editor-container table td,
-.editor-container table th {
-  padding: 5px 10px;
-  border: 1px solid #d8d8d8;
-  font-size: 16px;
-  vertical-align: top;
-  height: 18px;
 }
 .editor-default .editor-toolbar {
   position: relative;
@@ -875,4 +904,17 @@ blockquote {
 }
 .editor-default .editor-contenteditable-div p {
   margin: 5px 0;
+}
+.editor-default .editor-contenteditable-div table {
+  margin-bottom: 10px;
+  border-collapse: collapse;
+  display: table;
+}
+.editor-default .editor-contenteditable-div table td,
+.editor-default .editor-contenteditable-div table th {
+  padding: 5px 10px;
+  border: 1px solid #d8d8d8;
+  font-size: 16px;
+  vertical-align: top;
+  height: 18px;
 }
