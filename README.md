@@ -1,6 +1,6 @@
 # react-umeditor
 
-[![Version](https://img.shields.io/npm/v/react-native-svg.svg)](https://www.npmjs.com/package/react-native-svg)
+[![Version](https://img.shields.io/npm/v/react-umeditor.svg)](https://www.npmjs.com/package/react-umeditor)
 
 React Editor like [Umeditor](https://github.com/fex-team/umeditor)
 
