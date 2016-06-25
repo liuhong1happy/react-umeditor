@@ -49,9 +49,14 @@ You can set the `props`!The `props` maybe is as follows:
 	git clone https://github.com/liuhong1happy/react-umeditor
 	cd react-umeditor
 	npm install
+    npm install envify browserify
+    npm install react browserify
+    npm install reactify browserify
 	npm run build
 
 open the file `example/dist/index.html`
+
+
 
 ## Contribute
 
