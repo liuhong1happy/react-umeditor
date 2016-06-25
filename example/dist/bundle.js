@@ -106,6 +106,7 @@ var Dialog = React.createClass({
 
 module.exports = Dialog;
 
+
 },{"react":undefined}],2:[function(require,module,exports){
 "use strict";
 
@@ -179,6 +180,7 @@ var Dropdown = React.createClass({
 
 module.exports = Dropdown;
 
+
 },{"react":undefined}],3:[function(require,module,exports){
 "use strict";
 
@@ -245,6 +247,7 @@ var TabGroup = React.createClass({
 
 module.exports = TabGroup;
 
+
 },{"react":undefined}],4:[function(require,module,exports){
 'use strict';
 
@@ -305,6 +308,7 @@ var EditorContentEditableDiv = React.createClass({
 	}
 });
 module.exports = EditorContentEditableDiv;
+
 
 },{"../../utils/EditorDOM":15,"../../utils/EditorSelection":18,"react":undefined,"react-dom":undefined}],5:[function(require,module,exports){
 'use strict';
@@ -374,6 +378,7 @@ var EditorIcon = React.createClass({
 
 module.exports = EditorIcon;
 
+
 },{"react":undefined,"react-dom":undefined}],6:[function(require,module,exports){
 'use strict';
 
@@ -412,6 +417,7 @@ var EditorTextArea = React.createClass({
 });
 module.exports = EditorTextArea;
 
+
 },{"react":undefined,"react-dom":undefined}],7:[function(require,module,exports){
 'use strict';
 
@@ -435,7 +441,7 @@ var EditorToolbar = React.createClass({
 	getDefaultProps: function getDefaultProps() {
 		// paragraph fontfamily fontsize video map print preview drafts link unlink
 		return {
-			icons: ["source | undo redo | bold italic underline strikethrough fontborder | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal date time  | image emotion formula spechars | inserttable"]
+			icons: ["source | undo redo | bold italic underline strikethrough fontborder | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal date time  | image emotion formula spechars | inserttable deletetable"]
 		};
 	},
 	handleIconClick: function handleIconClick(e, state) {
@@ -482,6 +488,7 @@ var EditorToolbar = React.createClass({
 });
 
 module.exports = EditorToolbar;
+
 
 },{"../../constants/EditorConstants":14,"../../utils/EditorHistory":16,"./EditorIcon.react":5,"react":undefined}],8:[function(require,module,exports){
 'use strict';
@@ -588,6 +595,7 @@ var ColorDropdown = React.createClass({
 });
 
 module.exports = ColorDropdown;
+
 
 },{"../../constants/EditorConstants":14,"../base/Dropdown.react":2,"react":undefined}],9:[function(require,module,exports){
 'use strict';
@@ -710,6 +718,7 @@ var EmotionDialog = React.createClass({
 
 module.exports = EmotionDialog;
 
+
 },{"../../constants/EditorConstants":14,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],10:[function(require,module,exports){
 'use strict';
 
@@ -792,6 +801,7 @@ var FormulaDropdown = React.createClass({
 });
 
 module.exports = FormulaDropdown;
+
 
 },{"../../constants/EditorConstants":14,"../base/Dropdown.react":2,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],11:[function(require,module,exports){
 'use strict';
@@ -1134,6 +1144,7 @@ var ImageDialog = React.createClass({
 
 module.exports = ImageDialog;
 
+
 },{"../../utils/FileUpload":20,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],12:[function(require,module,exports){
 'use strict';
 
@@ -1227,6 +1238,7 @@ var SpecialCharsDialog = React.createClass({
 });
 
 module.exports = SpecialCharsDialog;
+
 
 },{"../../constants/EditorConstants":14,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],13:[function(require,module,exports){
 'use strict';
@@ -1323,6 +1335,7 @@ var TablePickerDropdown = React.createClass({
 });
 
 module.exports = TablePickerDropdown;
+
 
 },{"../base/Dropdown.react":2,"react":undefined}],14:[function(require,module,exports){
 "use strict";
@@ -1467,6 +1480,10 @@ var EditorIconTypes = {
 		title: "插入表格",
 		disabled: false
 	},
+	"deletetable": {
+		title: "删除表格",
+		disabled: false
+	},
 	"touppercase": {
 		title: "转换大写",
 		disabled: false
@@ -1545,6 +1562,7 @@ module.exports = {
 	EmotionImages: EmotionImages
 };
 
+
 },{}],15:[function(require,module,exports){
 "use strict";
 
@@ -1574,6 +1592,7 @@ var EditorDOM = {
 	}
 };
 module.exports = EditorDOM;
+
 
 },{}],16:[function(require,module,exports){
 "use strict";
@@ -1629,6 +1648,7 @@ var EditorHistory = {
 	}
 };
 module.exports = EditorHistory;
+
 
 },{}],17:[function(require,module,exports){
 'use strict';
@@ -1857,6 +1877,7 @@ var EditorResize = React.createClass({
 
 module.exports = EditorResize;
 
+
 },{"react":undefined,"react-dom":undefined}],18:[function(require,module,exports){
 "use strict";
 
@@ -2050,6 +2071,7 @@ var EditorSelection = {
 						rangeState["indent"] = { active: true, icon: "indent" };
 						rangeState["outdent"] = { active: false, icon: "indent" };
 						break;
+					case "TABLE":
 
 				}
 				parentElement = parentElement.parentElement;
@@ -2074,6 +2096,7 @@ var EditorSelection = {
 	}
 };
 module.exports = EditorSelection;
+
 
 },{"./EditorDOM":15}],19:[function(require,module,exports){
 "use strict";
@@ -2196,6 +2219,7 @@ EditorTimer.animate();
 
 module.exports = EditorTimer;
 
+
 },{}],20:[function(require,module,exports){
 'use strict';
 
@@ -2281,6 +2305,7 @@ module.exports = {
     },
     uploadFiles: function uploadFiles(options) {}
 };
+
 
 },{}],"react-umeditor":[function(require,module,exports){
 'use strict';
@@ -2712,6 +2737,8 @@ var Editor = React.createClass({
 					handleRangeChange();
 				});
 				break;
+			case "deletetable":
+				break;
 			case "spechars":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h + 5;
@@ -2842,7 +2869,7 @@ var Editor = React.createClass({
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		editarea.focus();
 	},
-	// render functions 
+	// render functions
 	genEditArea: function genEditArea() {
 		var showHtml = this.state.editorState.showHtml;
 		if (showHtml) {
@@ -2881,5 +2908,6 @@ var Editor = React.createClass({
 });
 
 module.exports = Editor;
+
 
 },{"./components/core/EditorContentEditableDiv.react":4,"./components/core/EditorTextArea.react":6,"./components/core/EditorToolbar.react":7,"./components/plugins/ColorDropdown.react":8,"./components/plugins/EmotionDialog.react":9,"./components/plugins/FormulaDropdown.react":10,"./components/plugins/ImageDialog.react":11,"./components/plugins/SpecialCharsDialog.react":12,"./components/plugins/TablePickerDropdown.react":13,"./constants/EditorConstants":14,"./utils/EditorDOM":15,"./utils/EditorHistory":16,"./utils/EditorResize.react":17,"./utils/EditorSelection":18,"./utils/EditorTimer":19,"react":undefined,"react-dom":undefined}]},{},[]);

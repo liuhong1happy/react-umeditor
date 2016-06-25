@@ -107,6 +107,7 @@ var Dialog = React.createClass({
 
 module.exports = Dialog;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],2:[function(require,module,exports){
 (function (global){
@@ -182,6 +183,7 @@ var Dropdown = React.createClass({
 
 module.exports = Dropdown;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
 (function (global){
@@ -250,6 +252,7 @@ var TabGroup = React.createClass({
 
 module.exports = TabGroup;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],4:[function(require,module,exports){
 (function (global){
@@ -312,6 +315,7 @@ var EditorContentEditableDiv = React.createClass({
 	}
 });
 module.exports = EditorContentEditableDiv;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../utils/EditorDOM":16,"../../utils/EditorSelection":19,"react-dom":undefined}],5:[function(require,module,exports){
@@ -383,6 +387,7 @@ var EditorIcon = React.createClass({
 
 module.exports = EditorIcon;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"react-dom":undefined}],6:[function(require,module,exports){
 (function (global){
@@ -423,6 +428,7 @@ var EditorTextArea = React.createClass({
 });
 module.exports = EditorTextArea;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"react-dom":undefined}],7:[function(require,module,exports){
 (function (global){
@@ -448,7 +454,7 @@ var EditorToolbar = React.createClass({
 	getDefaultProps: function getDefaultProps() {
 		// paragraph fontfamily fontsize video map print preview drafts link unlink
 		return {
-			icons: ["source | undo redo | bold italic underline strikethrough fontborder | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal date time  | image emotion formula spechars | inserttable"]
+			icons: ["source | undo redo | bold italic underline strikethrough fontborder | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal date time  | image emotion formula spechars | inserttable deletetable"]
 		};
 	},
 	handleIconClick: function handleIconClick(e, state) {
@@ -495,6 +501,7 @@ var EditorToolbar = React.createClass({
 });
 
 module.exports = EditorToolbar;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":14,"../../utils/EditorHistory":17,"./EditorIcon.react":5}],8:[function(require,module,exports){
@@ -603,6 +610,7 @@ var ColorDropdown = React.createClass({
 });
 
 module.exports = ColorDropdown;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":14,"../base/Dropdown.react":2}],9:[function(require,module,exports){
@@ -727,6 +735,7 @@ var EmotionDialog = React.createClass({
 
 module.exports = EmotionDialog;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":14,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],10:[function(require,module,exports){
 (function (global){
@@ -811,6 +820,7 @@ var FormulaDropdown = React.createClass({
 });
 
 module.exports = FormulaDropdown;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":14,"../base/Dropdown.react":2,"../base/TabGroup.react":3,"react-dom":undefined}],11:[function(require,module,exports){
@@ -1155,6 +1165,7 @@ var ImageDialog = React.createClass({
 
 module.exports = ImageDialog;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../utils/FileUpload":21,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],12:[function(require,module,exports){
 (function (global){
@@ -1250,6 +1261,7 @@ var SpecialCharsDialog = React.createClass({
 });
 
 module.exports = SpecialCharsDialog;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":14,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react-dom":undefined}],13:[function(require,module,exports){
@@ -1348,6 +1360,7 @@ var TablePickerDropdown = React.createClass({
 });
 
 module.exports = TablePickerDropdown;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../base/Dropdown.react":2}],14:[function(require,module,exports){
@@ -1493,6 +1506,10 @@ var EditorIconTypes = {
 		title: "插入表格",
 		disabled: false
 	},
+	"deletetable": {
+		title: "删除表格",
+		disabled: false
+	},
 	"touppercase": {
 		title: "转换大写",
 		disabled: false
@@ -1570,6 +1587,7 @@ module.exports = {
 	SpecialChars: SpecialChars,
 	EmotionImages: EmotionImages
 };
+
 
 },{}],15:[function(require,module,exports){
 (function (global){
@@ -2002,6 +2020,8 @@ var Editor = React.createClass({
 					handleRangeChange();
 				});
 				break;
+			case "deletetable":
+				break;
 			case "spechars":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h + 5;
@@ -2132,7 +2152,7 @@ var Editor = React.createClass({
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		editarea.focus();
 	},
-	// render functions 
+	// render functions
 	genEditArea: function genEditArea() {
 		var showHtml = this.state.editorState.showHtml;
 		if (showHtml) {
@@ -2172,6 +2192,7 @@ var Editor = React.createClass({
 
 module.exports = Editor;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./components/core/EditorContentEditableDiv.react":4,"./components/core/EditorTextArea.react":6,"./components/core/EditorToolbar.react":7,"./components/plugins/ColorDropdown.react":8,"./components/plugins/EmotionDialog.react":9,"./components/plugins/FormulaDropdown.react":10,"./components/plugins/ImageDialog.react":11,"./components/plugins/SpecialCharsDialog.react":12,"./components/plugins/TablePickerDropdown.react":13,"./constants/EditorConstants":14,"./utils/EditorDOM":16,"./utils/EditorHistory":17,"./utils/EditorResize.react":18,"./utils/EditorSelection":19,"./utils/EditorTimer":20,"react-dom":undefined}],16:[function(require,module,exports){
 "use strict";
@@ -2202,6 +2223,7 @@ var EditorDOM = {
 	}
 };
 module.exports = EditorDOM;
+
 
 },{}],17:[function(require,module,exports){
 "use strict";
@@ -2257,6 +2279,7 @@ var EditorHistory = {
 	}
 };
 module.exports = EditorHistory;
+
 
 },{}],18:[function(require,module,exports){
 (function (global){
@@ -2486,6 +2509,7 @@ var EditorResize = React.createClass({
 
 module.exports = EditorResize;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"react-dom":undefined}],19:[function(require,module,exports){
 "use strict";
@@ -2680,6 +2704,7 @@ var EditorSelection = {
 						rangeState["indent"] = { active: true, icon: "indent" };
 						rangeState["outdent"] = { active: false, icon: "indent" };
 						break;
+					case "TABLE":
 
 				}
 				parentElement = parentElement.parentElement;
@@ -2704,6 +2729,7 @@ var EditorSelection = {
 	}
 };
 module.exports = EditorSelection;
+
 
 },{"./EditorDOM":16}],20:[function(require,module,exports){
 "use strict";
@@ -2826,6 +2852,7 @@ EditorTimer.animate();
 
 module.exports = EditorTimer;
 
+
 },{}],21:[function(require,module,exports){
 'use strict';
 
@@ -2911,6 +2938,7 @@ module.exports = {
     },
     uploadFiles: function uploadFiles(options) {}
 };
+
 
 },{}]},{},[15])(15)
 });

@@ -134,10 +134,14 @@ var EditorIconTypes = {
 		title:"数学公式",
 		disabled:false
 	},
-    "inserttable":{
+  "inserttable":{
 		title:"插入表格",
 		disabled:false
-    },
+  },
+  "deletetable":{
+  	title:"删除表格",
+		disabled:false
+  },
 	"touppercase":{
 		title:"转换大写",
 		disabled:false
@@ -209,7 +213,7 @@ var FormulaTypes = {
 		{backgroundPosition:"-210px -60px",latex:"\\bigtriangleup"},
 		{backgroundPosition:"-0px -90px",latex:"="},
 		{backgroundPosition:"-30px -90px",latex:"\\ne"},
-		
+
 		{backgroundPosition:"-60px -90px",latex:"\\approx"},
 		{backgroundPosition:"-90px -90px",latex:">"},
 		{backgroundPosition:"-120px -90px",latex:"<"},
@@ -220,7 +224,7 @@ var FormulaTypes = {
 		{backgroundPosition:"-30px -120px",latex:"\\cup"},
 		{backgroundPosition:"-60px -120px",latex:"\\because"},
 		{backgroundPosition:"-90px -120px",latex:"\\therefore"},
-		
+
 		{backgroundPosition:"-120px -120px",latex:"\\subset"},
 		{backgroundPosition:"-150px -120px",latex:"\\supset"},
 		{backgroundPosition:"-180px -120px",latex:"\\subseteq"},
@@ -231,7 +235,7 @@ var FormulaTypes = {
 		{backgroundPosition:"-90px -150px",latex:"\\ni"},
 		{backgroundPosition:"-120px -150px",latex:"\\notin"},
 		{backgroundPosition:"-150px -150px",latex:"\\mapsto"},
-		
+
 		{backgroundPosition:"-180px -150px",latex:"\\leftarrow"},
 		{backgroundPosition:"-210px -150px",latex:"\\rightarrow"},
 		{backgroundPosition:"-0px -180px",latex:"\\Leftarrow"},
@@ -244,22 +248,22 @@ var FormulaTypes = {
 		{backgroundPosition:"-30px -210px",latex:"\\beta"},
 		{backgroundPosition:"-60px -210px",latex:"\\gamma"},
 		{backgroundPosition:"-90px -210px",latex:"\\delta"},
-		
+
 		{backgroundPosition:"-120px -210px",latex:"\\varepsilon"},
 		{backgroundPosition:"-150px -210px",latex:"\\varphi"},
 		{backgroundPosition:"-180px -210px",latex:"\\lambda"},
 		{backgroundPosition:"-210px -210px",latex:"\\mu"},
-		
+
 		{backgroundPosition:"-0px -240px",latex:"\\rho"},
 		{backgroundPosition:"-30px -240px",latex:"\\sigma"},
 		{backgroundPosition:"-60px -240px",latex:"\\omega"},
 		{backgroundPosition:"-90px -240px",latex:"\\Gamma"},
-		
+
 		{backgroundPosition:"-120px -240px",latex:"\\Delta"},
 		{backgroundPosition:"-150px -240px",latex:"\\Theta"},
 		{backgroundPosition:"-180px -240px",latex:"\\Lambda"},
 		{backgroundPosition:"-210px -240px",latex:"\\Xi"},
-		
+
 		{backgroundPosition:"-0px -270px",latex:"\\Pi"},
 		{backgroundPosition:"-30px -270px",latex:"\\Sigma"},
 		{backgroundPosition:"-60px -270px",latex:"\\Upsilon"},

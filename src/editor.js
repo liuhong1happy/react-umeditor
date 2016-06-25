@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var { 
+var {
 	EditorIconTypes
 } = require('./constants/EditorConstants');
 
@@ -161,7 +161,7 @@ var Editor = React.createClass({
 	exchangeRangeState:function(editorState){
 		var rangeState = EditorSelection.getRangeState();
 		for(var icon in rangeState){
-			if(!editorState.icons[icon]) 
+			if(!editorState.icons[icon])
 				editorState.icons[icon] = rangeState[icon];
 			else {
 				switch(icon){
@@ -200,7 +200,7 @@ var Editor = React.createClass({
 		e = e || event;
 		var target = e.target || e.srcElement;
 		var offsetPosition = this.getOffsetRootParentPosition(target);
-		
+
 		var handleRangeChange = this.handleRangeChange;
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var editorState = this.state.editorState;
@@ -227,7 +227,7 @@ var Editor = React.createClass({
 							var spanNode = spanNodes[i];
 							var parentNode = spanNode.parentNode;
 							var nextSibling = spanNode.nextSibling;
-							
+
 							for(var c=0;c<spanNode.childNodes.length;c++){
 								parentNode.insertBefore(spanNode.childNodes[c].cloneNode(),nextSibling);
 							}
@@ -261,8 +261,8 @@ var Editor = React.createClass({
 					var node = textNodes[i].childNode;
 					var start = textNodes[i].startOffset;
 					var end = textNodes[i].endOffset;
-					node.nodeValue = node.nodeValue.substring(0,start) + 
-							( state.icon=="touppercase"?node.nodeValue.substring(start,end).toUpperCase():node.nodeValue.substring(start,end).toLowerCase() ) + 
+					node.nodeValue = node.nodeValue.substring(0,start) +
+							( state.icon=="touppercase"?node.nodeValue.substring(start,end).toUpperCase():node.nodeValue.substring(start,end).toLowerCase() ) +
 							node.nodeValue.substring(end,node.length);
 				}
 				EditorHistory.execCommand(state.icon,false,null);
@@ -316,7 +316,7 @@ var Editor = React.createClass({
 				for(var i=0;i<spanNodes.length-1;i++){
 					var spanNode = spanNodes[i];
 					var parentNode = spanNodes[i].parentNode;
-					
+
 					if(EditorDOM.isNullOfTextNode(spanNode.nextSibling)){
 						// 移除空元素
 						parentNode.removeChild(spanNode.nextSibling);
@@ -347,7 +347,7 @@ var Editor = React.createClass({
 			case "backcolor":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
-				
+
 				this.refs.color.open(offsetPosition,function(e,color){
 					editarea.focus();
 					EditorSelection.restoreRange();
@@ -374,7 +374,7 @@ var Editor = React.createClass({
 				this.refs.image.open(function(e,html){
 					editarea.focus();
 					EditorSelection.restoreRange();
-					
+
 					if(html && html.length>0){
 						if(EditorSelection.range){
 							EditorHistory.execCommand('inserthtml',false,html);
@@ -392,7 +392,7 @@ var Editor = React.createClass({
 				this.refs.formula.open(offsetPosition,function(e,latex,id){
 					editarea.focus();
 					EditorSelection.restoreRange();
-					
+
 					if(latex && latex.length>0){
 						var html = '<p>&nbsp;<span class="mathquill-embedded-latex" id="'+id+'"></span>&nbsp;</p>';
 						if(EditorSelection.range){
@@ -407,7 +407,7 @@ var Editor = React.createClass({
 					}
 				})
 				break;
-            case "inserttable":
+      case "inserttable":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
                 offsetPosition.x -= offsetPosition.w/2;
@@ -417,6 +417,8 @@ var Editor = React.createClass({
 					EditorHistory.execCommand('inserthtml',false,html);
 					handleRangeChange();
 				});
+				break;
+			case "deletetable":
 				break;
 			case "spechars":
 				EditorSelection.storeRange();
@@ -449,7 +451,7 @@ var Editor = React.createClass({
 		this.setState({
 			editorState:editorState
 		})
-		
+
 		if(e.stopPropagation){
 			e.stopPropagation();
 		}else{
@@ -480,7 +482,7 @@ var Editor = React.createClass({
 		  restrictMismatchedBrackets: true
 		};
 		var mathField = MQ.MathField(htmlElement, config);
-		mathField.latex(latex); 
+		mathField.latex(latex);
 		var $htmlElement = $(htmlElement);
 		$htmlElement.keydown(function(e){
 			mathField.focus();
@@ -515,7 +517,7 @@ var Editor = React.createClass({
 	findDOMNode:function(refName){
 		// 对外公布方法
 		var keys = [ "root","editarea","toolbar","color"];
-		if(keys.indexOf(refName)==-1) 
+		if(keys.indexOf(refName)==-1)
 			return {ref:null,dom:null};
 		return {
 			ref:this.refs[refName],
@@ -549,13 +551,13 @@ var Editor = React.createClass({
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		editarea.focus();
 	},
-    // render functions  
+    // render functions
 	genEditArea:function(){
 		var showHtml = this.state.editorState.showHtml;
 		if(showHtml){
 			return (<EditorTextArea ref="editarea" />)
 		}else{
-			return (<EditorContentEditableDiv ref="editarea" onRangeChange={this.handleRangeChange}/>)		
+			return (<EditorContentEditableDiv ref="editarea" onRangeChange={this.handleRangeChange}/>)
 		}
 	},
 	render:function(){

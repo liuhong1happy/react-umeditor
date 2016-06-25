@@ -1,6 +1,6 @@
 var React = require('react');
 var EditorIcon = require('./EditorIcon.react');
-var { 
+var {
 	EditorIconTypes
 } = require('../../constants/EditorConstants');
 var EditorHistory = require('../../utils/EditorHistory');
@@ -15,7 +15,7 @@ var EditorToolbar = React.createClass({
 			icons:[
 				"source | undo redo | bold italic underline strikethrough fontborder | superscript subscript | ",
 				"forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ",
-				"cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal date time  | image emotion formula spechars | inserttable"
+				"cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal date time  | image emotion formula spechars | inserttable deletetable"
 		    ]
 		}
 	},
@@ -28,7 +28,7 @@ var EditorToolbar = React.createClass({
 		var editorState = this.props.editorState;
 		editorState.icons["undo"] = { disabled:!EditorHistory.canUndo()}
 		editorState.icons["redo"] = { disabled:!EditorHistory.canRedo()}
-		
+
 		var icons = this.props.icons;
 		var _icons = icons.join(" ").replace(/\|/gm,"separator").split(" ");
 		_icons = _icons.filter(function(ico){ return ico!=""});
@@ -53,7 +53,7 @@ var EditorToolbar = React.createClass({
 						var props = icon;
 						return(<EditorIcon key={pos} {...props} />)
 					})
-					
+
 				}{this.props.children}</div>)
 	}
 })
