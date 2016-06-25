@@ -1,6 +1,78 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var React = require('react');
+
+var ComboBox = React.createClass({
+	displayName: "ComboBox",
+
+	getInitialState: function getInitialState() {
+		return {
+			show: false,
+			position: {
+				x: 0,
+				y: 0
+			}
+		};
+	},
+	componentDidMount: function componentDidMount() {
+		window.addEventListener("click", this.close);
+	},
+	componentWillUnmount: function componentWillUnmount() {
+		window.removeEventListener("click", this.close);
+	},
+	open: function open(position) {
+		this.setState({
+			show: true,
+			position: position
+		});
+	},
+	close: function close() {
+		this.setState({
+			show: false
+		});
+	},
+	toggle: function toggle(position) {
+		this.setState({
+			show: !this.state.show,
+			position: position
+		});
+	},
+	render: function render() {
+		var _props = this.props;
+		var className = _props.className;
+		var style = _props.style;
+
+		var props = _objectWithoutProperties(_props, ["className", "style"]);
+
+		style = style || {};
+		if (!this.state.show) {
+			style["display"] = "none";
+		} else {
+			style["display"] = "";
+		}
+		if (this.state.position) {
+			style["left"] = this.state.position.x;
+			style["top"] = this.state.position.y;
+		}
+
+		return React.createElement(
+			"div",
+			_extends({ style: style, className: "combobox" + (className ? " " + className : "") }, props),
+			this.props.children
+		);
+	}
+});
+
+module.exports = ComboBox;
+
+},{"react":undefined}],2:[function(require,module,exports){
+"use strict";
+
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 var React = require('react');
@@ -106,7 +178,7 @@ var Dialog = React.createClass({
 
 module.exports = Dialog;
 
-},{"react":undefined}],2:[function(require,module,exports){
+},{"react":undefined}],3:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -179,7 +251,7 @@ var Dropdown = React.createClass({
 
 module.exports = Dropdown;
 
-},{"react":undefined}],3:[function(require,module,exports){
+},{"react":undefined}],4:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -245,7 +317,7 @@ var TabGroup = React.createClass({
 
 module.exports = TabGroup;
 
-},{"react":undefined}],4:[function(require,module,exports){
+},{"react":undefined}],5:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -306,7 +378,7 @@ var EditorContentEditableDiv = React.createClass({
 });
 module.exports = EditorContentEditableDiv;
 
-},{"../../utils/EditorDOM":14,"../../utils/EditorSelection":17,"react":undefined,"react-dom":undefined}],5:[function(require,module,exports){
+},{"../../utils/EditorDOM":19,"../../utils/EditorSelection":22,"react":undefined,"react-dom":undefined}],6:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -368,13 +440,27 @@ var EditorIcon = React.createClass({
 		var props = _objectWithoutProperties(_props2, ['icon', 'active', 'disabled', 'showHtml', 'onClick']);
 
 		var _disabled = showHtml && icon != "source" && icon != "separator";
-		return React.createElement('span', _extends({ ref: 'root', className: "editor-icon icon-" + icon + (active ? " active" : "") + (disabled || _disabled ? " disabled" : ""), onClick: this.handleClick }, props));
+		var _className = "editor-icon icon-" + icon + (active ? " active" : "") + (disabled || _disabled ? " disabled" : "");
+		if (icon == "fontsize" || icon == "fontfamily" || icon == "paragraph") {
+			return React.createElement(
+				'span',
+				_extends({ ref: 'root', className: _className, onClick: this.handleClick }, props),
+				React.createElement(
+					'span',
+					{ className: 'icon-label' },
+					props.value
+				),
+				React.createElement('span', { className: 'icon-caret' })
+			);
+		} else {
+			return React.createElement('span', _extends({ ref: 'root', className: _className, onClick: this.handleClick }, props));
+		}
 	}
 });
 
 module.exports = EditorIcon;
 
-},{"react":undefined,"react-dom":undefined}],6:[function(require,module,exports){
+},{"react":undefined,"react-dom":undefined}],7:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -412,7 +498,7 @@ var EditorTextArea = React.createClass({
 });
 module.exports = EditorTextArea;
 
-},{"react":undefined,"react-dom":undefined}],7:[function(require,module,exports){
+},{"react":undefined,"react-dom":undefined}],8:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -433,9 +519,9 @@ var EditorToolbar = React.createClass({
 		icons: React.PropTypes.array
 	},
 	getDefaultProps: function getDefaultProps() {
-		// paragraph fontfamily fontsize  emotion video map print preview drafts link unlink
+		// video map print preview drafts link unlink
 		return {
-			icons: ["source | undo redo | bold italic underline strikethrough fontborder | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal | image formula spechars | inserttable"]
+			icons: ["source | undo redo | bold italic underline strikethrough fontborder | paragraph fontfamily fontsize | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal date time  | image emotion formula spechars | inserttable"]
 		};
 	},
 	handleIconClick: function handleIconClick(e, state) {
@@ -462,6 +548,7 @@ var EditorToolbar = React.createClass({
 				returnArray[i].disabled = !!editorState.icons[_icons[i]].disabled;
 				returnArray[i].active = !!editorState.icons[_icons[i]].active;
 				returnArray[i].color = editorState.icons[_icons[i]].color;
+				returnArray[i].value = editorState.icons[_icons[i]].value;
 			}
 			returnArray[i].showHtml = !!editorState.showHtml;
 		}
@@ -483,7 +570,7 @@ var EditorToolbar = React.createClass({
 
 module.exports = EditorToolbar;
 
-},{"../../constants/EditorConstants":13,"../../utils/EditorHistory":15,"./EditorIcon.react":5,"react":undefined}],8:[function(require,module,exports){
+},{"../../constants/EditorConstants":18,"../../utils/EditorHistory":20,"./EditorIcon.react":6,"react":undefined}],9:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -589,7 +676,262 @@ var ColorDropdown = React.createClass({
 
 module.exports = ColorDropdown;
 
-},{"../../constants/EditorConstants":13,"../base/Dropdown.react":2,"react":undefined}],9:[function(require,module,exports){
+},{"../../constants/EditorConstants":18,"../base/Dropdown.react":3,"react":undefined}],10:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var ReactDOM = require('react-dom');
+
+var TabGroup = require('../base/TabGroup.react');
+var Dialog = require('../base/Dialog.react');
+
+var _require = require('../../constants/EditorConstants');
+
+var EmotionImages = _require.EmotionImages;
+
+var EmotionPanel = React.createClass({
+	displayName: 'EmotionPanel',
+
+	handleClick: function handleClick(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var url = target.getAttribute("data-url");
+		var title = target.getAttribute("data-title");
+
+		if (this.props.onSelectImage) {
+			this.props.onSelectImage(e, '<img src="' + url + '" title="' + title + '" />');
+		}
+	},
+	render: function render() {
+		var images = this.props.images;
+		var handleClick = this.handleClick;
+		return React.createElement(
+			'ul',
+			{ className: "emotion-images " + this.props.name },
+			images.map(function (ele, pos) {
+				return React.createElement(
+					'li',
+					{ className: 'emotion-image', key: pos, 'data-url': ele.url, 'data-title': ele.title, onClick: handleClick },
+					React.createElement('img', { src: ele.url, title: ele.title, 'data-url': ele.url, 'data-title': ele.title })
+				);
+			})
+		);
+	}
+});
+
+var EmotionDialog = React.createClass({
+	displayName: 'EmotionDialog',
+
+	getInitialState: function getInitialState() {
+		return {
+			handle: function handle() {}
+		};
+	},
+	open: function open(position, handle) {
+		this.setState({
+			handle: handle
+		});
+		this.refs.root.open(position);
+	},
+	close: function close() {
+		this.refs.root.close();
+	},
+	toggle: function toggle(position) {
+		this.refs.root.toggle(position);
+	},
+	handleSelectImage: function handleSelectImage(e, char) {
+		e = e || event;
+		if (this.state.handle) {
+			this.state.handle(e, char);
+		}
+		if (e.stopPropagation) {
+			e.stopPropagation();
+		} else {
+			e.cancelBubble = true;
+		}
+		this.close();
+	},
+	getEmotionTabs: function getEmotionTabs() {
+		var EmotionTabs = EmotionImages.EmotionTabs;
+		var BaseUrl = EmotionImages.BaseUrl;
+		var SmileyInfor = EmotionImages.SmileyInfor;
+
+		var tabs = [];
+		for (var key in EmotionTabs) {
+			var tab = { title: EmotionTabs[key].name };
+			var images = [];
+			var titles = SmileyInfor[key];
+			for (var i = 0; i < titles.length; i++) {
+				var index = (i + 1).toString();
+				index = index.length == 1 ? "0" + index : index;
+				var image = {
+					title: titles[i],
+					url: BaseUrl + EmotionTabs[key].path + EmotionTabs[key].prefix + index + ".gif?v=1.1"
+				};
+				images.push(image);
+			}
+			tab.images = images;
+			tabs.push(tab);
+		}
+		return tabs;
+	},
+	render: function render() {
+		var tabs = [];
+		var EmotionTabs = this.getEmotionTabs();
+
+		for (var i = 0; i < EmotionTabs.length; i++) {
+			tabs.push({
+				title: EmotionTabs[i].title,
+				images: EmotionTabs[i].images,
+				component: React.createElement(EmotionPanel, { images: EmotionTabs[i].images, name: 'common-images', onSelectImage: this.handleSelectImage })
+			});
+		}
+		var buttons = [];
+		return React.createElement(
+			Dialog,
+			{ ref: 'root', className: 'emotion-dropdwon', width: 700, height: 508, title: '表情', buttons: buttons, onClose: this.close },
+			React.createElement(TabGroup, { tabs: tabs })
+		);
+	}
+});
+
+module.exports = EmotionDialog;
+
+},{"../../constants/EditorConstants":18,"../base/Dialog.react":2,"../base/TabGroup.react":4,"react":undefined,"react-dom":undefined}],11:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var ComboBox = require('../base/ComboBox.react');
+
+var FontFamilyDropdown = React.createClass({
+	displayName: 'FontFamilyDropdown',
+
+	getInitialState: function getInitialState() {
+		return {
+			handle: function handle() {}
+		};
+	},
+	open: function open(position, handle) {
+		this.setState({
+			handle: handle
+		});
+		this.refs.root.open(position);
+	},
+	close: function close() {
+		this.refs.root.close();
+	},
+	toggle: function toggle(position) {
+		this.refs.root.toggle(position);
+	},
+	handleSelect: function handleSelect(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var value = target.getAttribute('data-value');
+		if (this.state.handle) {
+			this.state.handle(e, value);
+		}
+		if (e.stopPropagation) {
+			e.stopPropagation();
+		} else {
+			e.cancelBubble = true;
+		}
+		this.close();
+	},
+	render: function render() {
+		var handleSelect = this.handleSelect;
+		var paragraph = this.props.paragraph ? this.props.paragraph : [];
+		return React.createElement(
+			ComboBox,
+			{ ref: 'root', className: 'color-combobox' },
+			React.createElement(
+				'ul',
+				null,
+				paragraph.map(function (ele, pos) {
+					return React.createElement(
+						'li',
+						{ 'data-value': ele.value, onClick: handleSelect },
+						React.createElement(
+							'p',
+							{ 'data-value': ele.value, style: { "fontFamily": ele.value } },
+							ele.name
+						)
+					);
+				})
+			)
+		);
+	}
+});
+
+module.exports = FontFamilyDropdown;
+
+},{"../base/ComboBox.react":1,"react":undefined}],12:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var ComboBox = require('../base/ComboBox.react');
+
+var FontSizeDropdown = React.createClass({
+	displayName: 'FontSizeDropdown',
+
+	getInitialState: function getInitialState() {
+		return {
+			handle: function handle() {}
+		};
+	},
+	open: function open(position, handle) {
+		this.setState({
+			handle: handle
+		});
+		this.refs.root.open(position);
+	},
+	close: function close() {
+		this.refs.root.close();
+	},
+	toggle: function toggle(position) {
+		this.refs.root.toggle(position);
+	},
+	handleSelect: function handleSelect(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var value = target.getAttribute('data-value');
+		if (this.state.handle) {
+			this.state.handle(e, value);
+		}
+		if (e.stopPropagation) {
+			e.stopPropagation();
+		} else {
+			e.cancelBubble = true;
+		}
+		this.close();
+	},
+	render: function render() {
+		var handleSelect = this.handleSelect;
+		var fontsize = this.props.fontsize ? this.props.fontsize : [];
+		return React.createElement(
+			ComboBox,
+			{ ref: 'root', className: 'color-combobox' },
+			React.createElement(
+				'ul',
+				null,
+				fontsize.map(function (ele, pos) {
+					return React.createElement(
+						'li',
+						{ 'data-value': ele.value, onClick: handleSelect },
+						React.createElement(
+							'p',
+							{ 'data-value': ele.value, style: { "fontSize": ele.value } },
+							ele.name
+						)
+					);
+				})
+			)
+		);
+	}
+});
+
+module.exports = FontSizeDropdown;
+
+},{"../base/ComboBox.react":1,"react":undefined}],13:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -672,7 +1014,7 @@ var FormulaDropdown = React.createClass({
 
 module.exports = FormulaDropdown;
 
-},{"../../constants/EditorConstants":13,"../base/Dropdown.react":2,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],10:[function(require,module,exports){
+},{"../../constants/EditorConstants":18,"../base/Dropdown.react":3,"../base/TabGroup.react":4,"react":undefined,"react-dom":undefined}],14:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -695,7 +1037,8 @@ var ImageUpload = React.createClass({
 		var _self = this;
 		var images = this.state.images;
 		var mask = ReactDOM.findDOMNode(this.refs.mask);
-		Uploader.uploadFile({
+		var uploader = this.props.customUploader ? this.props.customUploader : Uploader;
+		uploader.uploadFile({
 			file: file,
 			filename: this.props.name,
 			url: this.props.url,
@@ -948,14 +1291,16 @@ var ImageDialog = React.createClass({
 		};
 	},
 	propTypes: {
-		uploader: React.PropTypes.object
+		uploader: React.PropTypes.object,
+		customUploader: React.PropTypes.object
 	},
 	getDefaultProps: function getDefaultProps() {
 		return {
 			uploader: {
 				url: "/upload",
 				name: "file"
-			}
+			},
+			customUploader: null
 		};
 	},
 	open: function open(handle) {
@@ -1010,7 +1355,70 @@ var ImageDialog = React.createClass({
 
 module.exports = ImageDialog;
 
-},{"../../utils/FileUpload":19,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],11:[function(require,module,exports){
+},{"../../utils/FileUpload":24,"../base/Dialog.react":2,"../base/TabGroup.react":4,"react":undefined,"react-dom":undefined}],15:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var ComboBox = require('../base/ComboBox.react');
+
+var ParagraphDropdown = React.createClass({
+	displayName: 'ParagraphDropdown',
+
+	getInitialState: function getInitialState() {
+		return {
+			handle: function handle() {}
+		};
+	},
+	open: function open(position, handle) {
+		this.setState({
+			handle: handle
+		});
+		this.refs.root.open(position);
+	},
+	close: function close() {
+		this.refs.root.close();
+	},
+	toggle: function toggle(position) {
+		this.refs.root.toggle(position);
+	},
+	handleSelect: function handleSelect(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var value = target.getAttribute('data-value');
+		if (this.state.handle) {
+			this.state.handle(e, value);
+		}
+		if (e.stopPropagation) {
+			e.stopPropagation();
+		} else {
+			e.cancelBubble = true;
+		}
+		this.close();
+	},
+	render: function render() {
+		var handleSelect = this.handleSelect;
+		var paragraph = this.props.paragraph ? this.props.paragraph : [];
+		return React.createElement(
+			ComboBox,
+			{ ref: 'root', className: 'color-combobox' },
+			React.createElement(
+				'ul',
+				null,
+				paragraph.map(function (ele, pos) {
+					return React.createElement(
+						'li',
+						{ 'data-value': ele.value, onClick: handleSelect },
+						React.createElement(ele.value, { "data-value": ele.value }, ele.name)
+					);
+				})
+			)
+		);
+	}
+});
+
+module.exports = ParagraphDropdown;
+
+},{"../base/ComboBox.react":1,"react":undefined}],16:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -1104,7 +1512,7 @@ var SpecialCharsDialog = React.createClass({
 
 module.exports = SpecialCharsDialog;
 
-},{"../../constants/EditorConstants":13,"../base/Dialog.react":1,"../base/TabGroup.react":3,"react":undefined,"react-dom":undefined}],12:[function(require,module,exports){
+},{"../../constants/EditorConstants":18,"../base/Dialog.react":2,"../base/TabGroup.react":4,"react":undefined,"react-dom":undefined}],17:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -1200,7 +1608,7 @@ var TablePickerDropdown = React.createClass({
 
 module.exports = TablePickerDropdown;
 
-},{"../base/Dropdown.react":2,"react":undefined}],13:[function(require,module,exports){
+},{"../base/Dropdown.react":3,"react":undefined}],18:[function(require,module,exports){
 "use strict";
 
 var EditorIconTypes = {
@@ -1366,6 +1774,14 @@ var EditorIconTypes = {
 	"fontborder": {
 		title: "字体边框",
 		disabled: false
+	},
+	"date": {
+		title: "插入日期",
+		disabled: false
+	},
+	"time": {
+		title: "插入时间",
+		disabled: false
 	}
 };
 var ColorTypes = {
@@ -1381,14 +1797,39 @@ var toArray = function toArray(str) {
 	return str.split(",");
 };
 var SpecialChars = [{ name: "tsfh", title: "特殊字符", chars: toArray("、,。,·,ˉ,ˇ,¨,〃,々,—,～,‖,…,‘,’,“,”,〔,〕,〈,〉,《,》,「,」,『,』,〖,〗,【,】,±,×,÷,∶,∧,∨,∑,∏,∪,∩,∈,∷,√,⊥,∥,∠,⌒,⊙,∫,∮,≡,≌,≈,∽,∝,≠,≮,≯,≤,≥,∞,∵,∴,♂,♀,°,′,″,℃,＄,¤,￠,￡,‰,§,№,☆,★,○,●,◎,◇,◆,□,■,△,▲,※,→,←,↑,↓,〓,〡,〢,〣,〤,〥,〦,〧,〨,〩,㊣,㎎,㎏,㎜,㎝,㎞,㎡,㏄,㏎,㏑,㏒,㏕,︰,￢,￤,℡,ˊ,ˋ,˙,–,―,‥,‵,℅,℉,↖,↗,↘,↙,∕,∟,∣,≒,≦,≧,⊿,═,║,╒,╓,╔,╕,╖,╗,╘,╙,╚,╛,╜,╝,╞,╟,╠,╡,╢,╣,╤,╥,╦,╧,╨,╩,╪,╫,╬,╭,╮,╯,╰,╱,╲,╳,▁,▂,▃,▄,▅,▆,▇,�,█,▉,▊,▋,▌,▍,▎,▏,▓,▔,▕,▼,▽,◢,◣,◤,◥,☉,⊕,〒,〝,〞") }, { name: "lmsz", title: "罗马字符", chars: toArray("ⅰ,ⅱ,ⅲ,ⅳ,ⅴ,ⅵ,ⅶ,ⅷ,ⅸ,ⅹ,Ⅰ,Ⅱ,Ⅲ,Ⅳ,Ⅴ,Ⅵ,Ⅶ,Ⅷ,Ⅸ,Ⅹ,Ⅺ,Ⅻ") }, { name: "szfh", title: "数学字符", chars: toArray("⒈,⒉,⒊,⒋,⒌,⒍,⒎,⒏,⒐,⒑,⒒,⒓,⒔,⒕,⒖,⒗,⒘,⒙,⒚,⒛,⑴,⑵,⑶,⑷,⑸,⑹,⑺,⑻,⑼,⑽,⑾,⑿,⒀,⒁,⒂,⒃,⒄,⒅,⒆,⒇,①,②,③,④,⑤,⑥,⑦,⑧,⑨,⑩,㈠,㈡,㈢,㈣,㈤,㈥,㈦,㈧,㈨,㈩") }, { name: "rwfh", title: "日文字符", chars: toArray("ぁ,あ,ぃ,い,ぅ,う,ぇ,え,ぉ,お,か,が,き,ぎ,く,ぐ,け,げ,こ,ご,さ,ざ,し,じ,す,ず,せ,ぜ,そ,ぞ,た,だ,ち,ぢ,っ,つ,づ,て,で,と,ど,な,に,ぬ,ね,の,は,ば,ぱ,ひ,び,ぴ,ふ,ぶ,ぷ,へ,べ,ぺ,ほ,ぼ,ぽ,ま,み,む,め,も,ゃ,や,ゅ,ゆ,ょ,よ,ら,り,る,れ,ろ,ゎ,わ,ゐ,ゑ,を,ん,ァ,ア,ィ,イ,ゥ,ウ,ェ,エ,ォ,オ,カ,ガ,キ,ギ,ク,グ,ケ,ゲ,コ,ゴ,サ,ザ,シ,ジ,ス,ズ,セ,ゼ,ソ,ゾ,タ,ダ,チ,ヂ,ッ,ツ,ヅ,テ,デ,ト,ド,ナ,ニ,ヌ,ネ,ノ,ハ,バ,パ,ヒ,ビ,ピ,フ,ブ,プ,ヘ,ベ,ペ,ホ,ボ,ポ,マ,ミ,ム,メ,モ,ャ,ヤ,ュ,ユ,ョ,ヨ,ラ,リ,ル,レ,ロ,ヮ,ワ,ヰ,ヱ,ヲ,ン,ヴ,ヵ,ヶ") }, { name: "xlzm", title: "希腊字符", chars: toArray("Α,Β,Γ,Δ,Ε,Ζ,Η,Θ,Ι,Κ,Λ,Μ,Ν,Ξ,Ο,Π,Ρ,Σ,Τ,Υ,Φ,Χ,Ψ,Ω,α,β,γ,δ,ε,ζ,η,θ,ι,κ,λ,μ,ν,ξ,ο,π,ρ,σ,τ,υ,φ,χ,ψ,ω") }, { name: "ewzm", title: "俄文字符", chars: toArray("А,Б,В,Г,Д,Е,Ё,Ж,З,И,Й,К,Л,М,Н,О,П,Р,С,Т,У,Ф,Х,Ц,Ч,Ш,Щ,Ъ,Ы,Ь,Э,Ю,Я,а,б,в,г,д,е,ё,ж,з,и,й,к,л,м,н,о,п,р,с,т,у,ф,х,ц,ч,ш,щ,ъ,ы,ь,э,ю,я") }, { name: "pyzm", title: "拼音字母", chars: toArray("ā,á,ǎ,à,ē,é,ě,è,ī,í,ǐ,ì,ō,ó,ǒ,ò,ū,ú,ǔ,ù,ǖ,ǘ,ǚ,ǜ,ü") }, { name: "yyyb", title: "英语音标", chars: toArray("i:,i,e,æ,ʌ,ə:,ə,u:,u,ɔ:,ɔ,a:,ei,ai,ɔi,əu,au,iə,εə,uə,p,t,k,b,d,g,f,s,ʃ,θ,h,v,z,ʒ,ð,tʃ,tr,ts,dʒ,dr,dz,m,n,ŋ,l,r,w,j,") }, { name: "zyzf", title: "其它", chars: toArray("ㄅ,ㄆ,ㄇ,ㄈ,ㄉ,ㄊ,ㄋ,ㄌ,ㄍ,ㄎ,ㄏ,ㄐ,ㄑ,ㄒ,ㄓ,ㄔ,ㄕ,ㄖ,ㄗ,ㄘ,ㄙ,ㄚ,ㄛ,ㄜ,ㄝ,ㄞ,ㄟ,ㄠ,ㄡ,ㄢ,ㄣ,ㄤ,ㄥ,ㄦ,ㄧ,ㄨ") }];
+
+var EmotionImages = {
+	DemoUrl: "http://img.baidu.com/hi/tsj/t_0001.gif",
+	BaseUrl: "http://img.baidu.com/hi/",
+	SmileyInfor: {
+		tab0: ['Kiss', 'Love', 'Yeah', '啊！', '背扭', '顶', '抖胸', '88', '汗', '瞌睡', '鲁拉', '拍砖', '揉脸', '生日快乐', '大笑', '瀑布汗~', '惊讶', '臭美', '傻笑', '抛媚眼', '发怒', '打酱油', '俯卧撑', '气愤', '?', '吻', '怒', '胜利', 'HI', 'KISS', '不说', '不要', '扯花', '大心', '顶', '大惊', '飞吻', '鬼脸', '害羞', '口水', '狂哭', '来', '发财了', '吃西瓜', '套牢', '害羞', '庆祝', '我来了', '敲打', '晕了', '胜利', '臭美', '被打了', '贪吃', '迎接', '酷', '微笑', '亲吻', '调皮', '惊恐', '耍酷', '发火', '害羞', '汗水', '大哭', '', '加油', '困', '你NB', '晕倒', '开心', '偷笑', '大哭', '滴汗', '叹气', '超赞', '??', '飞吻', '天使', '撒花', '生气', '被砸', '吓傻', '随意吐'],
+		tab1: ['Kiss', 'Love', 'Yeah', '啊！', '背扭', '顶', '抖胸', '88', '汗', '瞌睡', '鲁拉', '拍砖', '揉脸', '生日快乐', '摊手', '睡觉', '瘫坐', '无聊', '星星闪', '旋转', '也不行', '郁闷', '正Music', '抓墙', '撞墙至死', '歪头', '戳眼', '飘过', '互相拍砖', '砍死你', '扔桌子', '少林寺', '什么？', '转头', '我爱牛奶', '我踢', '摇晃', '晕厥', '在笼子里', '震荡'],
+		tab2: ['大笑', '瀑布汗~', '惊讶', '臭美', '傻笑', '抛媚眼', '发怒', '我错了', 'money', '气愤', '挑逗', '吻', '怒', '胜利', '委屈', '受伤', '说啥呢？', '闭嘴', '不', '逗你玩儿', '飞吻', '眩晕', '魔法', '我来了', '睡了', '我打', '闭嘴', '打', '打晕了', '刷牙', '爆揍', '炸弹', '倒立', '刮胡子', '邪恶的笑', '不要不要', '爱恋中', '放大仔细看', '偷窥', '超高兴', '晕', '松口气', '我跑', '享受', '修养', '哭', '汗', '啊~', '热烈欢迎', '打酱油', '俯卧撑', '?'],
+		tab3: ['HI', 'KISS', '不说', '不要', '扯花', '大心', '顶', '大惊', '飞吻', '鬼脸', '害羞', '口水', '狂哭', '来', '泪眼', '流泪', '生气', '吐舌', '喜欢', '旋转', '再见', '抓狂', '汗', '鄙视', '拜', '吐血', '嘘', '打人', '蹦跳', '变脸', '扯肉', '吃To', '吃花', '吹泡泡糖', '大变身', '飞天舞', '回眸', '可怜', '猛抽', '泡泡', '苹果', '亲', '', '骚舞', '烧香', '睡', '套娃娃', '捅捅', '舞倒', '西红柿', '爱慕', '摇', '摇摆', '杂耍', '招财', '被殴', '被球闷', '大惊', '理想', '欧打', '呕吐', '碎', '吐痰'],
+		tab4: ['发财了', '吃西瓜', '套牢', '害羞', '庆祝', '我来了', '敲打', '晕了', '胜利', '臭美', '被打了', '贪吃', '迎接', '酷', '顶', '幸运', '爱心', '躲', '送花', '选择'],
+		tab5: ['微笑', '亲吻', '调皮', '惊讶', '耍酷', '发火', '害羞', '汗水', '大哭', '得意', '鄙视', '困', '夸奖', '晕倒', '疑问', '媒婆', '狂吐', '青蛙', '发愁', '亲吻', '', '爱心', '心碎', '玫瑰', '礼物', '哭', '奸笑', '可爱', '得意', '呲牙', '暴汗', '楚楚可怜', '困', '哭', '生气', '惊讶', '口水', '彩虹', '夜空', '太阳', '钱钱', '灯泡', '咖啡', '蛋糕', '音乐', '爱', '胜利', '赞', '鄙视', 'OK'],
+		tab6: ['男兜', '女兜', '开心', '乖乖', '偷笑', '大笑', '抽泣', '大哭', '无奈', '滴汗', '叹气', '狂晕', '委屈', '超赞', '??', '疑问', '飞吻', '天使', '撒花', '生气', '被砸', '口水', '泪奔', '吓傻', '吐舌头', '点头', '随意吐', '旋转', '困困', '鄙视', '狂顶', '篮球', '再见', '欢迎光临', '恭喜发财', '稍等', '我在线', '恕不议价', '库房有货', '货在路上']
+	},
+	EmotionTabs: {
+		tab0: { name: "精选", prefix: "j_00", path: "jx2/" },
+		tab1: { name: "兔斯基", prefix: "t_00", path: "tsj/" },
+		tab2: { name: "绿豆蛙", prefix: "w_00", path: "ldw/" },
+		tab3: { name: "BOBO", prefix: "B_00", path: "bobo/" },
+		tab4: { name: "baby猫", prefix: "C_00", path: "babycat/" },
+		tab5: { name: "泡泡", prefix: "i_f", path: "face/" },
+		tab6: { name: "有啊", prefix: "y_00", path: "youa/" }
+	}
+};
+
 module.exports = {
 	EditorIconTypes: EditorIconTypes,
 	ColorTypes: ColorTypes,
 	FormulaTypes: FormulaTypes,
-	SpecialChars: SpecialChars
+	SpecialChars: SpecialChars,
+	EmotionImages: EmotionImages
 };
 
-},{}],14:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 var EditorDOM = {
@@ -1418,7 +1859,7 @@ var EditorDOM = {
 };
 module.exports = EditorDOM;
 
-},{}],15:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 
 var EditorHistory = {
@@ -1473,7 +1914,7 @@ var EditorHistory = {
 };
 module.exports = EditorHistory;
 
-},{}],16:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -1700,7 +2141,7 @@ var EditorResize = React.createClass({
 
 module.exports = EditorResize;
 
-},{"react":undefined,"react-dom":undefined}],17:[function(require,module,exports){
+},{"react":undefined,"react-dom":undefined}],22:[function(require,module,exports){
 "use strict";
 
 var EditorDOM = require('./EditorDOM');
@@ -1884,10 +2325,20 @@ var EditorSelection = {
 						rangeState["backcolor"] = { color: parentElement.style.backgroundColor, icon: "backcolor" };
 						break;
 					case "P":
+					case "H1":
+					case "H2":
+					case "H3":
+					case "H5":
+					case "H6":
 						var textAlign = parentElement.style.textAlign ? parentElement.style.textAlign : "left";
+						var fontFamily = parentElement.style.fontFamily ? parentElement.style.fontFamily : "宋体,SimSun";
+						var fontSize = parentElement.style.fontSize ? parentElement.style.fontSize : "12px";
 						rangeState["justifycenter"] = { active: textAlign == "center", icon: "subscript" };
 						rangeState["justifyleft"] = { active: textAlign == "left", icon: "subscript" };
 						rangeState["justifyright"] = { active: textAlign == "right", icon: "subscript" };
+						rangeState["paragraph"] = { value: "p", icon: "paragraph" };
+						rangeState["fontfamily"] = { value: fontFamily, icon: "fontfamily" };
+						rangeState["fontsize"] = { value: fontSize, icon: "fontsize" };
 						break;
 					case "BLOCKQUOTE":
 						rangeState["indent"] = { active: true, icon: "indent" };
@@ -1918,7 +2369,7 @@ var EditorSelection = {
 };
 module.exports = EditorSelection;
 
-},{"./EditorDOM":14}],18:[function(require,module,exports){
+},{"./EditorDOM":19}],23:[function(require,module,exports){
 "use strict";
 
 var INTERVAL_MS = 1000 / 60;
@@ -2039,7 +2490,7 @@ EditorTimer.animate();
 
 module.exports = EditorTimer;
 
-},{}],19:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 'use strict';
 
 var getError = function getError(options, xhr) {
@@ -2149,6 +2600,12 @@ var EditorTimer = require('./utils/EditorTimer');
 var ColorDropdown = require('./components/plugins/ColorDropdown.react');
 var FormulaDropdown = require('./components/plugins/FormulaDropdown.react');
 var TablePickerDropdown = require('./components/plugins/TablePickerDropdown.react');
+// combobox
+var FontSizeComboBox = require('./components/plugins/FontSizeComboBox.react');
+var FontFamilyComboBox = require('./components/plugins/FontFamilyComboBox.react');
+var ParagraphComboBox = require('./components/plugins/ParagraphComboBox.react');
+// dialog
+var EmotionDialog = require('./components/plugins/EmotionDialog.react');
 var SpecialCharsDialog = require('./components/plugins/SpecialCharsDialog.react');
 var ImageDialog = require('./components/plugins/ImageDialog.react');
 
@@ -2166,6 +2623,24 @@ var maxInputCount = 20;
 var lastKeyCode = null;
 var keycont = 0;
 
+if (!Date.prototype.Format) {
+	Date.prototype.Format = function (n) {
+		var i = {
+			"M+": this.getMonth() + 1,
+			"d+": this.getDate(),
+			"h+": this.getHours(),
+			"m+": this.getMinutes(),
+			"s+": this.getSeconds(),
+			"q+": Math.floor((this.getMonth() + 3) / 3),
+			S: this.getMilliseconds()
+		},
+		    t;
+		/(y+)/.test(n) && (n = n.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length)));
+		for (t in i) new RegExp("(" + t + ")").test(n) && (n = n.replace(RegExp.$1, RegExp.$1.length == 1 ? i[t] : ("00" + i[t]).substr(("" + i[t]).length)));
+		return n;
+	};
+}
+
 /**
 * 对外接口方法
 * @findDOMNode: 获取"root","editarea","toolbar","color"的ref对象以及相应的dom对象
@@ -2175,6 +2650,7 @@ var keycont = 0;
 * @focusEditor: 聚焦到Editor上
 * @defaultValue: 默认内容
 * @value: 编辑器的值
+* @icons: 工具条上需要显示的图标
 **/
 
 var Editor = React.createClass({
@@ -2192,7 +2668,10 @@ var Editor = React.createClass({
 		};
 	},
 	propTypes: {
-		"plugins": React.PropTypes.object
+		"plugins": React.PropTypes.object,
+		"fontFamily": React.PropTypes.array,
+		"fontSize": React.PropTypes.array,
+		"paragraph": React.PropTypes.array
 	},
 	getDefaultProps: function getDefaultProps() {
 		return {
@@ -2201,9 +2680,13 @@ var Editor = React.createClass({
 					"uploader": {
 						name: "file",
 						url: "/upload"
-					}
+					},
+					"customUploader": null
 				}
-			}
+			},
+			"fontFamily": [{ "name": "宋体", value: "宋体,SimSun", defualt: true }, { "name": "隶书", value: "隶书,SimLi" }, { "name": "楷体", value: "楷体,SimKai" }, { "name": "微软雅黑", value: "微软雅黑,Microsoft YaHei" }, { "name": "黑体", value: "黑体,SimHei" }, { "name": "arial", value: "arial,helvetica,sans-serif" }, { "name": "arial black", value: "arial black,avant garde" }, { "name": "omic sans ms", value: "omic sans ms" }, { "name": "impact", value: "impact,chicago" }, { "name": "times new roman", value: "times new roman" }, { "name": "andale mono", value: "andale mono" }],
+			"fontSize": [{ "name": "12px", value: "12px", defualt: true }, { "name": "14px", value: "14px" }, { "name": "16px", value: "16px" }, { "name": "18px", value: "18px" }, { "name": "20px", value: "20px" }, { "name": "24px", value: "24px" }, { "name": "28px", value: "28px" }, { "name": "32px", value: "32px" }, { "name": "36px", value: "32px" }],
+			"paragraph": [{ "name": "段落", value: "p", defualt: true }, { "name": "标题1", value: "h1" }, { "name": "标题2", value: "h2" }, { "name": "标题3", value: "h3" }, { "name": "标题4", value: "h4" }, { "name": "标题5", value: "h5" }, { "name": "标题6", value: "h6" }]
 		};
 	},
 	componentDidMount: function componentDidMount() {
@@ -2283,6 +2766,11 @@ var Editor = React.createClass({
 					case "forecolor":
 					case "backcolor":
 						editorState.icons[icon].color = rangeState[icon].color;
+						break;
+					case "paragraph":
+					case "fontfamily":
+					case "fontsize":
+						editorState.icons[icon].value = rangeState[icon].value;
 						break;
 				}
 				editorState.icons[icon].active = rangeState[icon].active;
@@ -2471,11 +2959,52 @@ var Editor = React.createClass({
 					handleRangeChange();
 				});
 				break;
+			case "fontsize":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h + 5;
+
+				this.refs.fontsize.open(offsetPosition, function (e, fontsize) {
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('fontsize', false, fontsize);
+					handleRangeChange();
+				});
+				break;
+			case "fontfamily":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h + 5;
+
+				this.refs.fontfamily.open(offsetPosition, function (e, fontfamily) {
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('fontfamily', false, fontfamily);
+					handleRangeChange();
+				});
+				break;
+			case "paragraph":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h + 5;
+
+				this.refs.paragraph.open(offsetPosition, function (e, paragraph) {
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('paragraph', false, paragraph);
+					handleRangeChange();
+				});
+				break;
 			case "cleardoc":
 				editorState.content = "<p><br/></p>";
 				break;
 			case "horizontal":
 				EditorHistory.execCommand('inserthtml', false, "<hr/><p><br/></p>");
+				break;
+			case "date":
+				var strDate = new Date().Format("yyyy-MM-dd");
+				EditorHistory.execCommand('inserthtml', false, strDate);
+				break;
+			case "time":
+				var strTime = new Date().Format('hh:mm:ss');
+				EditorHistory.execCommand('inserthtml', false, strTime);
 				break;
 			case "image":
 				EditorSelection.storeRange();
@@ -2534,6 +3063,16 @@ var Editor = React.createClass({
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('inserthtml', false, char);
+					handleRangeChange();
+				});
+				break;
+			case "emotion":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h + 5;
+				this.refs.emotion.open(offsetPosition, function (e, html) {
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('inserthtml', false, html);
 					handleRangeChange();
 				});
 				break;
@@ -2670,12 +3209,16 @@ var Editor = React.createClass({
 			_extends({ ref: 'root', id: id, className: "editor-container editor-default" + (className ? " " + className : ""), onBlur: this.handleRangeChange, onFocus: this.handleFocus }, props),
 			React.createElement(
 				EditorToolbar,
-				{ ref: 'toolbar', editorState: this.state.editorState, onIconClick: this.handleToolbarIconClick, icons: this.props.icons },
-				React.createElement(ImageDialog, { ref: 'image', uploader: this.props.plugins.image.uploader }),
+				{ ref: 'toolbar', editorState: this.state.editorState, onIconClick: this.handleToolbarIconClick, icons: this.props.icons, paragraph: this.props.paragraph, fontsize: this.props.fontSize, fontfamily: this.props.fontFamily },
+				React.createElement(ImageDialog, { ref: 'image', uploader: this.props.plugins.image.uploader, customUploader: this.props.plugins.image.customUploader }),
 				React.createElement(ColorDropdown, { ref: 'color' }),
 				React.createElement(FormulaDropdown, { ref: 'formula' }),
 				React.createElement(TablePickerDropdown, { ref: 'table' }),
-				React.createElement(SpecialCharsDialog, { ref: 'special' })
+				React.createElement(SpecialCharsDialog, { ref: 'special' }),
+				React.createElement(EmotionDialog, { ref: 'emotion' }),
+				React.createElement(FontSizeComboBox, { ref: 'fontsize', fontsize: this.props.fontSize }),
+				React.createElement(FontFamilyComboBox, { ref: 'fontfamily', fontfamily: this.props.fontFamily }),
+				React.createElement(ParagraphComboBox, { ref: 'paragraph', paragraph: this.props.paragraph })
 			),
 			editArea,
 			React.createElement(EditorResize, { ref: 'resize' })
@@ -2685,4 +3228,4 @@ var Editor = React.createClass({
 
 module.exports = Editor;
 
-},{"./components/core/EditorContentEditableDiv.react":4,"./components/core/EditorTextArea.react":6,"./components/core/EditorToolbar.react":7,"./components/plugins/ColorDropdown.react":8,"./components/plugins/FormulaDropdown.react":9,"./components/plugins/ImageDialog.react":10,"./components/plugins/SpecialCharsDialog.react":11,"./components/plugins/TablePickerDropdown.react":12,"./constants/EditorConstants":13,"./utils/EditorDOM":14,"./utils/EditorHistory":15,"./utils/EditorResize.react":16,"./utils/EditorSelection":17,"./utils/EditorTimer":18,"react":undefined,"react-dom":undefined}]},{},[]);
+},{"./components/core/EditorContentEditableDiv.react":5,"./components/core/EditorTextArea.react":7,"./components/core/EditorToolbar.react":8,"./components/plugins/ColorDropdown.react":9,"./components/plugins/EmotionDialog.react":10,"./components/plugins/FontFamilyComboBox.react":11,"./components/plugins/FontSizeComboBox.react":12,"./components/plugins/FormulaDropdown.react":13,"./components/plugins/ImageDialog.react":14,"./components/plugins/ParagraphComboBox.react":15,"./components/plugins/SpecialCharsDialog.react":16,"./components/plugins/TablePickerDropdown.react":17,"./constants/EditorConstants":18,"./utils/EditorDOM":19,"./utils/EditorHistory":20,"./utils/EditorResize.react":21,"./utils/EditorSelection":22,"./utils/EditorTimer":23,"react":undefined,"react-dom":undefined}]},{},[]);

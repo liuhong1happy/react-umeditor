@@ -40,7 +40,15 @@ var EditorIcon = React.createClass({
 	render:function(){
 		var {icon,active,disabled,showHtml,onClick,...props} = this.props;
 		var _disabled = showHtml && (icon!="source" && icon!="separator");
-		return (<span ref="root" className={"editor-icon icon-"+icon+(active?" active":"")+(disabled || _disabled?" disabled":"")} onClick={this.handleClick} {...props}></span>)
+		var _className = "editor-icon icon-" + icon + (active ? " active" : "") + (disabled || _disabled ? " disabled" : "");
+		if(icon=="fontsize" || icon=="fontfamily" || icon == "paragraph"){
+			return (<span ref="root" className={_className} onClick={this.handleClick} {...props}> 
+				<span className="icon-label">{props.value}</span>
+				<span className="icon-caret"></span>
+				</span>)
+		}else{
+				return (<span ref="root" className={_className} onClick={this.handleClick} {...props}></span>)
+		}
 	}
 })
 

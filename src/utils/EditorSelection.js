@@ -180,10 +180,20 @@ var EditorSelection = {
 						rangeState["backcolor"] = {color: parentElement.style.backgroundColor, icon:"backcolor"}
 						break;
 					case "P":
+					case "H1":
+					case "H2":
+					case "H3":
+					case "H5":
+					case "H6":
 						var textAlign = parentElement.style.textAlign?parentElement.style.textAlign:"left";
+						var fontFamily = parentElement.style.fontFamily?parentElement.style.fontFamily:"宋体,SimSun";
+						var fontSize = parentElement.style.fontSize?parentElement.style.fontSize:"12px";
 						rangeState["justifycenter"] = { active:textAlign=="center",icon:"subscript"}
 						rangeState["justifyleft"] = { active:textAlign=="left",icon:"subscript"}
 						rangeState["justifyright"] = { active:textAlign=="right",icon:"subscript"}
+						rangeState["paragraph"] = {value:"p",icon:"paragraph"}
+						rangeState["fontfamily"] = {value: fontFamily,icon:"fontfamily"}
+						rangeState["fontsize"] = {value: fontSize,icon:"fontsize"}
 						break;
 					case "BLOCKQUOTE":
 						rangeState["indent"] = { active:true,icon:"indent"}

@@ -14,6 +14,12 @@ var EditorTimer = require('./utils/EditorTimer')
 var ColorDropdown = require('./components/plugins/ColorDropdown.react');
 var FormulaDropdown = require('./components/plugins/FormulaDropdown.react');
 var TablePickerDropdown = require('./components/plugins/TablePickerDropdown.react');
+// combobox
+var FontSizeComboBox= require('./components/plugins/FontSizeComboBox.react');
+var FontFamilyComboBox = require('./components/plugins/FontFamilyComboBox.react');
+var ParagraphComboBox = require('./components/plugins/ParagraphComboBox.react');
+// dialog
+var EmotionDialog =  require('./components/plugins/EmotionDialog.react');
 var SpecialCharsDialog = require('./components/plugins/SpecialCharsDialog.react');
 var ImageDialog = require('./components/plugins/ImageDialog.react');
 
@@ -30,7 +36,24 @@ var saveSceneTimer = null;
 var maxInputCount = 20;
 var lastKeyCode = null;
 var keycont = 0;
-		
+
+if(!Date.prototype.Format){
+	Date.prototype.Format = function(n) {
+		var i = {
+			"M+": this.getMonth() + 1,
+			"d+": this.getDate(),
+			"h+": this.getHours(),
+			"m+": this.getMinutes(),
+			"s+": this.getSeconds(),
+			"q+": Math.floor((this.getMonth() + 3) / 3),
+			S: this.getMilliseconds()
+		}, t;
+		/(y+)/.test(n) && (n = n.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length)));
+		for (t in i) new RegExp("(" + t + ")").test(n) && (n = n.replace(RegExp.$1, RegExp.$1.length == 1 ? i[t] : ("00" + i[t]).substr(("" + i[t]).length)));
+		return n
+};
+}
+
 /**
 * 对外接口方法
 * @findDOMNode: 获取"root","editarea","toolbar","color"的ref对象以及相应的dom对象
@@ -40,6 +63,7 @@ var keycont = 0;
 * @focusEditor: 聚焦到Editor上
 * @defaultValue: 默认内容
 * @value: 编辑器的值
+* @icons: 工具条上需要显示的图标
 **/
 
 var Editor = React.createClass({
@@ -55,7 +79,10 @@ var Editor = React.createClass({
 		}
 	},
 	propTypes:{
-		"plugins":React.PropTypes.object
+		"plugins": React.PropTypes.object,
+		"fontFamily": React.PropTypes.array,
+		"fontSize": React.PropTypes.array,
+		"paragraph": React.PropTypes.array,
 	},
 	getDefaultProps:function(){
 		return {
@@ -64,9 +91,43 @@ var Editor = React.createClass({
 					"uploader":{
 						name:"file",
 						url:"/upload"
-					}
+					},
+					"customUploader":null
 				}
-			}
+			},
+			"fontFamily":[
+				{"name":"宋体",value:"宋体,SimSun",defualt:true},
+				{"name":"隶书",value:"隶书,SimLi"},
+				{"name":"楷体",value:"楷体,SimKai"},
+				{"name":"微软雅黑",value:"微软雅黑,Microsoft YaHei"},
+				{"name":"黑体",value:"黑体,SimHei"},
+				{"name":"arial",value:"arial,helvetica,sans-serif"},
+				{"name":"arial black",value:"arial black,avant garde"},
+				{"name":"omic sans ms",value:"omic sans ms"},
+				{"name":"impact",value:"impact,chicago"},
+				{"name":"times new roman",value:"times new roman"},
+				{"name":"andale mono",value:"andale mono"}
+			],
+			"fontSize": [
+				{"name":"12px",value:"12px",defualt:true},
+				{"name":"14px",value:"14px"},
+				{"name":"16px",value:"16px"},
+				{"name":"18px",value:"18px"},
+				{"name":"20px",value:"20px"},
+				{"name":"24px",value:"24px"},
+				{"name":"28px",value:"28px"},
+				{"name":"32px",value:"32px"},
+				{"name":"36px",value:"32px"}
+			],
+			"paragraph": [
+				{"name":"段落",value:"p",defualt:true},
+				{"name":"标题1",value:"h1"},
+				{"name":"标题2",value:"h2"},
+				{"name":"标题3",value:"h3"},
+				{"name":"标题4",value:"h4"},
+				{"name":"标题5",value:"h5"},
+				{"name":"标题6",value:"h6"}
+			]
 		}
 	},
 	componentDidMount:function(){
@@ -148,6 +209,11 @@ var Editor = React.createClass({
 					case "forecolor":
 					case "backcolor":
 						editorState.icons[icon].color = rangeState[icon].color;
+						break;
+					case "paragraph":
+					case "fontfamily":
+					case "fontsize":
+						editorState.icons[icon].value = rangeState[icon].value;
 						break;
 				}
 				editorState.icons[icon].active = rangeState[icon].active;
@@ -335,11 +401,52 @@ var Editor = React.createClass({
 					handleRangeChange();
 				});
 				break;
+			case "fontsize":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h+5;
+				
+				this.refs.fontsize.open(offsetPosition,function(e,fontsize){
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('fontsize',false,fontsize);
+					handleRangeChange();
+				});
+				break;
+			case "fontfamily":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h+5;
+				
+				this.refs.fontfamily.open(offsetPosition,function(e,fontfamily){
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('fontfamily',false,fontfamily);
+					handleRangeChange();
+				});
+				break;
+			case "paragraph":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h+5;
+				
+				this.refs.paragraph.open(offsetPosition,function(e,paragraph){
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('paragraph',false,paragraph);
+					handleRangeChange();
+				});
+				break;
 			case "cleardoc":
 				editorState.content = "<p><br/></p>"
 				break;
 			case "horizontal":
 				EditorHistory.execCommand('inserthtml',false,"<hr/><p><br/></p>");
+				break;
+			case "date":
+				var strDate = new Date().Format("yyyy-MM-dd");
+				EditorHistory.execCommand('inserthtml',false, strDate);
+				break;
+			case "time":
+				var strTime = new Date().Format('hh:mm:ss')
+				EditorHistory.execCommand('inserthtml',false,strTime);
 				break;
 			case "image":
 				EditorSelection.storeRange();
@@ -398,6 +505,16 @@ var Editor = React.createClass({
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('inserthtml',false,char);
+					handleRangeChange();
+				});
+				break;
+			case "emotion":
+				EditorSelection.storeRange();
+				offsetPosition.y += offsetPosition.h+5;
+				this.refs.emotion.open(offsetPosition,function(e,html){
+					editarea.focus();
+					EditorSelection.restoreRange();
+					EditorHistory.execCommand('inserthtml',false,html);
 					handleRangeChange();
 				});
 				break;
@@ -524,12 +641,16 @@ var Editor = React.createClass({
 		var editArea = this.genEditArea();
 		var {onBlur,className,id,onFocus,...props} = this.props;
 		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
-				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick} icons={this.props.icons}>
-					<ImageDialog ref="image" uploader={this.props.plugins.image.uploader} />
+				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick} icons={this.props.icons} paragraph={this.props.paragraph}  fontsize={this.props.fontSize}  fontfamily={this.props.fontFamily}>
+					<ImageDialog ref="image" uploader={this.props.plugins.image.uploader} customUploader={this.props.plugins.image.customUploader}/>
 					<ColorDropdown ref="color" />
 					<FormulaDropdown ref="formula"/>
 					<TablePickerDropdown ref="table" />
 					<SpecialCharsDialog ref="special" />
+					<EmotionDialog ref="emotion" />
+					<FontSizeComboBox ref="fontsize" fontsize={this.props.fontSize} />
+					<FontFamilyComboBox ref="fontfamily" fontfamily={this.props.fontFamily} />
+					<ParagraphComboBox ref="paragraph" paragraph={this.props.paragraph} />
 				</EditorToolbar>
 				{editArea}
 				<EditorResize ref="resize" />

@@ -16,7 +16,8 @@ var ImageUpload = React.createClass({
 		var _self = this;
 		var images = this.state.images;
 		var mask = ReactDOM.findDOMNode(this.refs.mask);
-		Uploader.uploadFile({
+		var uploader = this.props.customUploader? this.props.customUploader: Uploader;
+		uploader.uploadFile({
 				file:file,
 				filename:this.props.name,
 				url:this.props.url,
@@ -232,14 +233,16 @@ var ImageDialog = React.createClass({
 		}
 	},
 	propTypes:{
-		uploader:React.PropTypes.object
+		uploader:React.PropTypes.object,
+		customUploader:React.PropTypes.object
 	},
 	getDefaultProps:function(){
 		return {
 			uploader:{
 				url:"/upload",
 				name:"file"
-			}
+			},
+			customUploader:null
 		}
 	},
 	open:function(handle){
