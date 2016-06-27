@@ -87,8 +87,10 @@ blockquote {
   left: 0px;
   z-index: 999;
   background-color: #fff;
-  border: 1px solid #d8d8d8;
-  border-radius: 2px;
+  border: 1px solid #CCC;
+  padding: 0;
+  margin: 0 2px;
+  line-height: 20px;
   padding: 10px;
   font-size: 12px;
 }
@@ -105,6 +107,7 @@ blockquote {
   cursor: pointer;
   width: 160px;
 }
+.editor-container .combobox ul li span,
 .editor-container .combobox ul li p,
 .editor-container .combobox ul li h1,
 .editor-container .combobox ul li h2,
@@ -115,7 +118,7 @@ blockquote {
   text-align: center;
   margin: 0px;
   padding: 3px 5px;
-  min-height: 25px;
+  min-height: 20px;
   vertical-align: middle;
 }
 .editor-container .combobox ul li:hover,
@@ -506,8 +509,8 @@ blockquote {
   padding: 5px;
 }
 .editor-default .editor-toolbar .editor-icon {
-  height: 20px !important;
-  width: 20px !important;
+  height: 20px;
+  width: 20px;
   background-image: url(images/icons.png);
   display: inline-block;
   vertical-align: top;
@@ -894,10 +897,42 @@ blockquote {
 .editor-default .editor-toolbar .editor-icon.icon-fontsize,
 .editor-default .editor-toolbar .editor-icon.icon-fontfamily {
   background-image: none;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  width: 80px !important;
-  overflow-x: hidden;
+  background-color: transparent;
+  border: 1px solid #ccc;
+  width: 80px;
+}
+.editor-default .editor-toolbar .editor-icon.icon-paragraph:hover,
+.editor-default .editor-toolbar .editor-icon.icon-fontsize:hover,
+.editor-default .editor-toolbar .editor-icon.icon-fontfamily:hover {
+  background-color: #d5e1f2;
+  padding: 0;
+  border: 1px solid #a3bde3;
+}
+.editor-default .editor-toolbar .editor-icon.icon-paragraph .icon-label,
+.editor-default .editor-toolbar .editor-icon.icon-fontsize .icon-label,
+.editor-default .editor-toolbar .editor-icon.icon-fontfamily .icon-label {
+  display: inline-block;
+  vertical-align: top;
+  width: 65px;
+  height: 20px;
+  line-height: 20px;
+  padding: 0px;
+  margin: 0;
+  font-size: 12px;
+  text-align: center;
+  cursor: default;
+  overflow: hidden;
+}
+.editor-default .editor-toolbar .editor-icon.icon-paragraph .icon-caret,
+.editor-default .editor-toolbar .editor-icon.icon-fontsize .icon-caret,
+.editor-default .editor-toolbar .editor-icon.icon-fontfamily .icon-caret {
+  display: inline-block;
+  vertical-align: top;
+  height: 20px;
+  width: 12px;
+  margin: 0;
+  padding: 0;
+  background: url(images/icons.png) -741px 0;
 }
 .editor-default .editor-contenteditable-div {
   padding: 0px 10px;

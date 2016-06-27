@@ -839,19 +839,19 @@ var FontFamilyDropdown = React.createClass({
 	},
 	render: function render() {
 		var handleSelect = this.handleSelect;
-		var paragraph = this.props.paragraph ? this.props.paragraph : [];
+		var fontfamily = this.props.fontfamily ? this.props.fontfamily : [];
 		return React.createElement(
 			ComboBox,
 			{ ref: 'root', className: 'color-combobox' },
 			React.createElement(
 				'ul',
 				null,
-				paragraph.map(function (ele, pos) {
+				fontfamily.map(function (ele, pos) {
 					return React.createElement(
 						'li',
 						{ 'data-value': ele.value, onClick: handleSelect },
 						React.createElement(
-							'p',
+							'span',
 							{ 'data-value': ele.value, style: { "fontFamily": ele.value } },
 							ele.name
 						)
@@ -918,7 +918,7 @@ var FontSizeDropdown = React.createClass({
 						'li',
 						{ 'data-value': ele.value, onClick: handleSelect },
 						React.createElement(
-							'p',
+							'span',
 							{ 'data-value': ele.value, style: { "fontSize": ele.value } },
 							ele.name
 						)

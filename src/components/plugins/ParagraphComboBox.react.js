@@ -41,7 +41,7 @@ var ParagraphDropdown = React.createClass({
 				{
 					paragraph.map(function(ele,pos){
 						return (<li data-value={ele.value} onClick={handleSelect}>
-								{React.createElement(ele.value,{"data-value": ele.value},ele.name)}
+									{React.createElement(ele.value,{"data-value": ele.value},ele.name)}
 								</li>)
 					})
 				}

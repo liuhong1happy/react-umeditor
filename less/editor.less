@@ -90,8 +90,10 @@ blockquote{
 		left: 0px;
 		z-index: 999;
 		background-color: #fff;
-		border: 1px solid #d8d8d8;
-		border-radius: 2px;
+		border: 1px solid #CCC;
+		padding: 0;
+		margin: 0 2px;
+		line-height: 20px;
 		padding: 10px;
 		font-size: 12px;
 		ul{
@@ -105,11 +107,11 @@ blockquote{
 				padding: 0px;
 				cursor: pointer;
 				width: 160px;
-				p,h1,h2,h3,h4,h5,h6{
+				span,p,h1,h2,h3,h4,h5,h6{
 					text-align: center;
 					margin: 0px;
 					padding: 3px 5px;
-					min-height: 25px;
+					min-height: 20px;
 					vertical-align: middle;
 				}
 				&:hover,&.active{
@@ -521,8 +523,8 @@ blockquote{
 		z-index: 999;
 		padding: 5px;
 		.editor-icon{
-			height: 20px !important;
-			width:20px !important;
+			height: 20px;
+			width:20px;
 			background-image: url(images/icons.png);
 			display: inline-block;
     		vertical-align: top;
@@ -905,10 +907,36 @@ blockquote{
 			}
 			&.icon-paragraph,&.icon-fontsize,&.icon-fontfamily{
 				background-image:none;
-				background-color: #fff;
-				border: 1px solid #ddd;
-				width: 80px !important;
-				overflow-x: hidden;
+				background-color: transparent;
+				border: 1px solid #ccc;
+				width: 80px;
+				&:hover{
+					    background-color: #d5e1f2;
+						padding: 0;
+						border: 1px solid #a3bde3
+				}
+				.icon-label{
+					display: inline-block;
+					vertical-align: top;
+					width: 65px;
+					height: 20px;
+					line-height: 20px;
+					padding: 0px;
+					margin: 0;
+					font-size: 12px;
+					text-align: center;
+					cursor: default;
+					overflow: hidden;
+				}
+				.icon-caret{
+					display: inline-block;
+					vertical-align: top;
+					height: 20px;
+					width: 12px;
+					margin: 0;
+					padding: 0;
+					background: url(images/icons.png) -741px 0;
+				}
 			}
 		}
 	}
