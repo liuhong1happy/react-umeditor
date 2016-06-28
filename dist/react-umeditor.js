@@ -33,6 +33,7 @@ var ComboBox = React.createClass({
 		});
 	},
 	close: function close() {
+		if (!this.state.show) return;
 		this.setState({
 			show: false
 		});
@@ -96,12 +97,19 @@ var Dialog = React.createClass({
 			show: false
 		};
 	},
+	componentDidMount: function componentDidMount() {
+		window.addEventListener("click", this.close);
+	},
+	componentWillUnmount: function componentWillUnmount() {
+		window.removeEventListener("click", this.close);
+	},
 	open: function open() {
 		this.setState({
 			show: true
 		});
 	},
 	close: function close() {
+		if (!this.state.show) return;
 		this.setState({
 			show: false
 		});
@@ -217,6 +225,7 @@ var Dropdown = React.createClass({
 		});
 	},
 	close: function close() {
+		if (!this.state.show) return;
 		this.setState({
 			show: false
 		});
@@ -597,6 +606,7 @@ var _require = require('../../constants/EditorConstants');
 
 var ColorTypes = _require.ColorTypes;
 
+var EditorDOM = require('../../utils/EditorDOM');
 var ColorDropdown = React.createClass({
 	displayName: 'ColorDropdown',
 
@@ -624,12 +634,8 @@ var ColorDropdown = React.createClass({
 		if (this.state.handle) {
 			this.state.handle(e, color);
 		}
-		if (e.stopPropagation) {
-			e.stopPropagation();
-		} else {
-			e.cancelBubble = true;
-		}
 		this.close();
+		EditorDOM.stopPropagation(e);
 	},
 	render: function render() {
 		var handleSelectColor = this.handleSelectColor;
@@ -694,7 +700,7 @@ var ColorDropdown = React.createClass({
 module.exports = ColorDropdown;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../constants/EditorConstants":18,"../base/Dropdown.react":3}],10:[function(require,module,exports){
+},{"../../constants/EditorConstants":18,"../../utils/EditorDOM":20,"../base/Dropdown.react":3}],10:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -870,7 +876,7 @@ var FontFamilyDropdown = React.createClass({
 				fontfamily.map(function (ele, pos) {
 					return React.createElement(
 						'li',
-						{ 'data-value': ele.value, onClick: handleSelect },
+						{ key: pos, 'data-value': ele.value, onClick: handleSelect },
 						React.createElement(
 							'span',
 							{ 'data-value': ele.value, style: { "fontFamily": ele.value } },
@@ -939,7 +945,7 @@ var FontSizeDropdown = React.createClass({
 				fontsize.map(function (ele, pos) {
 					return React.createElement(
 						'li',
-						{ 'data-value': ele.value, onClick: handleSelect },
+						{ key: pos, 'data-value': ele.value, onClick: handleSelect },
 						React.createElement(
 							'span',
 							{ 'data-value': ele.value, style: { "fontSize": ele.value } },
@@ -1436,7 +1442,7 @@ var ParagraphDropdown = React.createClass({
 				paragraph.map(function (ele, pos) {
 					return React.createElement(
 						'li',
-						{ 'data-value': ele.value, onClick: handleSelect },
+						{ key: pos, 'data-value': ele.value, onClick: handleSelect },
 						React.createElement(ele.value, { "data-value": ele.value }, ele.name)
 					);
 				})
@@ -2002,6 +2008,11 @@ var Editor = React.createClass({
 				break;
 		}
 	},
+	componentWillUnmont: function componentWillUnmont() {
+		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
+		editarea.removeEventListener('keydown', this.handleKeyDown);
+		editarea.removeEventListener('keyup', this.handleKeyUp);
+	},
 	// event handler
 	handleKeyDown: function handleKeyDown(evt) {
 		evt = evt || event;
@@ -2030,6 +2041,7 @@ var Editor = React.createClass({
 				}
 			}
 		}
+		EditorDOM.stopPropagation(e);
 	},
 	handleKeyUp: function handleKeyUp(evt) {
 		evt = evt || event;
@@ -2040,11 +2052,16 @@ var Editor = React.createClass({
 				// some handle
 			}
 		}
+		EditorDOM.stopPropagation(e);
 	},
 	handleFocus: function handleFocus(e) {
 		if (this.props.onFocus) {
 			this.props.onFocus(e, this.findDOMNode('root'));
 		}
+		EditorDOM.stopPropagation(e);
+	},
+	handleClick: function handleClick(e) {
+		EditorDOM.stopPropagation(e);
 	},
 	exchangeRangeState: function exchangeRangeState(editorState) {
 		var rangeState = EditorSelection.getRangeState();
@@ -2374,12 +2391,7 @@ var Editor = React.createClass({
 		this.setState({
 			editorState: editorState
 		});
-
-		if (e.stopPropagation) {
-			e.stopPropagation();
-		} else {
-			e.cancelBubble = true;
-		}
+		EditorDOM.stopPropagation(e);
 	},
 	// utils
 	getOffsetRootParentPosition: function getOffsetRootParentPosition(target) {
@@ -2489,12 +2501,13 @@ var Editor = React.createClass({
 		var className = _props.className;
 		var id = _props.id;
 		var onFocus = _props.onFocus;
+		var onClick = _props.onClick;
 
-		var props = _objectWithoutProperties(_props, ['onBlur', 'className', 'id', 'onFocus']);
+		var props = _objectWithoutProperties(_props, ['onBlur', 'className', 'id', 'onFocus', 'onClick']);
 
 		return React.createElement(
 			'div',
-			_extends({ ref: 'root', id: id, className: "editor-container editor-default" + (className ? " " + className : ""), onBlur: this.handleRangeChange, onFocus: this.handleFocus }, props),
+			_extends({ ref: 'root', id: id, className: "editor-container editor-default" + (className ? " " + className : ""), onClick: this.handleClick, onBlur: this.handleRangeChange, onFocus: this.handleFocus }, props),
 			React.createElement(
 				EditorToolbar,
 				{ ref: 'toolbar', editorState: this.state.editorState, onIconClick: this.handleToolbarIconClick, icons: this.props.icons, paragraph: this.props.paragraph, fontsize: this.props.fontSize, fontfamily: this.props.fontFamily },

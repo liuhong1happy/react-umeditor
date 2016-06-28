@@ -40,7 +40,7 @@ var ParagraphDropdown = React.createClass({
 			<ul>
 				{
 					paragraph.map(function(ele,pos){
-						return (<li data-value={ele.value} onClick={handleSelect}>
+						return (<li key={pos} data-value={ele.value} onClick={handleSelect}>
 									{React.createElement(ele.value,{"data-value": ele.value},ele.name)}
 								</li>)
 					})

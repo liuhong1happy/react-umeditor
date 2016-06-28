@@ -23,6 +23,7 @@ var Dropdown = React.createClass({
 		})
 	},
 	close:function(){
+		if(!this.state.show) return;
 		this.setState({
 			show:false
 		})

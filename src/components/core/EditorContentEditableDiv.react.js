@@ -12,6 +12,9 @@ var EditorContentEditableDiv = React.createClass({
 	componentDidMount:function(e){
 		window.addEventListener("mousedown",this.handleWindowMouseDown);
 	},
+	componentWillUnmount:function(e){
+		window.removeEventListener("mousedown",this.handleWindowMouseDown);
+	},
 	componentWillUpdate:function(e){
 		EditorSelection.cloneRange();
 	},

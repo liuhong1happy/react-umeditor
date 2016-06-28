@@ -155,6 +155,11 @@ var Editor = React.createClass({
 				break;
 		}
 	},
+	componentWillUnmont:function(){
+		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
+    	editarea.removeEventListener('keydown', this.handleKeyDown);
+    	editarea.removeEventListener('keyup', this.handleKeyUp);
+	},
     // event handler
 	handleKeyDown:function(evt){
 		evt = evt || event;
@@ -183,6 +188,7 @@ var Editor = React.createClass({
 				}
 			}
 		}
+		EditorDOM.stopPropagation(e);
 	},
 	handleKeyUp:function(evt){
 		evt = evt || event;
@@ -193,11 +199,16 @@ var Editor = React.createClass({
 				// some handle
 			}
 		}
+		EditorDOM.stopPropagation(e);
 	},
 	handleFocus:function(e){
 		if(this.props.onFocus){
 			this.props.onFocus(e,this.findDOMNode('root'));
 		}
+		EditorDOM.stopPropagation(e);
+	},
+	handleClick:function(e){
+		EditorDOM.stopPropagation(e);
 	},
 	exchangeRangeState:function(editorState){
 		var rangeState = EditorSelection.getRangeState();
@@ -528,12 +539,7 @@ var Editor = React.createClass({
 		this.setState({
 			editorState:editorState
 		})
-		
-		if(e.stopPropagation){
-			e.stopPropagation();
-		}else{
-			e.cancelBubble = true;
-		}
+		EditorDOM.stopPropagation(e);
 	},
     // utils
 	getOffsetRootParentPosition:function(target){
@@ -639,8 +645,8 @@ var Editor = React.createClass({
 	},
 	render:function(){
 		var editArea = this.genEditArea();
-		var {onBlur,className,id,onFocus,...props} = this.props;
-		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
+		var {onBlur,className,id,onFocus,onClick,...props} = this.props;
+		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onClick={this.handleClick} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
 				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick} icons={this.props.icons} paragraph={this.props.paragraph}  fontsize={this.props.fontSize}  fontfamily={this.props.fontFamily}>
 					<ImageDialog ref="image" uploader={this.props.plugins.image.uploader} customUploader={this.props.plugins.image.customUploader}/>
 					<ColorDropdown ref="color" />

@@ -1,7 +1,7 @@
 var React = require('react');
 var Dropdown = require('../base/Dropdown.react');
 var {ColorTypes} = require('../../constants/EditorConstants');
-
+var EditorDOM = require('../../utils/EditorDOM');
 var ColorDropdown = React.createClass({
 	getInitialState:function(){
 		return {
@@ -27,12 +27,8 @@ var ColorDropdown = React.createClass({
 		if(this.state.handle){
 			this.state.handle(e,color);
 		}
-		if(e.stopPropagation){
-			e.stopPropagation();
-		}else{
-			e.cancelBubble = true;
-		}
 		this.close();
+		EditorDOM.stopPropagation(e);
 	},
 	render:function(){
 		var handleSelectColor = this.handleSelectColor;

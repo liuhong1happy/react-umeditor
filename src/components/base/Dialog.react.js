@@ -14,12 +14,19 @@ var Dialog = React.createClass({
 			show:false
 		}
 	},
+	componentDidMount:function(){
+		window.addEventListener("click",this.close);
+	},
+	componentWillUnmount:function(){
+		window.removeEventListener("click",this.close);
+	},
 	open:function(){
 		this.setState({
 			show:true
 		})
 	},
 	close:function(){
+		if(!this.state.show) return;
 		this.setState({
 			show:false
 		})

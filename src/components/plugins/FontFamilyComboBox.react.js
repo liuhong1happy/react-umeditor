@@ -40,7 +40,7 @@ var FontFamilyDropdown = React.createClass({
 			<ul>
 				{
 					fontfamily.map(function(ele,pos){
-						return (<li data-value={ele.value} onClick={handleSelect}>
+						return (<li key={pos} data-value={ele.value} onClick={handleSelect}>
 								<span data-value={ele.value} style={{"fontFamily":ele.value}}>{ele.name}</span>
 								</li>)
 					})
