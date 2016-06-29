@@ -546,9 +546,8 @@ var EditorToolbar = React.createClass({
 		icons: React.PropTypes.array
 	},
 	getDefaultProps: function getDefaultProps() {
-		// video map print preview drafts link unlink
 		return {
-			icons: ["source | undo redo | bold italic underline strikethrough fontborder | paragraph fontfamily fontsize | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | horizontal date time  | image emotion formula spechars | inserttable"]
+			icons: []
 		};
 	},
 	handleIconClick: function handleIconClick(e, state) {
@@ -656,61 +655,65 @@ var ColorDropdown = React.createClass({
 	},
 	render: function render() {
 		var handleSelectColor = this.handleSelectColor;
-		return React.createElement(
-			Dropdown,
-			{ ref: 'root', className: 'color-dropdown' },
-			React.createElement(
-				'table',
-				null,
+		if (this.props.hidden) {
+			return React.createElement('div', null);
+		} else {
+			return React.createElement(
+				Dropdown,
+				{ ref: 'root', className: 'color-dropdown' },
 				React.createElement(
-					'tbody',
+					'table',
 					null,
 					React.createElement(
-						'tr',
-						{ className: 'title-row', key: "title-row" },
+						'tbody',
+						null,
 						React.createElement(
-							'td',
-							{ colSpan: 10 },
-							'主题颜色'
-						)
-					),
-					ColorTypes.themeColors.map(function (colors, pos) {
-						var firstRow = pos == 0;
-						return React.createElement(
 							'tr',
-							{ key: pos, className: firstRow ? "first-row" : "" },
-							colors.map(function (color, index) {
+							{ className: 'title-row', key: "title-row" },
+							React.createElement(
+								'td',
+								{ colSpan: 10 },
+								'主题颜色'
+							)
+						),
+						ColorTypes.themeColors.map(function (colors, pos) {
+							var firstRow = pos == 0;
+							return React.createElement(
+								'tr',
+								{ key: pos, className: firstRow ? "first-row" : "" },
+								colors.map(function (color, index) {
+									return React.createElement(
+										'td',
+										{ key: index },
+										React.createElement('a', { className: 'color-anchor', 'data-color': color, style: { "backgroundColor": color }, onClick: handleSelectColor })
+									);
+								})
+							);
+						}),
+						React.createElement(
+							'tr',
+							{ className: 'title-row', key: "title-row2" },
+							React.createElement(
+								'td',
+								{ colSpan: 10 },
+								'标准颜色'
+							)
+						),
+						React.createElement(
+							'tr',
+							{ className: 'last-row', key: "last-row" },
+							ColorTypes.standardColors.map(function (color, pos) {
 								return React.createElement(
 									'td',
-									{ key: index },
+									{ key: pos },
 									React.createElement('a', { className: 'color-anchor', 'data-color': color, style: { "backgroundColor": color }, onClick: handleSelectColor })
 								);
 							})
-						);
-					}),
-					React.createElement(
-						'tr',
-						{ className: 'title-row', key: "title-row2" },
-						React.createElement(
-							'td',
-							{ colSpan: 10 },
-							'标准颜色'
 						)
-					),
-					React.createElement(
-						'tr',
-						{ className: 'last-row', key: "last-row" },
-						ColorTypes.standardColors.map(function (color, pos) {
-							return React.createElement(
-								'td',
-								{ key: pos },
-								React.createElement('a', { className: 'color-anchor', 'data-color': color, style: { "backgroundColor": color }, onClick: handleSelectColor })
-							);
-						})
 					)
 				)
-			)
-		);
+			);
+		}
 	}
 });
 
@@ -829,11 +832,15 @@ var EmotionDialog = React.createClass({
 			});
 		}
 		var buttons = [];
-		return React.createElement(
-			Dialog,
-			{ ref: 'root', className: 'emotion-dropdwon', width: 700, height: 508, title: '表情', buttons: buttons, onClose: this.close },
-			React.createElement(TabGroup, { tabs: tabs })
-		);
+		if (this.props.hidden) {
+			return React.createElement('div', null);
+		} else {
+			return React.createElement(
+				Dialog,
+				{ ref: 'root', className: 'emotion-dropdwon', width: 700, height: 508, title: '表情', buttons: buttons, onClose: this.close },
+				React.createElement(TabGroup, { tabs: tabs })
+			);
+		}
 	}
 });
 
@@ -884,25 +891,30 @@ var FontFamilyDropdown = React.createClass({
 	render: function render() {
 		var handleSelect = this.handleSelect;
 		var fontfamily = this.props.fontfamily ? this.props.fontfamily : [];
-		return React.createElement(
-			ComboBox,
-			{ ref: 'root', className: 'color-combobox' },
-			React.createElement(
-				'ul',
-				null,
-				fontfamily.map(function (ele, pos) {
-					return React.createElement(
-						'li',
-						{ key: pos, 'data-value': ele.value, onClick: handleSelect },
-						React.createElement(
-							'span',
-							{ 'data-value': ele.value, style: { "fontFamily": ele.value } },
-							ele.name
-						)
-					);
-				})
-			)
-		);
+		var props = this.props;
+		if (this.props.hidden) {
+			return React.createElement('div', null);
+		} else {
+			return React.createElement(
+				ComboBox,
+				{ ref: 'root', className: 'color-combobox' },
+				React.createElement(
+					'ul',
+					null,
+					fontfamily.map(function (ele, pos) {
+						return React.createElement(
+							'li',
+							{ className: ele.value == props.value ? "active" : "", key: pos, 'data-value': ele.value, onClick: handleSelect },
+							React.createElement(
+								'span',
+								{ 'data-value': ele.value, style: { "fontFamily": ele.value } },
+								ele.name
+							)
+						);
+					})
+				)
+			);
+		}
 	}
 });
 
@@ -954,25 +966,29 @@ var FontSizeDropdown = React.createClass({
 		var handleSelect = this.handleSelect;
 		var fontsize = this.props.fontsize ? this.props.fontsize : [];
 		var props = this.props;
-		return React.createElement(
-			ComboBox,
-			{ ref: 'root', className: 'color-combobox' },
-			React.createElement(
-				'ul',
-				null,
-				fontsize.map(function (ele, pos) {
-					return React.createElement(
-						'li',
-						{ className: ele.value == props.value ? "active" : "", key: pos, 'data-value': ele.value, onClick: handleSelect },
-						React.createElement(
-							'span',
-							{ 'data-value': ele.value, style: { "fontSize": ele.value } },
-							ele.name
-						)
-					);
-				})
-			)
-		);
+		if (this.props.hidden) {
+			return React.createElement('div', null);
+		} else {
+			return React.createElement(
+				ComboBox,
+				{ ref: 'root', className: 'color-combobox' },
+				React.createElement(
+					'ul',
+					null,
+					fontsize.map(function (ele, pos) {
+						return React.createElement(
+							'li',
+							{ className: ele.value == props.value ? "active" : "", key: pos, 'data-value': ele.value, onClick: handleSelect },
+							React.createElement(
+								'span',
+								{ 'data-value': ele.value, style: { "fontSize": ele.value } },
+								ele.name
+							)
+						);
+					})
+				)
+			);
+		}
 	}
 });
 
@@ -1052,12 +1068,15 @@ var FormulaDropdown = React.createClass({
 	},
 	render: function render() {
 		var tabs = [{ title: "常用公式", component: React.createElement(FormulaIcons, { icons: FormulaTypes.commonFormulas, name: 'common-formulas', onSelectFormula: this.handleSelectFormula }) }, { title: "符号", component: React.createElement(FormulaIcons, { icons: FormulaTypes.symbolFormulas, name: 'symbol-formulas', onSelectFormula: this.handleSelectFormula }) }, { title: "字母", component: React.createElement(FormulaIcons, { icons: FormulaTypes.arabicFormulas, name: 'arabic-formulas', onSelectFormula: this.handleSelectFormula }) }];
-
-		return React.createElement(
-			Dropdown,
-			{ ref: 'root', className: 'formula-dropdown' },
-			React.createElement(TabGroup, { tabs: tabs })
-		);
+		if (this.props.hidden) {
+			return React.createElement('div', null);
+		} else {
+			return React.createElement(
+				Dropdown,
+				{ ref: 'root', className: 'formula-dropdown' },
+				React.createElement(TabGroup, { tabs: tabs })
+			);
+		}
 	}
 });
 
@@ -1396,11 +1415,15 @@ var ImageDialog = React.createClass({
 		var uploader = this.props.uploader;
 		var buttons = [{ name: "btn-ok", content: "确定", onClick: this.handleOkClick }, { name: "btn-cancel", content: "取消", onClick: this.close }];
 		var tabs = [{ title: "本地上传", component: React.createElement(ImageUpload, { ref: 'image', onChange: this.handleChange, name: uploader.name, url: uploader.url }) }, { title: "网络图片", component: React.createElement(ImageSearch, { ref: 'image', onChange: this.handleChange }) }];
-		return React.createElement(
-			Dialog,
-			{ ref: 'modal', className: 'image-dialog', width: 700, height: 508, title: '图片', buttons: buttons, onClose: this.close },
-			React.createElement(TabGroup, { tabs: tabs, ref: 'tab' })
-		);
+		if (this.props.hidden) {
+			return React.createElement('div', null);
+		} else {
+			return React.createElement(
+				Dialog,
+				{ ref: 'modal', className: 'image-dialog', width: 700, height: 508, title: '图片', buttons: buttons, onClose: this.close },
+				React.createElement(TabGroup, { tabs: tabs, ref: 'tab' })
+			);
+		}
 	}
 });
 
@@ -1451,21 +1474,26 @@ var ParagraphDropdown = React.createClass({
 	render: function render() {
 		var handleSelect = this.handleSelect;
 		var paragraph = this.props.paragraph ? this.props.paragraph : [];
-		return React.createElement(
-			ComboBox,
-			{ ref: 'root', className: 'color-combobox' },
-			React.createElement(
-				'ul',
-				null,
-				paragraph.map(function (ele, pos) {
-					return React.createElement(
-						'li',
-						{ key: pos, 'data-value': ele.value, onClick: handleSelect },
-						React.createElement(ele.value, { "data-value": ele.value }, ele.name)
-					);
-				})
-			)
-		);
+		var props = this.props;
+		if (this.props.hidden) {
+			return React.createElement('div', null);
+		} else {
+			return React.createElement(
+				ComboBox,
+				{ ref: 'root', className: 'color-combobox' },
+				React.createElement(
+					'ul',
+					null,
+					paragraph.map(function (ele, pos) {
+						return React.createElement(
+							'li',
+							{ className: ele.value == props.value ? "active" : "", key: pos, 'data-value': ele.value, onClick: handleSelect },
+							React.createElement(ele.value, { "data-value": ele.value }, ele.name)
+						);
+					})
+				)
+			);
+		}
 	}
 });
 
@@ -1557,11 +1585,15 @@ var SpecialCharsDialog = React.createClass({
 			});
 		}
 		var buttons = [];
-		return React.createElement(
-			Dialog,
-			{ ref: 'root', className: 'special-chars-dialog', width: 700, height: 508, title: '特殊字符', buttons: buttons, onClose: this.close },
-			React.createElement(TabGroup, { tabs: tabs })
-		);
+		if (this.props.hidden) {
+			return React.createElement('div', null);
+		} else {
+			return React.createElement(
+				Dialog,
+				{ ref: 'root', className: 'special-chars-dialog', width: 700, height: 508, title: '特殊字符', buttons: buttons, onClose: this.close },
+				React.createElement(TabGroup, { tabs: tabs })
+			);
+		}
 	}
 });
 
@@ -1639,27 +1671,30 @@ var TablePickerDropdown = React.createClass({
     render: function render() {
         var row = this.state.row;
         var column = this.state.column;
-
-        return React.createElement(
-            Dropdown,
-            { ref: 'root', className: 'tablepicker-dropdown' },
-            React.createElement(
-                'div',
-                { className: 'infoarea' },
-                ' ',
+        if (this.props.hidden) {
+            return React.createElement('div', null);
+        } else {
+            return React.createElement(
+                Dropdown,
+                { ref: 'root', className: 'tablepicker-dropdown' },
                 React.createElement(
-                    'span',
-                    null,
-                    column + "列 x " + row + "行"
+                    'div',
+                    { className: 'infoarea' },
+                    ' ',
+                    React.createElement(
+                        'span',
+                        null,
+                        column + "列 x " + row + "行"
+                    )
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'pickarea', onMouseOver: this.handleMouseEvent, onMouseMove: this.handleMouseEvent,
+                        onMouseOut: this.handleMouseOut, onClick: this.handleClick },
+                    React.createElement('div', { className: 'overlay', style: { width: row * 22, height: column * 22 } })
                 )
-            ),
-            React.createElement(
-                'div',
-                { className: 'pickarea', onMouseOver: this.handleMouseEvent, onMouseMove: this.handleMouseEvent,
-                    onMouseOut: this.handleMouseOut, onClick: this.handleClick },
-                React.createElement('div', { className: 'overlay', style: { width: row * 22, height: column * 22 } })
-            )
-        );
+            );
+        }
     }
 });
 
@@ -1973,7 +2008,15 @@ var Editor = React.createClass({
 		return {
 			editorState: {
 				showHtml: false,
-				icons: {}
+				icons: {
+					"forecolor": { color: 'transparent', icon: "forecolor" },
+					"backcolor": { color: 'transparent', icon: "backcolor" },
+					"fontsize": { value: "3", icon: "fontsize" },
+					"paragraph": { value: "p", icon: "fontsize" },
+					"fontfamily": { value: "宋体, SimSun", icon: "fontfamily" },
+					"indent": { active: false, icon: "indent" },
+					"outdent": { active: true, icon: "outdent" }
+				}
 			},
 			defaultValue: this.props.defaultValue ? this.props.defaultValue : "<p>This is an Editor</p>",
 			value: this.props.value
@@ -1998,7 +2041,10 @@ var Editor = React.createClass({
 			},
 			"fontFamily": [{ "name": "宋体", value: "宋体, SimSun", defualt: true }, { "name": "隶书", value: "隶书, SimLi" }, { "name": "楷体", value: "楷体, SimKai" }, { "name": "微软雅黑", value: "微软雅黑, Microsoft YaHei" }, { "name": "黑体", value: "黑体, SimHei" }, { "name": "arial", value: "arial, helvetica, sans-serif" }, { "name": "arial black", value: "arial black, avant garde" }, { "name": "omic sans ms", value: "omic sans ms" }, { "name": "impact", value: "impact, chicago" }, { "name": "times new roman", value: "times new roman" }, { "name": "andale mono", value: "andale mono" }],
 			"fontSize": [{ "name": "10px", value: "1" }, { "name": "12px", value: "2" }, { "name": "16px", value: "3", defualt: true }, { "name": "18px", value: "4" }, { "name": "24px", value: "5" }, { "name": "32px", value: "6" }, { "name": "38px", value: "7" }],
-			"paragraph": [{ "name": "段落", value: "p", defualt: true }, { "name": "标题1", value: "h1" }, { "name": "标题2", value: "h2" }, { "name": "标题3", value: "h3" }, { "name": "标题4", value: "h4" }, { "name": "标题5", value: "h5" }, { "name": "标题6", value: "h6" }]
+			"paragraph": [{ "name": "段落", value: "p", defualt: true }, { "name": "标题1", value: "h1" }, { "name": "标题2", value: "h2" }, { "name": "标题3", value: "h3" }, { "name": "标题4", value: "h4" }, { "name": "标题5", value: "h5" }, { "name": "标题6", value: "h6" }],
+			"icons": [
+			// video map print preview drafts link unlink
+			"source | undo redo | bold italic underline strikethrough fontborder | ", "paragraph fontfamily fontsize | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | ", "horizontal date time  | image emotion formula spechars | inserttable"]
 		};
 	},
 	componentDidMount: function componentDidMount() {
@@ -2311,6 +2357,40 @@ var Editor = React.createClass({
 				this.refs.paragraph.open(offsetPosition, function (e, paragraph) {
 					editarea.focus();
 					EditorSelection.restoreRange();
+					var paragraphs = EditorSelection.getParagraphs();
+					for (var i = 0; i < paragraphs.length; i++) {
+						switch (paragraphs[i].tagName.toUpperCase()) {
+							case "TD":
+							case "TH":
+							case "DIV":
+								var childNodes = paragraphs[i].childNodes;
+								var paraElement = document.createElement(paragraph);
+								for (var j = 0; j < childNodes.length; j++) {
+									paraElement.appendChild(childNodes[j]);
+								}
+								paragraphs[i].appendChild(paraElement);
+								break;
+							case "P":
+							case "H1":
+							case "H2":
+							case "H3":
+							case "H4":
+							case "H5":
+							case "H6":
+								var parentElement = paragraphs[i];
+								var childNodes = paragraphs[i].childNodes;
+								var paraElement = document.createElement(paragraph);
+								var parentNode = parentElement.parentNode;
+								parentNode.insertBefore(paraElement, parentElement.nextSibling);
+								for (var j = 0; j < childNodes.length; j++) {
+									paraElement.appendChild(childNodes[j]);
+								}
+								parentNode.removeChild(parentElement);
+								break;
+							default:
+								break;
+						}
+					}
 					EditorHistory.execCommand('paragraph', false, paragraph);
 					handleRangeChange();
 				});
@@ -2528,22 +2608,24 @@ var Editor = React.createClass({
 		var fontSize = _props2.fontSize;
 		var paragraph = _props2.paragraph;
 		var fontFamily = _props2.fontFamily;
+		var icons = _props2.icons;
 
+		var _icons = icons.join(" ").replace(/\|/gm, "separator").split(" ");
 		return React.createElement(
 			'div',
 			_extends({ ref: 'root', id: id, className: "editor-container editor-default" + (className ? " " + className : ""), onClick: this.handleClick, onBlur: this.handleRangeChange, onFocus: this.handleFocus }, props),
 			React.createElement(
 				EditorToolbar,
 				{ ref: 'toolbar', editorState: editorState, onIconClick: this.handleToolbarIconClick, icons: this.props.icons, paragraph: this.props.paragraph, fontsize: this.props.fontSize, fontfamily: this.props.fontFamily },
-				React.createElement(ImageDialog, { ref: 'image', uploader: this.props.plugins.image.uploader, customUploader: this.props.plugins.image.customUploader }),
-				React.createElement(ColorDropdown, { ref: 'color' }),
-				React.createElement(FormulaDropdown, { ref: 'formula' }),
-				React.createElement(TablePickerDropdown, { ref: 'table' }),
-				React.createElement(SpecialCharsDialog, { ref: 'special' }),
-				React.createElement(EmotionDialog, { ref: 'emotion' }),
-				React.createElement(FontSizeComboBox, { ref: 'fontsize', fontsize: this.props.fontSize, value: editorState.icons["fontsize"] ? editorState.icons["fontsize"].value : fontSize[0].value }),
-				React.createElement(FontFamilyComboBox, { ref: 'fontfamily', fontfamily: this.props.fontFamily, value: editorState.icons["fontfamily"] ? editorState.icons["fontfamily"].value : fontFamily[0].value }),
-				React.createElement(ParagraphComboBox, { ref: 'paragraph', paragraph: this.props.paragraph, value: editorState.icons["paragraph"] ? editorState.icons["paragraph"].value : paragraph[0].value })
+				React.createElement(ImageDialog, { hidden: !_icons["image"], ref: 'image', uploader: this.props.plugins.image.uploader, customUploader: this.props.plugins.image.customUploader }),
+				React.createElement(ColorDropdown, { hidden: !_icons["forecolor"] && !_icons["backcolor"], ref: 'color' }),
+				React.createElement(FormulaDropdown, { hidden: !_icons["formula"], ref: 'formula' }),
+				React.createElement(TablePickerDropdown, { hidden: !_icons["inserttable"], ref: 'table' }),
+				React.createElement(SpecialCharsDialog, { hidden: !_icons["spechars"], ref: 'special' }),
+				React.createElement(EmotionDialog, { hidden: !_icons["emotion"], ref: 'emotion' }),
+				React.createElement(FontSizeComboBox, { hidden: !_icons["fontsize"], ref: 'fontsize', fontsize: this.props.fontSize, value: editorState.icons["fontsize"] ? editorState.icons["fontsize"].value : fontSize[0].value }),
+				React.createElement(FontFamilyComboBox, { hidden: !_icons["fontfamily"], ref: 'fontfamily', fontfamily: this.props.fontFamily, value: editorState.icons["fontfamily"] ? editorState.icons["fontfamily"].value : fontFamily[0].value }),
+				React.createElement(ParagraphComboBox, { hidden: !_icons["paragraph"], ref: 'paragraph', paragraph: this.props.paragraph, value: editorState.icons["paragraph"] ? editorState.icons["paragraph"].value : paragraph[0].value })
 			),
 			editArea,
 			React.createElement(EditorResize, { ref: 'resize' })
@@ -2986,6 +3068,14 @@ var EditorSelection = {
 		}
 		return spanNodes;
 	},
+	getParagraphs: function getParagraphs() {
+		var textNodes = this.getTextNodes();
+		var parents = [];
+		for (var i = 0; i < textNodes.length; i++) {
+			if (parents.indexOf(textNodes[i].childNode.parentElement) == -1) parents.push(textNodes[i].childNode.parentElement);
+		}
+		return parents;
+	},
 	getCommonAncestor: function getCommonAncestor() {
 		if (this.range.collapsed) return null;
 		var parent = this.range.commonAncestorContainer;
@@ -2995,7 +3085,7 @@ var EditorSelection = {
 		// addRange
 		this.selection = this.getSelection();
 		this.selection.removeAllRanges();
-		if (this.selection && this.range) {
+		if (this.selection && this.range && startContainer instanceof Node && endContainer instanceof Node) {
 			this.range.setStart(startContainer, startOffset);
 			this.range.setEnd(endContainer, endOffset);
 			this.selection.addRange(this.range.cloneRange());
@@ -3071,7 +3161,6 @@ var EditorSelection = {
 						rangeState["indent"] = { active: true, icon: "indent" };
 						rangeState["outdent"] = { active: false, icon: "indent" };
 						break;
-
 				}
 				parentElement = parentElement.parentElement;
 			}
@@ -3083,7 +3172,7 @@ var EditorSelection = {
 		if (!rangeState["paragraph"] || !rangeState["paragraph"].value) rangeState["paragraph"] = { value: "p", icon: "fontsize" };
 		if (!rangeState["fontfamily"] || !rangeState["fontfamily"].value) rangeState["fontfamily"] = { value: "宋体, SimSun", icon: "fontfamily" };
 		if (!rangeState["indent"]) {
-			rangeState["outdent"] = { active: true, icon: "indent" };
+			rangeState["outdent"] = { active: true, icon: "outdent" };
 			rangeState["indent"] = { active: false, icon: "indent" };
 		}
 		return rangeState;

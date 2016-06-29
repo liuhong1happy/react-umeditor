@@ -132,7 +132,7 @@ var EditorSelection = {
 	addRange:function(startContainer,startOffset,endContainer,endOffset){  // addRange
 		this.selection = this.getSelection();
 		this.selection.removeAllRanges();
-		if(this.selection && this.range){
+		if(this.selection && this.range && startContainer instanceof Node && endContainer instanceof Node){
 			this.range.setStart(startContainer,startOffset);
 			this.range.setEnd(endContainer,endOffset);
 			this.selection.addRange(this.range.cloneRange());
@@ -219,7 +219,7 @@ var EditorSelection = {
 		if(!rangeState["paragraph"] || !rangeState["paragraph"].value) rangeState["paragraph"] = {value: "p", icon:"fontsize"}
 		if(!rangeState["fontfamily"] || !rangeState["fontfamily"].value) rangeState["fontfamily"] = {value: "宋体, SimSun", icon:"fontfamily"}
 		if(!rangeState["indent"]) {
-			rangeState["outdent"] = { active:true,icon:"indent"}
+			rangeState["outdent"] = { active:true,icon:"outdent"}
 			rangeState["indent"] = { active:false,icon:"indent"}
 		}
 		return rangeState;

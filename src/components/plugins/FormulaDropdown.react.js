@@ -65,10 +65,13 @@ var FormulaDropdown = React.createClass({
 			{title:"符号",component:(<FormulaIcons icons={FormulaTypes.symbolFormulas} name="symbol-formulas" onSelectFormula={this.handleSelectFormula}/>)},
 			{title:"字母",component:(<FormulaIcons icons={FormulaTypes.arabicFormulas} name="arabic-formulas" onSelectFormula={this.handleSelectFormula}/>)}
 		]
-
-		return (<Dropdown ref="root" className="formula-dropdown">
-				<TabGroup tabs={tabs} />
-		</Dropdown>)
+		if(this.props.hidden){
+			return (<div></div>)
+		}else{
+			return (<Dropdown ref="root" className="formula-dropdown">
+					<TabGroup tabs={tabs} />
+			</Dropdown>)
+		}
 	}
 })
 		

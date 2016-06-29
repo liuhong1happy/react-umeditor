@@ -293,9 +293,13 @@ var ImageDialog = React.createClass({
 			{title:"本地上传",component:(<ImageUpload ref="image" onChange={this.handleChange} name={uploader.name} url={uploader.url}/>)},
 			{title:"网络图片",component:(<ImageSearch ref="image" onChange={this.handleChange}/>)},		
 		]
-		return (<Dialog ref="modal" className="image-dialog" width={700} height={508} title="图片" buttons={buttons} onClose={this.close}>
-				<TabGroup tabs={tabs} ref="tab"/>
-			</Dialog>)
+		if(this.props.hidden){
+			return (<div></div>)
+		}else{
+			return (<Dialog ref="modal" className="image-dialog" width={700} height={508} title="图片" buttons={buttons} onClose={this.close}>
+					<TabGroup tabs={tabs} ref="tab"/>
+				</Dialog>)
+		}
 	}
 })
 		

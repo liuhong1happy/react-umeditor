@@ -19,9 +19,9 @@ This document will help you Implement the plugin of the editor. OK,let's go!
             \\...
         }
         
-2. we have the icon's constant, so we have the toolbar to show. Please change the file  `components/core/EditorToolbar`,add content as follow:
+2. we have the icon's constant, so we have the toolbar to show. Please change the file  `components/core/Editor`,add content as follow:
 
-        var EditorToolbar = React.createClass({
+        var Editor = React.createClass({
             //...
             getDefaultProps:function(){
                 return {

@@ -19,9 +19,9 @@
             \\...
         }
         
-2. 我们有了控件的常量描述, 我们要让其显示在工具栏上. 请修改文件  `components/core/EditorToolbar`,添加如下内容:
+2. 我们有了控件的常量描述, 我们要让其显示在工具栏上. 请修改文件  `components/core/Editor`,添加如下内容:
 
-        var EditorToolbar = React.createClass({
+        var Editor = React.createClass({
             //...
             getDefaultProps:function(){
                 return {

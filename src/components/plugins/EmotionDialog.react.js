@@ -95,9 +95,13 @@ var EmotionDialog = React.createClass({
 			})
 		}
 		var buttons = [];
-		return (<Dialog ref="root" className="emotion-dropdwon" width={700} height={508} title="表情" buttons={buttons} onClose={this.close}>
-				<TabGroup tabs={tabs} />
-		</Dialog>)
+		if(this.props.hidden){
+			return (<div></div>)
+		}else{
+			return (<Dialog ref="root" className="emotion-dropdwon" width={700} height={508} title="表情" buttons={buttons} onClose={this.close}>
+					<TabGroup tabs={tabs} />
+			</Dialog>)
+		}
 	}
 })
 		

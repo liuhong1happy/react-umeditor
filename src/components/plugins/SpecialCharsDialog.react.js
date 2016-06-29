@@ -69,9 +69,13 @@ var SpecialCharsDialog = React.createClass({
 			})
 		}
 		var buttons = [];
-		return (<Dialog ref="root" className="special-chars-dialog" width={700} height={508} title="特殊字符" buttons={buttons} onClose={this.close}>
-				<TabGroup tabs={tabs} />
-		</Dialog>)
+		if(this.props.hidden){
+			return (<div></div>)
+		}else{
+			return (<Dialog ref="root" className="special-chars-dialog" width={700} height={508} title="特殊字符" buttons={buttons} onClose={this.close}>
+					<TabGroup tabs={tabs} />
+			</Dialog>)
+		}
 	}
 })
 		

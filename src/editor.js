@@ -66,13 +66,22 @@ if(!Date.prototype.Format){
 * @icons: 工具条上需要显示的图标
 **/
 
+
 var Editor = React.createClass({
     // init & update
 	getInitialState:function(){
 		return {
 			editorState:{
 				showHtml:false,
-				icons:{}
+				icons:{
+					"forecolor":{color: 'transparent', icon:"forecolor"},
+					"backcolor":{color: 'transparent', icon:"backcolor"},
+					"fontsize": {value: "3", icon:"fontsize"},
+					"paragraph":  {value: "p", icon:"fontsize"},
+					"fontfamily": {value: "宋体, SimSun", icon:"fontfamily"},
+					"indent": { active:false,icon:"indent"},
+					"outdent": { active:true,icon:"outdent"}
+				}
 			},
 			defaultValue:this.props.defaultValue?this.props.defaultValue:"<p>This is an Editor</p>",
 			value:this.props.value
@@ -125,6 +134,14 @@ var Editor = React.createClass({
 				{"name":"标题4",value:"h4"},
 				{"name":"标题5",value:"h5"},
 				{"name":"标题6",value:"h6"}
+			],
+			"icons":[
+				// video map print preview drafts link unlink
+				"source | undo redo | bold italic underline strikethrough fontborder | ",
+				"paragraph fontfamily fontsize | superscript subscript | ",
+				"forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ",
+				"cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | ",
+				"horizontal date time  | image emotion formula spechars | inserttable"
 			]
 		}
 	},
@@ -679,18 +696,19 @@ var Editor = React.createClass({
 		var editArea = this.genEditArea();
 		var {onBlur,className,id,onFocus,onClick,...props} = this.props;
 		var editorState = this.state.editorState;
-		var {fontSize,paragraph,fontFamily} = this.props;
+		var {fontSize,paragraph,fontFamily,icons} = this.props;
+		var _icons = icons.join(" ").replace(/\|/gm,"separator").split(" ");
 		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onClick={this.handleClick} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
 				<EditorToolbar ref="toolbar" editorState={editorState} onIconClick={this.handleToolbarIconClick} icons={this.props.icons} paragraph={this.props.paragraph}  fontsize={this.props.fontSize}  fontfamily={this.props.fontFamily}>
-					<ImageDialog ref="image" uploader={this.props.plugins.image.uploader} customUploader={this.props.plugins.image.customUploader}/>
-					<ColorDropdown ref="color" />
-					<FormulaDropdown ref="formula"/>
-					<TablePickerDropdown ref="table" />
-					<SpecialCharsDialog ref="special" />
-					<EmotionDialog ref="emotion" />
-					<FontSizeComboBox ref="fontsize" fontsize={this.props.fontSize} value={editorState.icons["fontsize"]?editorState.icons["fontsize"].value: fontSize[0].value}/>
-					<FontFamilyComboBox ref="fontfamily" fontfamily={this.props.fontFamily} value={editorState.icons["fontfamily"]?editorState.icons["fontfamily"].value: fontFamily[0].value}/>
-					<ParagraphComboBox ref="paragraph" paragraph={this.props.paragraph} value={editorState.icons["paragraph"]?editorState.icons["paragraph"].value: paragraph[0].value}/>
+					<ImageDialog hidden={!_icons["image"]} ref="image" uploader={this.props.plugins.image.uploader} customUploader={this.props.plugins.image.customUploader}/>
+					<ColorDropdown hidden={!_icons["forecolor"] && !_icons["backcolor"]} ref="color" />
+					<FormulaDropdown hidden={!_icons["formula"]} ref="formula"/>
+					<TablePickerDropdown hidden={!_icons["inserttable"]} ref="table" />
+					<SpecialCharsDialog hidden={!_icons["spechars"]} ref="special" />
+					<EmotionDialog hidden={!_icons["emotion"]} ref="emotion" />
+					<FontSizeComboBox hidden={!_icons["fontsize"]} ref="fontsize" fontsize={this.props.fontSize} value={editorState.icons["fontsize"]?editorState.icons["fontsize"].value: fontSize[0].value}/>
+					<FontFamilyComboBox hidden={!_icons["fontfamily"]} ref="fontfamily" fontfamily={this.props.fontFamily} value={editorState.icons["fontfamily"]?editorState.icons["fontfamily"].value: fontFamily[0].value}/>
+					<ParagraphComboBox hidden={!_icons["paragraph"]} ref="paragraph" paragraph={this.props.paragraph} value={editorState.icons["paragraph"]?editorState.icons["paragraph"].value: paragraph[0].value}/>
 				</EditorToolbar>
 				{editArea}
 				<EditorResize ref="resize" />

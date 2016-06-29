@@ -63,14 +63,17 @@ var TablePickerDropdown = React.createClass({
     render:function(){
         var row = this.state.row;
         var column = this.state.column;
-        
-        return (<Dropdown ref="root" className="tablepicker-dropdown">
-                    <div className="infoarea"> <span>{column+"列 x "+row+"行"}</span></div>
-                    <div className="pickarea" onMouseOver={this.handleMouseEvent}  onMouseMove={this.handleMouseEvent}
-                            onMouseOut={this.handleMouseOut} onClick={this.handleClick}>
-                            <div className="overlay" style={{width:row*22,height:column*22}}></div>
-                    </div>
-                </Dropdown>)
+		if(this.props.hidden){
+			return (<div></div>)
+		}else{
+			return (<Dropdown ref="root" className="tablepicker-dropdown">
+						<div className="infoarea"> <span>{column+"列 x "+row+"行"}</span></div>
+						<div className="pickarea" onMouseOver={this.handleMouseEvent}  onMouseMove={this.handleMouseEvent}
+								onMouseOut={this.handleMouseOut} onClick={this.handleClick}>
+								<div className="overlay" style={{width:row*22,height:column*22}}></div>
+						</div>
+					</Dropdown>)
+		}
     }
 })
 
