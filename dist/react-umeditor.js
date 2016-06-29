@@ -2617,15 +2617,15 @@ var Editor = React.createClass({
 			React.createElement(
 				EditorToolbar,
 				{ ref: 'toolbar', editorState: editorState, onIconClick: this.handleToolbarIconClick, icons: this.props.icons, paragraph: this.props.paragraph, fontsize: this.props.fontSize, fontfamily: this.props.fontFamily },
-				React.createElement(ImageDialog, { hidden: !_icons["image"], ref: 'image', uploader: this.props.plugins.image.uploader, customUploader: this.props.plugins.image.customUploader }),
-				React.createElement(ColorDropdown, { hidden: !_icons["forecolor"] && !_icons["backcolor"], ref: 'color' }),
-				React.createElement(FormulaDropdown, { hidden: !_icons["formula"], ref: 'formula' }),
-				React.createElement(TablePickerDropdown, { hidden: !_icons["inserttable"], ref: 'table' }),
-				React.createElement(SpecialCharsDialog, { hidden: !_icons["spechars"], ref: 'special' }),
-				React.createElement(EmotionDialog, { hidden: !_icons["emotion"], ref: 'emotion' }),
-				React.createElement(FontSizeComboBox, { hidden: !_icons["fontsize"], ref: 'fontsize', fontsize: this.props.fontSize, value: editorState.icons["fontsize"] ? editorState.icons["fontsize"].value : fontSize[0].value }),
-				React.createElement(FontFamilyComboBox, { hidden: !_icons["fontfamily"], ref: 'fontfamily', fontfamily: this.props.fontFamily, value: editorState.icons["fontfamily"] ? editorState.icons["fontfamily"].value : fontFamily[0].value }),
-				React.createElement(ParagraphComboBox, { hidden: !_icons["paragraph"], ref: 'paragraph', paragraph: this.props.paragraph, value: editorState.icons["paragraph"] ? editorState.icons["paragraph"].value : paragraph[0].value })
+				React.createElement(ImageDialog, { hidden: _icons.indexOf("image") == -1, ref: 'image', uploader: this.props.plugins.image.uploader, customUploader: this.props.plugins.image.customUploader }),
+				React.createElement(ColorDropdown, { hidden: _icons.indexOf("forecolor") == -1 && _icons.indexOf("forecolor"), ref: 'color' }),
+				React.createElement(FormulaDropdown, { hidden: _icons.indexOf("formula") == -1, ref: 'formula' }),
+				React.createElement(TablePickerDropdown, { hidden: _icons.indexOf("inserttable") == -1, ref: 'table' }),
+				React.createElement(SpecialCharsDialog, { hidden: _icons.indexOf("spechars") == -1, ref: 'special' }),
+				React.createElement(EmotionDialog, { hidden: _icons.indexOf("emotion") == -1, ref: 'emotion' }),
+				React.createElement(FontSizeComboBox, { hidden: _icons.indexOf("fontsize") == -1, ref: 'fontsize', fontsize: this.props.fontSize, value: editorState.icons["fontsize"] ? editorState.icons["fontsize"].value : fontSize[0].value }),
+				React.createElement(FontFamilyComboBox, { hidden: _icons.indexOf("fontfamily") == -1, ref: 'fontfamily', fontfamily: this.props.fontFamily, value: editorState.icons["fontfamily"] ? editorState.icons["fontfamily"].value : fontFamily[0].value }),
+				React.createElement(ParagraphComboBox, { hidden: _icons.indexOf("paragraph") == -1, ref: 'paragraph', paragraph: this.props.paragraph, value: editorState.icons["paragraph"] ? editorState.icons["paragraph"].value : paragraph[0].value })
 			),
 			editArea,
 			React.createElement(EditorResize, { ref: 'resize' })
