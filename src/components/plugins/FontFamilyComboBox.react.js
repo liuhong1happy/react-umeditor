@@ -40,7 +40,7 @@ var FontFamilyDropdown = React.createClass({
 		if(this.props.hidden){
 			return (<div></div>)
 		}else{
-			return (<ComboBox ref="root" className="color-combobox">
+			return (<ComboBox ref="root" className="fontfamily-combobox">
 				<ul>
 					{
 						fontfamily.map(function(ele,pos){

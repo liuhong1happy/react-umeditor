@@ -897,7 +897,7 @@ var FontFamilyDropdown = React.createClass({
 		} else {
 			return React.createElement(
 				ComboBox,
-				{ ref: 'root', className: 'color-combobox' },
+				{ ref: 'root', className: 'fontfamily-combobox' },
 				React.createElement(
 					'ul',
 					null,
@@ -971,7 +971,7 @@ var FontSizeDropdown = React.createClass({
 		} else {
 			return React.createElement(
 				ComboBox,
-				{ ref: 'root', className: 'color-combobox' },
+				{ ref: 'root', className: 'fontsize-combobox' },
 				React.createElement(
 					'ul',
 					null,
@@ -1480,7 +1480,7 @@ var ParagraphDropdown = React.createClass({
 		} else {
 			return React.createElement(
 				ComboBox,
-				{ ref: 'root', className: 'color-combobox' },
+				{ ref: 'root', className: 'paragraph-combobox' },
 				React.createElement(
 					'ul',
 					null,

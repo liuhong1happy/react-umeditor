@@ -40,7 +40,7 @@ var ParagraphDropdown = React.createClass({
 		if(this.props.hidden){
 			return (<div></div>)
 		}else{
-			return (<ComboBox ref="root" className="color-combobox">
+			return (<ComboBox ref="root" className="paragraph-combobox">
 				<ul>
 					{
 						paragraph.map(function(ele,pos){
