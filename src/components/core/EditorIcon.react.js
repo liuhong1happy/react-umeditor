@@ -43,7 +43,7 @@ var EditorIcon = React.createClass({
 		var _className = "editor-icon icon-" + icon + (active ? " active" : "") + (disabled || _disabled ? " disabled" : "");
 		if(icon=="fontsize" || icon=="fontfamily" || icon == "paragraph"){
 			return (<span ref="root" className={_className} onClick={this.handleClick} {...props}> 
-				<span className="icon-label">{props.value}</span>
+				<span className="icon-label">{props.name}</span>
 				<span className="icon-caret"></span>
 				</span>)
 		}else{

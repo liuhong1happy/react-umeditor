@@ -96,28 +96,26 @@ var Editor = React.createClass({
 				}
 			},
 			"fontFamily":[
-				{"name":"宋体",value:"宋体,SimSun",defualt:true},
-				{"name":"隶书",value:"隶书,SimLi"},
-				{"name":"楷体",value:"楷体,SimKai"},
-				{"name":"微软雅黑",value:"微软雅黑,Microsoft YaHei"},
-				{"name":"黑体",value:"黑体,SimHei"},
-				{"name":"arial",value:"arial,helvetica,sans-serif"},
-				{"name":"arial black",value:"arial black,avant garde"},
+				{"name":"宋体",value:"宋体, SimSun",defualt:true},
+				{"name":"隶书",value:"隶书, SimLi"},
+				{"name":"楷体",value:"楷体, SimKai"},
+				{"name":"微软雅黑",value:"微软雅黑, Microsoft YaHei"},
+				{"name":"黑体",value:"黑体, SimHei"},
+				{"name":"arial",value:"arial, helvetica, sans-serif"},
+				{"name":"arial black",value:"arial black, avant garde"},
 				{"name":"omic sans ms",value:"omic sans ms"},
-				{"name":"impact",value:"impact,chicago"},
+				{"name":"impact",value:"impact, chicago"},
 				{"name":"times new roman",value:"times new roman"},
 				{"name":"andale mono",value:"andale mono"}
 			],
 			"fontSize": [
-				{"name":"12px",value:"12px",defualt:true},
-				{"name":"14px",value:"14px"},
-				{"name":"16px",value:"16px"},
-				{"name":"18px",value:"18px"},
-				{"name":"20px",value:"20px"},
-				{"name":"24px",value:"24px"},
-				{"name":"28px",value:"28px"},
-				{"name":"32px",value:"32px"},
-				{"name":"36px",value:"32px"}
+				{"name":"10px",value:"1"},
+				{"name":"12px",value:"2"},
+				{"name":"16px",value:"3",defualt:true},
+				{"name":"18px",value:"4"},
+				{"name":"24px",value:"5"},
+				{"name":"32px",value:"6"},
+				{"name":"38px",value:"7"}
 			],
 			"paragraph": [
 				{"name":"段落",value:"p",defualt:true},
@@ -188,7 +186,7 @@ var Editor = React.createClass({
 				}
 			}
 		}
-		EditorDOM.stopPropagation(e);
+		EditorDOM.stopPropagation(evt);
 	},
 	handleKeyUp:function(evt){
 		evt = evt || event;
@@ -199,7 +197,7 @@ var Editor = React.createClass({
 				// some handle
 			}
 		}
-		EditorDOM.stopPropagation(e);
+		EditorDOM.stopPropagation(evt);
 	},
 	handleFocus:function(e){
 		if(this.props.onFocus){
@@ -430,7 +428,7 @@ var Editor = React.createClass({
 				this.refs.fontfamily.open(offsetPosition,function(e,fontfamily){
 					editarea.focus();
 					EditorSelection.restoreRange();
-					EditorHistory.execCommand('fontfamily',false,fontfamily);
+					EditorHistory.execCommand('fontname',false,fontfamily);
 					handleRangeChange();
 				});
 				break;
@@ -441,6 +439,40 @@ var Editor = React.createClass({
 				this.refs.paragraph.open(offsetPosition,function(e,paragraph){
 					editarea.focus();
 					EditorSelection.restoreRange();
+					var paragraphs = EditorSelection.getParagraphs();
+					for(var i=0;i<paragraphs.length;i++){
+						switch(paragraphs[i].tagName.toUpperCase()){
+							case "TD":
+							case "TH":
+							case "DIV":
+								var childNodes = paragraphs[i].childNodes;
+								var paraElement = document.createElement(paragraph);
+								for(var j=0;j<childNodes.length;j++){
+									paraElement.appendChild(childNodes[j]);
+								}
+								paragraphs[i].appendChild(paraElement);
+								break;
+							case "P":
+							case "H1":
+							case "H2":
+							case "H3":
+							case "H4":
+							case "H5":
+							case "H6":
+								var parentElement = paragraphs[i];
+								var childNodes = paragraphs[i].childNodes;
+								var paraElement = document.createElement(paragraph);
+								var parentNode = parentElement.parentNode;
+								parentNode.insertBefore(paraElement, parentElement.nextSibling);
+								for(var j=0;j<childNodes.length;j++){
+									paraElement.appendChild(childNodes[j]);
+								}
+								parentNode.removeChild(parentElement);
+								break;
+							default:
+								break;
+						}
+					}
 					EditorHistory.execCommand('paragraph',false,paragraph);
 					handleRangeChange();
 				});
@@ -646,17 +678,19 @@ var Editor = React.createClass({
 	render:function(){
 		var editArea = this.genEditArea();
 		var {onBlur,className,id,onFocus,onClick,...props} = this.props;
+		var editorState = this.state.editorState;
+		var {fontSize,paragraph,fontFamily} = this.props;
 		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onClick={this.handleClick} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
-				<EditorToolbar ref="toolbar" editorState={this.state.editorState} onIconClick={this.handleToolbarIconClick} icons={this.props.icons} paragraph={this.props.paragraph}  fontsize={this.props.fontSize}  fontfamily={this.props.fontFamily}>
+				<EditorToolbar ref="toolbar" editorState={editorState} onIconClick={this.handleToolbarIconClick} icons={this.props.icons} paragraph={this.props.paragraph}  fontsize={this.props.fontSize}  fontfamily={this.props.fontFamily}>
 					<ImageDialog ref="image" uploader={this.props.plugins.image.uploader} customUploader={this.props.plugins.image.customUploader}/>
 					<ColorDropdown ref="color" />
 					<FormulaDropdown ref="formula"/>
 					<TablePickerDropdown ref="table" />
 					<SpecialCharsDialog ref="special" />
 					<EmotionDialog ref="emotion" />
-					<FontSizeComboBox ref="fontsize" fontsize={this.props.fontSize} />
-					<FontFamilyComboBox ref="fontfamily" fontfamily={this.props.fontFamily} />
-					<ParagraphComboBox ref="paragraph" paragraph={this.props.paragraph} />
+					<FontSizeComboBox ref="fontsize" fontsize={this.props.fontSize} value={editorState.icons["fontsize"]?editorState.icons["fontsize"].value: fontSize[0].value}/>
+					<FontFamilyComboBox ref="fontfamily" fontfamily={this.props.fontFamily} value={editorState.icons["fontfamily"]?editorState.icons["fontfamily"].value: fontFamily[0].value}/>
+					<ParagraphComboBox ref="paragraph" paragraph={this.props.paragraph} value={editorState.icons["paragraph"]?editorState.icons["paragraph"].value: paragraph[0].value}/>
 				</EditorToolbar>
 				{editArea}
 				<EditorResize ref="resize" />

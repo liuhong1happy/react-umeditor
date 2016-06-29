@@ -115,6 +115,15 @@ var EditorSelection = {
 		}
 		return spanNodes;
 	},
+	getParagraphs:function(){
+		var textNodes = this.getTextNodes();
+		var parents = [];
+		for(var i=0;i<textNodes.length;i++){
+			if(parents.indexOf(textNodes[i].childNode.parentElement)==-1)
+				parents.push(textNodes[i].childNode.parentElement);
+		}
+		return parents;
+	},
 	getCommonAncestor:function(){
 		if(this.range.collapsed) return null;
 		var parent = this.range.commonAncestorContainer;
@@ -178,6 +187,8 @@ var EditorSelection = {
 					case "FONT":
 						rangeState["forecolor"] = {color: parentElement.color, icon:"forecolor"}
 						rangeState["backcolor"] = {color: parentElement.style.backgroundColor, icon:"backcolor"}
+						rangeState["fontsize"] = {value: parentElement.size, icon:"fontsize"}
+						rangeState["fontfamily"] = {value: parentElement.face, icon:"fontfamily"}
 						break;
 					case "P":
 					case "H1":
@@ -191,15 +202,12 @@ var EditorSelection = {
 						rangeState["justifycenter"] = { active:textAlign=="center",icon:"subscript"}
 						rangeState["justifyleft"] = { active:textAlign=="left",icon:"subscript"}
 						rangeState["justifyright"] = { active:textAlign=="right",icon:"subscript"}
-						rangeState["paragraph"] = {value:"p",icon:"paragraph"}
-						rangeState["fontfamily"] = {value: fontFamily,icon:"fontfamily"}
-						rangeState["fontsize"] = {value: fontSize,icon:"fontsize"}
+						rangeState["paragraph"] = {value:parentElement.tagName.toLowerCase(),icon:"paragraph"}
 						break;
 					case "BLOCKQUOTE":
 						rangeState["indent"] = { active:true,icon:"indent"}
 						rangeState["outdent"] = { active:false,icon:"indent"}
 						break;
-					
 				}
 				parentElement = parentElement.parentElement;
 			}
@@ -207,6 +215,9 @@ var EditorSelection = {
 		
 		if(!rangeState["forecolor"]) rangeState["forecolor"] = {color: 'transparent', icon:"forecolor"}
 		if(!rangeState["backcolor"]) rangeState["backcolor"] = {color: 'transparent', icon:"backcolor"}
+		if(!rangeState["fontsize"] || !rangeState["fontsize"].value) rangeState["fontsize"] = {value: "3", icon:"fontsize"}
+		if(!rangeState["paragraph"] || !rangeState["paragraph"].value) rangeState["paragraph"] = {value: "p", icon:"fontsize"}
+		if(!rangeState["fontfamily"] || !rangeState["fontfamily"].value) rangeState["fontfamily"] = {value: "宋体, SimSun", icon:"fontfamily"}
 		if(!rangeState["indent"]) {
 			rangeState["outdent"] = { active:true,icon:"indent"}
 			rangeState["indent"] = { active:false,icon:"indent"}

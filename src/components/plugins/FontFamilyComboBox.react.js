@@ -36,11 +36,12 @@ var FontFamilyDropdown = React.createClass({
 	render:function(){
 		var handleSelect = this.handleSelect;
 		var fontfamily = this.props.fontfamily?this.props.fontfamily:[];
+		var props = this.props;
 		return (<ComboBox ref="root" className="color-combobox">
 			<ul>
 				{
 					fontfamily.map(function(ele,pos){
-						return (<li key={pos} data-value={ele.value} onClick={handleSelect}>
+						return (<li className={ele.value==props.value?"active":""} key={pos} data-value={ele.value} onClick={handleSelect}>
 								<span data-value={ele.value} style={{"fontFamily":ele.value}}>{ele.name}</span>
 								</li>)
 					})

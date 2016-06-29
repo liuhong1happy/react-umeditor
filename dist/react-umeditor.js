@@ -354,6 +354,9 @@ var EditorContentEditableDiv = React.createClass({
 	componentDidMount: function componentDidMount(e) {
 		window.addEventListener("mousedown", this.handleWindowMouseDown);
 	},
+	componentWillUnmount: function componentWillUnmount(e) {
+		window.removeEventListener("mousedown", this.handleWindowMouseDown);
+	},
 	componentWillUpdate: function componentWillUpdate(e) {
 		EditorSelection.cloneRange();
 	},
@@ -468,7 +471,7 @@ var EditorIcon = React.createClass({
 				React.createElement(
 					'span',
 					{ className: 'icon-label' },
-					props.value
+					props.name
 				),
 				React.createElement('span', { className: 'icon-caret' })
 			);
@@ -553,10 +556,23 @@ var EditorToolbar = React.createClass({
 			this.props.onIconClick(e, state);
 		}
 	},
+	getNameByValue: function getNameByValue(arr, value) {
+		var filterArr = arr.filter(function (ele, pos) {
+			return ele.value == value;
+		});
+		if (filterArr.length > 0) {
+			return filterArr[0].name;
+		} else {
+			return "";
+		}
+	},
 	getIcons: function getIcons() {
 		var editorState = this.props.editorState;
 		editorState.icons["undo"] = { disabled: !EditorHistory.canUndo() };
 		editorState.icons["redo"] = { disabled: !EditorHistory.canRedo() };
+		if (editorState.icons["fontsize"]) editorState.icons["fontsize"].name = this.getNameByValue(this.props.fontsize, editorState.icons["fontsize"].value);
+		if (editorState.icons["paragraph"]) editorState.icons["paragraph"].name = this.getNameByValue(this.props.paragraph, editorState.icons["paragraph"].value);
+		if (editorState.icons["fontfamily"]) editorState.icons["fontfamily"].name = this.getNameByValue(this.props.fontfamily, editorState.icons["fontfamily"].value);
 
 		var icons = this.props.icons;
 		var _icons = icons.join(" ").replace(/\|/gm, "separator").split(" ");
@@ -573,6 +589,7 @@ var EditorToolbar = React.createClass({
 				returnArray[i].active = !!editorState.icons[_icons[i]].active;
 				returnArray[i].color = editorState.icons[_icons[i]].color;
 				returnArray[i].value = editorState.icons[_icons[i]].value;
+				returnArray[i].name = editorState.icons[_icons[i]].name;
 			}
 			returnArray[i].showHtml = !!editorState.showHtml;
 		}
@@ -936,6 +953,7 @@ var FontSizeDropdown = React.createClass({
 	render: function render() {
 		var handleSelect = this.handleSelect;
 		var fontsize = this.props.fontsize ? this.props.fontsize : [];
+		var props = this.props;
 		return React.createElement(
 			ComboBox,
 			{ ref: 'root', className: 'color-combobox' },
@@ -945,7 +963,7 @@ var FontSizeDropdown = React.createClass({
 				fontsize.map(function (ele, pos) {
 					return React.createElement(
 						'li',
-						{ key: pos, 'data-value': ele.value, onClick: handleSelect },
+						{ className: ele.value == props.value ? "active" : "", key: pos, 'data-value': ele.value, onClick: handleSelect },
 						React.createElement(
 							'span',
 							{ 'data-value': ele.value, style: { "fontSize": ele.value } },
@@ -1978,8 +1996,8 @@ var Editor = React.createClass({
 					"customUploader": null
 				}
 			},
-			"fontFamily": [{ "name": "宋体", value: "宋体,SimSun", defualt: true }, { "name": "隶书", value: "隶书,SimLi" }, { "name": "楷体", value: "楷体,SimKai" }, { "name": "微软雅黑", value: "微软雅黑,Microsoft YaHei" }, { "name": "黑体", value: "黑体,SimHei" }, { "name": "arial", value: "arial,helvetica,sans-serif" }, { "name": "arial black", value: "arial black,avant garde" }, { "name": "omic sans ms", value: "omic sans ms" }, { "name": "impact", value: "impact,chicago" }, { "name": "times new roman", value: "times new roman" }, { "name": "andale mono", value: "andale mono" }],
-			"fontSize": [{ "name": "12px", value: "12px", defualt: true }, { "name": "14px", value: "14px" }, { "name": "16px", value: "16px" }, { "name": "18px", value: "18px" }, { "name": "20px", value: "20px" }, { "name": "24px", value: "24px" }, { "name": "28px", value: "28px" }, { "name": "32px", value: "32px" }, { "name": "36px", value: "32px" }],
+			"fontFamily": [{ "name": "宋体", value: "宋体, SimSun", defualt: true }, { "name": "隶书", value: "隶书, SimLi" }, { "name": "楷体", value: "楷体, SimKai" }, { "name": "微软雅黑", value: "微软雅黑, Microsoft YaHei" }, { "name": "黑体", value: "黑体, SimHei" }, { "name": "arial", value: "arial, helvetica, sans-serif" }, { "name": "arial black", value: "arial black, avant garde" }, { "name": "omic sans ms", value: "omic sans ms" }, { "name": "impact", value: "impact, chicago" }, { "name": "times new roman", value: "times new roman" }, { "name": "andale mono", value: "andale mono" }],
+			"fontSize": [{ "name": "10px", value: "1" }, { "name": "12px", value: "2" }, { "name": "16px", value: "3", defualt: true }, { "name": "18px", value: "4" }, { "name": "24px", value: "5" }, { "name": "32px", value: "6" }, { "name": "38px", value: "7" }],
 			"paragraph": [{ "name": "段落", value: "p", defualt: true }, { "name": "标题1", value: "h1" }, { "name": "标题2", value: "h2" }, { "name": "标题3", value: "h3" }, { "name": "标题4", value: "h4" }, { "name": "标题5", value: "h5" }, { "name": "标题6", value: "h6" }]
 		};
 	},
@@ -2041,7 +2059,7 @@ var Editor = React.createClass({
 				}
 			}
 		}
-		EditorDOM.stopPropagation(e);
+		EditorDOM.stopPropagation(evt);
 	},
 	handleKeyUp: function handleKeyUp(evt) {
 		evt = evt || event;
@@ -2052,7 +2070,7 @@ var Editor = React.createClass({
 				// some handle
 			}
 		}
-		EditorDOM.stopPropagation(e);
+		EditorDOM.stopPropagation(evt);
 	},
 	handleFocus: function handleFocus(e) {
 		if (this.props.onFocus) {
@@ -2282,7 +2300,7 @@ var Editor = React.createClass({
 				this.refs.fontfamily.open(offsetPosition, function (e, fontfamily) {
 					editarea.focus();
 					EditorSelection.restoreRange();
-					EditorHistory.execCommand('fontfamily', false, fontfamily);
+					EditorHistory.execCommand('fontname', false, fontfamily);
 					handleRangeChange();
 				});
 				break;
@@ -2505,21 +2523,27 @@ var Editor = React.createClass({
 
 		var props = _objectWithoutProperties(_props, ['onBlur', 'className', 'id', 'onFocus', 'onClick']);
 
+		var editorState = this.state.editorState;
+		var _props2 = this.props;
+		var fontSize = _props2.fontSize;
+		var paragraph = _props2.paragraph;
+		var fontFamily = _props2.fontFamily;
+
 		return React.createElement(
 			'div',
 			_extends({ ref: 'root', id: id, className: "editor-container editor-default" + (className ? " " + className : ""), onClick: this.handleClick, onBlur: this.handleRangeChange, onFocus: this.handleFocus }, props),
 			React.createElement(
 				EditorToolbar,
-				{ ref: 'toolbar', editorState: this.state.editorState, onIconClick: this.handleToolbarIconClick, icons: this.props.icons, paragraph: this.props.paragraph, fontsize: this.props.fontSize, fontfamily: this.props.fontFamily },
+				{ ref: 'toolbar', editorState: editorState, onIconClick: this.handleToolbarIconClick, icons: this.props.icons, paragraph: this.props.paragraph, fontsize: this.props.fontSize, fontfamily: this.props.fontFamily },
 				React.createElement(ImageDialog, { ref: 'image', uploader: this.props.plugins.image.uploader, customUploader: this.props.plugins.image.customUploader }),
 				React.createElement(ColorDropdown, { ref: 'color' }),
 				React.createElement(FormulaDropdown, { ref: 'formula' }),
 				React.createElement(TablePickerDropdown, { ref: 'table' }),
 				React.createElement(SpecialCharsDialog, { ref: 'special' }),
 				React.createElement(EmotionDialog, { ref: 'emotion' }),
-				React.createElement(FontSizeComboBox, { ref: 'fontsize', fontsize: this.props.fontSize }),
-				React.createElement(FontFamilyComboBox, { ref: 'fontfamily', fontfamily: this.props.fontFamily }),
-				React.createElement(ParagraphComboBox, { ref: 'paragraph', paragraph: this.props.paragraph })
+				React.createElement(FontSizeComboBox, { ref: 'fontsize', fontsize: this.props.fontSize, value: editorState.icons["fontsize"] ? editorState.icons["fontsize"].value : fontSize[0].value }),
+				React.createElement(FontFamilyComboBox, { ref: 'fontfamily', fontfamily: this.props.fontFamily, value: editorState.icons["fontfamily"] ? editorState.icons["fontfamily"].value : fontFamily[0].value }),
+				React.createElement(ParagraphComboBox, { ref: 'paragraph', paragraph: this.props.paragraph, value: editorState.icons["paragraph"] ? editorState.icons["paragraph"].value : paragraph[0].value })
 			),
 			editArea,
 			React.createElement(EditorResize, { ref: 'resize' })
@@ -3026,6 +3050,8 @@ var EditorSelection = {
 					case "FONT":
 						rangeState["forecolor"] = { color: parentElement.color, icon: "forecolor" };
 						rangeState["backcolor"] = { color: parentElement.style.backgroundColor, icon: "backcolor" };
+						rangeState["fontsize"] = { value: parentElement.size, icon: "fontsize" };
+						rangeState["fontfamily"] = { value: parentElement.face, icon: "fontfamily" };
 						break;
 					case "P":
 					case "H1":
@@ -3039,9 +3065,7 @@ var EditorSelection = {
 						rangeState["justifycenter"] = { active: textAlign == "center", icon: "subscript" };
 						rangeState["justifyleft"] = { active: textAlign == "left", icon: "subscript" };
 						rangeState["justifyright"] = { active: textAlign == "right", icon: "subscript" };
-						rangeState["paragraph"] = { value: "p", icon: "paragraph" };
-						rangeState["fontfamily"] = { value: fontFamily, icon: "fontfamily" };
-						rangeState["fontsize"] = { value: fontSize, icon: "fontsize" };
+						rangeState["paragraph"] = { value: parentElement.tagName.toLowerCase(), icon: "paragraph" };
 						break;
 					case "BLOCKQUOTE":
 						rangeState["indent"] = { active: true, icon: "indent" };
@@ -3055,6 +3079,9 @@ var EditorSelection = {
 
 		if (!rangeState["forecolor"]) rangeState["forecolor"] = { color: 'transparent', icon: "forecolor" };
 		if (!rangeState["backcolor"]) rangeState["backcolor"] = { color: 'transparent', icon: "backcolor" };
+		if (!rangeState["fontsize"] || !rangeState["fontsize"].value) rangeState["fontsize"] = { value: "3", icon: "fontsize" };
+		if (!rangeState["paragraph"] || !rangeState["paragraph"].value) rangeState["paragraph"] = { value: "p", icon: "fontsize" };
+		if (!rangeState["fontfamily"] || !rangeState["fontfamily"].value) rangeState["fontfamily"] = { value: "宋体, SimSun", icon: "fontfamily" };
 		if (!rangeState["indent"]) {
 			rangeState["outdent"] = { active: true, icon: "indent" };
 			rangeState["indent"] = { active: false, icon: "indent" };

@@ -36,11 +36,12 @@ var FontSizeDropdown = React.createClass({
 	render:function(){
 		var handleSelect = this.handleSelect;
 		var fontsize = this.props.fontsize?this.props.fontsize:[];
+		var props = this.props;
 		return (<ComboBox ref="root" className="color-combobox">
 			<ul>
 				{
 					fontsize.map(function(ele,pos){
-						return (<li key={pos} data-value={ele.value} onClick={handleSelect}>
+						return (<li className={ele.value==props.value?"active":""} key={pos} data-value={ele.value} onClick={handleSelect}>
 									<span data-value={ele.value} style={{"fontSize":ele.value}}>{ele.name}</span>
 								</li>)
 					})
