@@ -8627,7 +8627,11 @@ var Editor = React.createClass({
 								SK: "6QTOr2Jg1gcZEWDQXKOGZh5PziC2MCV5KsntT70j"
 							},
 							key: null,
-							upload_token: null
+							upload_token: null,
+							domain: "http://o9sa2vijj.bkt.clouddn.com",
+							genKey: function genKey(options) {
+								return options.file.type + "-" + options.file.size + "-" + options.file.lastModifiedDate.valueOf() + "-" + new Date().valueOf() + "-" + options.file.name;
+							}
 						}
 					}
 				}
@@ -9950,6 +9954,7 @@ var Uploader = {
             }
         }
         if (options.type == "qiniu") {
+            options.qiniu.key = options.qiniu.key || options.qiniu.genKey(options);
             formData.append("token", options.qiniu.upload_token ? options.qiniu.upload_token : QiniuUtils.Utils.genUploadToken(options.qiniu.key, options.qiniu.app));
             if (options.qiniu.key) formData.append("key", options.qiniu.key);
             options.filename = "file";
@@ -9966,7 +9971,15 @@ var Uploader = {
                 return options.onError(getError(options, xhr), getBody(xhr));
             }
             options.onEnd(e);
-            options.onSuccess(getBody(xhr));
+            if (options.type == "qiniu") {
+                var res = getBody(xhr);
+                var body = {};
+                body.status = "success";
+                body.image_src = options.qiniu.domain + "/" + res.key;
+                options.onSuccess(body);
+            } else {
+                options.onSuccess(getBody(xhr));
+            }
         };
 
         xhr.open('post', options.url, true);

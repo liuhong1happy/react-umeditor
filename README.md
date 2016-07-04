@@ -41,7 +41,15 @@ You can set the `props`!The `props` maybe is as follows:
 		* uploader: settings of image uploader
 			* name:  form name of xhr
 			* url:  url of server
-		* customUploader: custom uploader
+            * type: qiniu or default
+            * qiniu: when type is qiniu
+                * upload_token: upload_token of qiniu
+                * app: app of qiniu
+                    * Bucket: Bucket of qiniu
+                    * AK: AccessKey of qiniu
+                    * SK: SecretKey of qiniu
+                * key: resource key of file
+                * genKey: when not key,gen resource key of file
 
 ## Snapshot
 
