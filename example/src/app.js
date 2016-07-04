@@ -12,9 +12,30 @@ var App = React.createClass({
 				"horizontal date time  | image formula spechars | inserttable"
 			]
 	},
+	getQiniuUploader:function(){
+		return {
+			url:'http://upload.qiniu.com',
+			type:'qiniu',
+			name:"file",
+			qiniu:{
+				app:{
+					Bucket:"liuhong1happy",
+					AK:"l9vEBNTqrz7H03S-SC0qxNWmf0K8amqP6MeYHNni",
+					SK:"eizTTxuA0Kq1YSe2SRdOexJ-tjwGpRnzztsSrLKj"
+				},
+				key:"blue.png"
+			}
+		}
+	},
 	render:function(){
 		var icons = this.getIcons();
-		return (<Editor icons={icons}/>)
+		var uploader = this.getQiniuUploader();
+		var plugins = {
+			image:{
+				uploader:uploader
+			}
+		}
+		return (<Editor icons={icons} plugins={plugins}/>)
 	}
 })
 	

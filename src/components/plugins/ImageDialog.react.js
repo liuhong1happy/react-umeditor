@@ -21,6 +21,8 @@ var ImageUpload = React.createClass({
 				file:file,
 				filename:this.props.name,
 				url:this.props.url,
+				type:this.props.type,
+			    qiniu:this.props.qiniu,
 				onLoad:function(e){
 					mask.style.display = "block";
 					mask.innerHTML = "Loading...";
@@ -239,10 +241,19 @@ var ImageDialog = React.createClass({
 	getDefaultProps:function(){
 		return {
 			uploader:{
+				type:"default", // qiniu
+				name:"file",
 				url:"/upload",
-				name:"file"
-			},
-			customUploader:null
+				qiniu:{
+					app:{
+						bucket: "qtestbucket",
+						ak: "iN7NgwM31j4-BZacMjPrOQBs34UG1maYCAQmhdCV",
+						sk: "6QTOr2Jg1gcZEWDQXKOGZh5PziC2MCV5KsntT70j"
+					},
+					key:null,
+					upload_token:null
+				}
+			}
 		}
 	},
 	open:function(handle){
@@ -290,7 +301,7 @@ var ImageDialog = React.createClass({
 			{ name:"btn-cancel", content:"取消", onClick:this.close}
 		];
 		var tabs = [
-			{title:"本地上传",component:(<ImageUpload ref="image" onChange={this.handleChange} name={uploader.name} url={uploader.url}/>)},
+			{title:"本地上传",component:(<ImageUpload ref="image" onChange={this.handleChange} type={uploader.type} name={uploader.name} url={uploader.url} qiniu={uploader.qiniu}/>)},
 			{title:"网络图片",component:(<ImageSearch ref="image" onChange={this.handleChange}/>)},		
 		]
 		if(this.props.hidden){

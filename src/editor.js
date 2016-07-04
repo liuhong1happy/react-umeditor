@@ -66,7 +66,6 @@ if(!Date.prototype.Format){
 * @icons: 工具条上需要显示的图标
 **/
 
-
 var Editor = React.createClass({
     // init & update
 	getInitialState:function(){
@@ -98,10 +97,19 @@ var Editor = React.createClass({
 			"plugins":{
 				"image":{
 					"uploader":{
+						type:"default", // qiniu
 						name:"file",
-						url:"/upload"
-					},
-					"customUploader":null
+						url:"/upload",
+						qiniu:{
+							app:{
+								Bucket: "qtestbucket",
+								AK: "iN7NgwM31j4-BZacMjPrOQBs34UG1maYCAQmhdCV",
+								SK: "6QTOr2Jg1gcZEWDQXKOGZh5PziC2MCV5KsntT70j"
+							},
+							key:null,
+							upload_token:null
+						}
+					}
 				}
 			},
 			"fontFamily":[
@@ -700,7 +708,7 @@ var Editor = React.createClass({
 		var _icons = icons.join(" ").replace(/\|/gm,"separator").split(" ");
 		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onClick={this.handleClick} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
 				<EditorToolbar ref="toolbar" editorState={editorState} onIconClick={this.handleToolbarIconClick} icons={this.props.icons} paragraph={this.props.paragraph}  fontsize={this.props.fontSize}  fontfamily={this.props.fontFamily}>
-					<ImageDialog hidden={_icons.indexOf("image")==-1} ref="image" uploader={this.props.plugins.image.uploader} customUploader={this.props.plugins.image.customUploader}/>
+					<ImageDialog hidden={_icons.indexOf("image")==-1} ref="image" uploader={this.props.plugins.image.uploader}/>
 					<ColorDropdown hidden={_icons.indexOf("forecolor")==-1 &&_icons.indexOf("forecolor")}   ref="color" />
 					<FormulaDropdown hidden={ _icons.indexOf("formula")==-1} ref="formula"/>
 					<TablePickerDropdown hidden={_icons.indexOf("inserttable")==-1} ref="table" />

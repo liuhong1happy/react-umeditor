@@ -29,7 +29,8 @@
 		"react-component"
     ],
     "dependencies": {
-		"classnames":"^2.2.1"
+		"classnames":"^2.2.1",
+		"crypto-js":"^3.1.6"
     },
     "peerDependencies": {
         "react": "^15.0.2",

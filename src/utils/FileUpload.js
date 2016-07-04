@@ -1,3 +1,4 @@
+var QiniuUtils =  require('./QiniuUtils');
 
 var getError = function(options,xhr){
     var  msg = 'cannot post '+options.url+":"+xhr.status;
@@ -35,12 +36,19 @@ var Uploader = {
             }
         }
         var formData = new FormData();
-        formData.append(options.filename,options.file);
+        
         if(options.data){
             for(var i in options.data){
-                formData[i] = options.data[i];
+                formData.append(i,options.data[i]);
             }
         }
+		if(options.type=="qiniu"){
+			formData.append("token",options.qiniu.upload_token ? options.qiniu.upload_token : QiniuUtils.Utils.genUploadToken(options.qiniu.key,options.qiniu.app));
+			if(options.qiniu.key) formData.append("key",options.qiniu.key);
+			options.filename = "file";
+		}
+		formData.append(options.filename,options.file);
+		
         xhr.onerror = function(e){
             options.onEnd(e);
             options.onError(e);

@@ -11,9 +11,30 @@ var App = React.createClass({
 	getIcons: function getIcons() {
 		return ["source | undo redo | bold italic underline strikethrough fontborder | ", "paragraph fontfamily fontsize | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | ", "horizontal date time  | image formula spechars | inserttable"];
 	},
+	getQiniuUploader: function getQiniuUploader() {
+		return {
+			url: 'http://upload.qiniu.com',
+			type: 'qiniu',
+			name: "file",
+			qiniu: {
+				app: {
+					Bucket: "liuhong1happy",
+					AK: "l9vEBNTqrz7H03S-SC0qxNWmf0K8amqP6MeYHNni",
+					SK: "eizTTxuA0Kq1YSe2SRdOexJ-tjwGpRnzztsSrLKj"
+				},
+				key: "blue.png"
+			}
+		};
+	},
 	render: function render() {
 		var icons = this.getIcons();
-		return React.createElement(Editor, { icons: icons });
+		var uploader = this.getQiniuUploader();
+		var plugins = {
+			image: {
+				uploader: uploader
+			}
+		};
+		return React.createElement(Editor, { icons: icons, plugins: plugins });
 	}
 });
 
