@@ -1,52 +1,56 @@
 {
-    "name": "react-umeditor",
-    "version": "0.4.1",
-    "description": "React Editor like UMEditor",
-    "main": "lib/editor.js",
-	"private": false,
-    "scripts": {
-		"test": "echo \"no tests yet\" && exit 0",
-		"build": "gulp clean && NODE_ENV=development gulp build && cp -R images/. dist/images && cp -R third-part/. dist/third-part",
-        "build-win": "gulp clean && set NODE_ENV=development && gulp build && cp -R images/. dist/images && cp -R third-part/. dist/third-part",
-		"examples": "gulp dev:server",
-		"publish:site": "gulp publish:examples",
-		"start": "gulp dev",
-		"release": "gulp release",
-        "watch": "gulp watch:lib"
-    },
-    "author": {
-        "name": "Holly Liu",
-        "email": "liuhong1.happy@163.com"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/liuhong1happy/react-umeditor.git"
-    },
-    "license": "MIT",
-    "keywords": [
-        "react",
-        "react-editor",
-		"react-component"
-    ],
-    "dependencies": {
-		"classnames":"^2.2.1",
-		"crypto-js":"^3.1.6"
-    },
-    "peerDependencies": {
-        "react": "^15.0.2",
-        "react-dom": "^15.0.2"
-    },
-    "devDependencies": {
-		"react-component-gulp-tasks": "^0.7.7",
-		"gulp": "^3.9.0"
-    },
-	"browserify":{
-		"transform":[
-			"reactify",
-			"envify"
-		]
-	},
-    "browserify-shim": {
-       "react": "global:React"
-     }
+  "name": "react-umeditor",
+  "version": "0.4.1",
+  "description": "React Editor like UMEditor",
+  "main": "lib/editor.js",
+  "private": false,
+  "scripts": {
+    "test": "echo \"no tests yet\" && exit 0",
+    "build": "gulp clean && NODE_ENV=development gulp build && cp -R images/. dist/images && cp -R third-part/. dist/third-part",
+    "build-win": "gulp clean && set NODE_ENV=development && gulp build && cp -R images/. dist/images && cp -R third-part/. dist/third-part",
+    "examples": "gulp dev:server",
+    "publish:site": "gulp publish:examples",
+    "start": "gulp dev",
+    "release": "gulp release",
+    "watch": "gulp watch:lib"
+  },
+  "author": {
+    "name": "Holly Liu",
+    "email": "liuhong1.happy@163.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/liuhong1happy/react-umeditor.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "react-editor",
+    "react-component"
+  ],
+  "dependencies": {
+    "classnames": "^2.2.1",
+    "crypto-js": "^3.1.6"
+  },
+  "peerDependencies": {
+    "react": "^15.0.2",
+    "react-dom": "^15.0.2"
+  },
+  "devDependencies": {
+    "react-component-gulp-tasks": "^0.7.7",
+    "gulp": "^3.9.0",
+    "envify": "^3.4.1",
+    "reactify": "^1.1.1",
+    "react": "^15.0.2",
+    "react-dom": "^15.0.2"
+  },
+  "browserify": {
+    "transform": [
+      "reactify",
+      "envify"
+    ]
+  },
+  "browserify-shim": {
+    "react": "global:React"
+  }
 }

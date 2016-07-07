@@ -6645,6 +6645,7 @@ var ComboBox = React.createClass({
 
 module.exports = ComboBox;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],36:[function(require,module,exports){
 (function (global){
@@ -6762,6 +6763,7 @@ var Dialog = React.createClass({
 
 module.exports = Dialog;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],37:[function(require,module,exports){
 (function (global){
@@ -6838,6 +6840,7 @@ var Dropdown = React.createClass({
 
 module.exports = Dropdown;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],38:[function(require,module,exports){
 (function (global){
@@ -6906,6 +6909,7 @@ var TabGroup = React.createClass({
 
 module.exports = TabGroup;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],39:[function(require,module,exports){
 (function (global){
@@ -6971,6 +6975,7 @@ var EditorContentEditableDiv = React.createClass({
 	}
 });
 module.exports = EditorContentEditableDiv;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../utils/EditorDOM":54,"../../utils/EditorSelection":57,"react-dom":undefined}],40:[function(require,module,exports){
@@ -7056,6 +7061,7 @@ var EditorIcon = React.createClass({
 
 module.exports = EditorIcon;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"react-dom":undefined}],41:[function(require,module,exports){
 (function (global){
@@ -7095,6 +7101,7 @@ var EditorTextArea = React.createClass({
 	}
 });
 module.exports = EditorTextArea;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"react-dom":undefined}],42:[function(require,module,exports){
@@ -7182,6 +7189,7 @@ var EditorToolbar = React.createClass({
 });
 
 module.exports = EditorToolbar;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":52,"../../utils/EditorHistory":55,"./EditorIcon.react":40}],43:[function(require,module,exports){
@@ -7291,6 +7299,7 @@ var ColorDropdown = React.createClass({
 });
 
 module.exports = ColorDropdown;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":52,"../../utils/EditorDOM":54,"../base/Dropdown.react":37}],44:[function(require,module,exports){
@@ -7419,6 +7428,7 @@ var EmotionDialog = React.createClass({
 
 module.exports = EmotionDialog;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":52,"../base/Dialog.react":36,"../base/TabGroup.react":38,"react-dom":undefined}],45:[function(require,module,exports){
 (function (global){
@@ -7493,6 +7503,7 @@ var FontFamilyDropdown = React.createClass({
 
 module.exports = FontFamilyDropdown;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../base/ComboBox.react":35}],46:[function(require,module,exports){
 (function (global){
@@ -7566,6 +7577,7 @@ var FontSizeDropdown = React.createClass({
 });
 
 module.exports = FontSizeDropdown;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../base/ComboBox.react":35}],47:[function(require,module,exports){
@@ -7654,6 +7666,7 @@ var FormulaDropdown = React.createClass({
 });
 
 module.exports = FormulaDropdown;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":52,"../base/Dropdown.react":37,"../base/TabGroup.react":38,"react-dom":undefined}],48:[function(require,module,exports){
@@ -8013,6 +8026,7 @@ var ImageDialog = React.createClass({
 
 module.exports = ImageDialog;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../utils/FileUpload":59,"../base/Dialog.react":36,"../base/TabGroup.react":38,"react-dom":undefined}],49:[function(require,module,exports){
 (function (global){
@@ -8082,6 +8096,7 @@ var ParagraphDropdown = React.createClass({
 });
 
 module.exports = ParagraphDropdown;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../base/ComboBox.react":35}],50:[function(require,module,exports){
@@ -8183,6 +8198,7 @@ var SpecialCharsDialog = React.createClass({
 
 module.exports = SpecialCharsDialog;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":52,"../base/Dialog.react":36,"../base/TabGroup.react":38,"react-dom":undefined}],51:[function(require,module,exports){
 (function (global){
@@ -8283,6 +8299,7 @@ var TablePickerDropdown = React.createClass({
 });
 
 module.exports = TablePickerDropdown;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../base/Dropdown.react":37}],52:[function(require,module,exports){
@@ -8505,6 +8522,7 @@ module.exports = {
 	SpecialChars: SpecialChars,
 	EmotionImages: EmotionImages
 };
+
 
 },{}],53:[function(require,module,exports){
 (function (global){
@@ -9232,6 +9250,7 @@ var Editor = React.createClass({
 
 module.exports = Editor;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./components/core/EditorContentEditableDiv.react":39,"./components/core/EditorTextArea.react":41,"./components/core/EditorToolbar.react":42,"./components/plugins/ColorDropdown.react":43,"./components/plugins/EmotionDialog.react":44,"./components/plugins/FontFamilyComboBox.react":45,"./components/plugins/FontSizeComboBox.react":46,"./components/plugins/FormulaDropdown.react":47,"./components/plugins/ImageDialog.react":48,"./components/plugins/ParagraphComboBox.react":49,"./components/plugins/SpecialCharsDialog.react":50,"./components/plugins/TablePickerDropdown.react":51,"./constants/EditorConstants":52,"./utils/EditorDOM":54,"./utils/EditorHistory":55,"./utils/EditorResize.react":56,"./utils/EditorSelection":57,"./utils/EditorTimer":58,"react-dom":undefined}],54:[function(require,module,exports){
 "use strict";
@@ -9262,6 +9281,7 @@ var EditorDOM = {
 	}
 };
 module.exports = EditorDOM;
+
 
 },{}],55:[function(require,module,exports){
 "use strict";
@@ -9317,6 +9337,7 @@ var EditorHistory = {
 	}
 };
 module.exports = EditorHistory;
+
 
 },{}],56:[function(require,module,exports){
 (function (global){
@@ -9545,6 +9566,7 @@ var EditorResize = React.createClass({
 });
 
 module.exports = EditorResize;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"react-dom":undefined}],57:[function(require,module,exports){
@@ -9785,6 +9807,7 @@ var EditorSelection = {
 };
 module.exports = EditorSelection;
 
+
 },{"./EditorDOM":54}],58:[function(require,module,exports){
 "use strict";
 
@@ -9906,6 +9929,7 @@ EditorTimer.animate();
 
 module.exports = EditorTimer;
 
+
 },{}],59:[function(require,module,exports){
 'use strict';
 
@@ -9954,8 +9978,8 @@ var Uploader = {
             }
         }
         if (options.type == "qiniu") {
-            options.qiniu.key = options.qiniu.key || options.qiniu.genKey(options);
-            formData.append("token", options.qiniu.upload_token ? options.qiniu.upload_token : QiniuUtils.Utils.genUploadToken(options.qiniu.key, options.qiniu.app));
+            var key = options.qiniu.key || options.qiniu.genKey(options);
+            formData.append("token", options.qiniu.upload_token ? options.qiniu.upload_token : QiniuUtils.Utils.genUploadToken(key, options.qiniu.app));
             if (options.qiniu.key) formData.append("key", options.qiniu.key);
             options.filename = "file";
         }
@@ -10009,6 +10033,7 @@ module.exports = {
     },
     uploadFiles: function uploadFiles(options) {}
 };
+
 
 },{"./QiniuUtils":60}],60:[function(require,module,exports){
 "use strict";
@@ -10150,6 +10175,7 @@ var QiniuUtils = {
 module.exports = {
     Utils: QiniuUtils
 };
+
 
 },{"crypto-js":9}]},{},[53])(53)
 });

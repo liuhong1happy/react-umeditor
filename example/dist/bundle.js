@@ -6644,6 +6644,7 @@ var ComboBox = React.createClass({
 
 module.exports = ComboBox;
 
+
 },{"react":undefined}],36:[function(require,module,exports){
 "use strict";
 
@@ -6759,6 +6760,7 @@ var Dialog = React.createClass({
 
 module.exports = Dialog;
 
+
 },{"react":undefined}],37:[function(require,module,exports){
 "use strict";
 
@@ -6833,6 +6835,7 @@ var Dropdown = React.createClass({
 
 module.exports = Dropdown;
 
+
 },{"react":undefined}],38:[function(require,module,exports){
 "use strict";
 
@@ -6899,6 +6902,7 @@ var TabGroup = React.createClass({
 
 module.exports = TabGroup;
 
+
 },{"react":undefined}],39:[function(require,module,exports){
 'use strict';
 
@@ -6962,6 +6966,7 @@ var EditorContentEditableDiv = React.createClass({
 	}
 });
 module.exports = EditorContentEditableDiv;
+
 
 },{"../../utils/EditorDOM":53,"../../utils/EditorSelection":56,"react":undefined,"react-dom":undefined}],40:[function(require,module,exports){
 'use strict';
@@ -7045,6 +7050,7 @@ var EditorIcon = React.createClass({
 
 module.exports = EditorIcon;
 
+
 },{"react":undefined,"react-dom":undefined}],41:[function(require,module,exports){
 'use strict';
 
@@ -7082,6 +7088,7 @@ var EditorTextArea = React.createClass({
 	}
 });
 module.exports = EditorTextArea;
+
 
 },{"react":undefined,"react-dom":undefined}],42:[function(require,module,exports){
 'use strict';
@@ -7167,6 +7174,7 @@ var EditorToolbar = React.createClass({
 });
 
 module.exports = EditorToolbar;
+
 
 },{"../../constants/EditorConstants":52,"../../utils/EditorHistory":54,"./EditorIcon.react":40,"react":undefined}],43:[function(require,module,exports){
 'use strict';
@@ -7274,6 +7282,7 @@ var ColorDropdown = React.createClass({
 });
 
 module.exports = ColorDropdown;
+
 
 },{"../../constants/EditorConstants":52,"../../utils/EditorDOM":53,"../base/Dropdown.react":37,"react":undefined}],44:[function(require,module,exports){
 'use strict';
@@ -7400,6 +7409,7 @@ var EmotionDialog = React.createClass({
 
 module.exports = EmotionDialog;
 
+
 },{"../../constants/EditorConstants":52,"../base/Dialog.react":36,"../base/TabGroup.react":38,"react":undefined,"react-dom":undefined}],45:[function(require,module,exports){
 'use strict';
 
@@ -7472,6 +7482,7 @@ var FontFamilyDropdown = React.createClass({
 
 module.exports = FontFamilyDropdown;
 
+
 },{"../base/ComboBox.react":35,"react":undefined}],46:[function(require,module,exports){
 'use strict';
 
@@ -7543,6 +7554,7 @@ var FontSizeDropdown = React.createClass({
 });
 
 module.exports = FontSizeDropdown;
+
 
 },{"../base/ComboBox.react":35,"react":undefined}],47:[function(require,module,exports){
 'use strict';
@@ -7629,6 +7641,7 @@ var FormulaDropdown = React.createClass({
 });
 
 module.exports = FormulaDropdown;
+
 
 },{"../../constants/EditorConstants":52,"../base/Dropdown.react":37,"../base/TabGroup.react":38,"react":undefined,"react-dom":undefined}],48:[function(require,module,exports){
 'use strict';
@@ -7986,6 +7999,7 @@ var ImageDialog = React.createClass({
 
 module.exports = ImageDialog;
 
+
 },{"../../utils/FileUpload":58,"../base/Dialog.react":36,"../base/TabGroup.react":38,"react":undefined,"react-dom":undefined}],49:[function(require,module,exports){
 'use strict';
 
@@ -8053,6 +8067,7 @@ var ParagraphDropdown = React.createClass({
 });
 
 module.exports = ParagraphDropdown;
+
 
 },{"../base/ComboBox.react":35,"react":undefined}],50:[function(require,module,exports){
 'use strict';
@@ -8152,6 +8167,7 @@ var SpecialCharsDialog = React.createClass({
 
 module.exports = SpecialCharsDialog;
 
+
 },{"../../constants/EditorConstants":52,"../base/Dialog.react":36,"../base/TabGroup.react":38,"react":undefined,"react-dom":undefined}],51:[function(require,module,exports){
 'use strict';
 
@@ -8250,6 +8266,7 @@ var TablePickerDropdown = React.createClass({
 });
 
 module.exports = TablePickerDropdown;
+
 
 },{"../base/Dropdown.react":37,"react":undefined}],52:[function(require,module,exports){
 "use strict";
@@ -8472,6 +8489,7 @@ module.exports = {
 	EmotionImages: EmotionImages
 };
 
+
 },{}],53:[function(require,module,exports){
 "use strict";
 
@@ -8501,6 +8519,7 @@ var EditorDOM = {
 	}
 };
 module.exports = EditorDOM;
+
 
 },{}],54:[function(require,module,exports){
 "use strict";
@@ -8556,6 +8575,7 @@ var EditorHistory = {
 	}
 };
 module.exports = EditorHistory;
+
 
 },{}],55:[function(require,module,exports){
 'use strict';
@@ -8783,6 +8803,7 @@ var EditorResize = React.createClass({
 });
 
 module.exports = EditorResize;
+
 
 },{"react":undefined,"react-dom":undefined}],56:[function(require,module,exports){
 "use strict";
@@ -9022,6 +9043,7 @@ var EditorSelection = {
 };
 module.exports = EditorSelection;
 
+
 },{"./EditorDOM":53}],57:[function(require,module,exports){
 "use strict";
 
@@ -9143,6 +9165,7 @@ EditorTimer.animate();
 
 module.exports = EditorTimer;
 
+
 },{}],58:[function(require,module,exports){
 'use strict';
 
@@ -9191,8 +9214,8 @@ var Uploader = {
             }
         }
         if (options.type == "qiniu") {
-            options.qiniu.key = options.qiniu.key || options.qiniu.genKey(options);
-            formData.append("token", options.qiniu.upload_token ? options.qiniu.upload_token : QiniuUtils.Utils.genUploadToken(options.qiniu.key, options.qiniu.app));
+            var key = options.qiniu.key || options.qiniu.genKey(options);
+            formData.append("token", options.qiniu.upload_token ? options.qiniu.upload_token : QiniuUtils.Utils.genUploadToken(key, options.qiniu.app));
             if (options.qiniu.key) formData.append("key", options.qiniu.key);
             options.filename = "file";
         }
@@ -9246,6 +9269,7 @@ module.exports = {
     },
     uploadFiles: function uploadFiles(options) {}
 };
+
 
 },{"./QiniuUtils":59}],59:[function(require,module,exports){
 "use strict";
@@ -9387,6 +9411,7 @@ var QiniuUtils = {
 module.exports = {
     Utils: QiniuUtils
 };
+
 
 },{"crypto-js":9}],"react-umeditor":[function(require,module,exports){
 'use strict';
@@ -10112,5 +10137,6 @@ var Editor = React.createClass({
 });
 
 module.exports = Editor;
+
 
 },{"./components/core/EditorContentEditableDiv.react":39,"./components/core/EditorTextArea.react":41,"./components/core/EditorToolbar.react":42,"./components/plugins/ColorDropdown.react":43,"./components/plugins/EmotionDialog.react":44,"./components/plugins/FontFamilyComboBox.react":45,"./components/plugins/FontSizeComboBox.react":46,"./components/plugins/FormulaDropdown.react":47,"./components/plugins/ImageDialog.react":48,"./components/plugins/ParagraphComboBox.react":49,"./components/plugins/SpecialCharsDialog.react":50,"./components/plugins/TablePickerDropdown.react":51,"./constants/EditorConstants":52,"./utils/EditorDOM":53,"./utils/EditorHistory":54,"./utils/EditorResize.react":55,"./utils/EditorSelection":56,"./utils/EditorTimer":57,"react":undefined,"react-dom":undefined}]},{},[]);
