@@ -10,6 +10,9 @@ React Editor like [Umeditor](https://github.com/fex-team/umeditor)
 
 ## Use
 
+javascript
+
+	``` js
 	var React = require('react');
 	var Editor = require('react-umeditor');
 
@@ -18,6 +21,36 @@ React Editor like [Umeditor](https://github.com/fex-team/umeditor)
 			return (<Editor ref="editor"/>)
 		}
 	})
+	```
+	
+html
+
+	``` html
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Editor Demo</title>
+		
+		<!-- mathquill & umeditor stylesheet -->
+		<link rel="stylesheet" href="../../dist/third-part/mathquill/mathquill.css"/>
+		<link rel="stylesheet" href="../../dist/react-umeditor.css" type="text/css" />
+		<link rel="stylesheet" href="app.css" type="text/css" />
+	</head>
+	<body>
+		<div id="react-container"></div>
+		
+		<!-- jquery & mathquill javascript -->
+		<script src="../../dist/third-part/jquery.min.js"></script>
+		<script src="../../dist/third-part/mathquill/mathquill.js"></script>
+		
+		<!-- your react script -->
+		<script src="common.js"></script>
+		<script src="bundle.js"></script>
+		<script src="app.js"></script>
+	</body>
+	</html>
+	```
 	
 ## Ref Functions
 
