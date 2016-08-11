@@ -7811,7 +7811,7 @@ var ImageUpload = React.createClass({
 					React.createElement(
 						'form',
 						{ className: 'image-form', method: 'post', encType: 'multipart/form-data', target: 'up', action: action },
-						React.createElement('input', { onChange: this.handleChange, style: { filter: "alpha(opacity=0)" }, className: 'image-file', type: 'file', hidefocus: '', name: 'file', accept: 'image/gif,image/jpeg,image/png,image/jpg,image/bmp' })
+						React.createElement('input', { onChange: this.handleChange, style: { filter: "alpha(opacity=0)" }, className: 'image-file', type: 'file', name: 'file', accept: 'image/gif,image/jpeg,image/png,image/jpg,image/bmp' })
 					)
 				)
 			),
@@ -7827,7 +7827,7 @@ var ImageUpload = React.createClass({
 				React.createElement(
 					'form',
 					{ className: 'image-form', method: 'post', encType: 'multipart/form-data', target: 'up', action: action },
-					React.createElement('input', { onChange: this.handleChange, style: { filter: "alpha(opacity=0)" }, className: 'image-file', type: 'file', hidefocus: '', name: 'file', accept: 'image/gif,image/jpeg,image/png,image/jpg,image/bmp' })
+					React.createElement('input', { onChange: this.handleChange, style: { filter: "alpha(opacity=0)" }, className: 'image-file', type: 'file', name: 'file', accept: 'image/gif,image/jpeg,image/png,image/jpg,image/bmp' })
 				)
 			),
 			React.createElement(
@@ -8637,7 +8637,7 @@ var Editor = React.createClass({
 				}
 			},
 			"fontFamily": [{ "name": "宋体", value: "宋体, SimSun", defualt: true }, { "name": "隶书", value: "隶书, SimLi" }, { "name": "楷体", value: "楷体, SimKai" }, { "name": "微软雅黑", value: "微软雅黑, Microsoft YaHei" }, { "name": "黑体", value: "黑体, SimHei" }, { "name": "arial", value: "arial, helvetica, sans-serif" }, { "name": "arial black", value: "arial black, avant garde" }, { "name": "omic sans ms", value: "omic sans ms" }, { "name": "impact", value: "impact, chicago" }, { "name": "times new roman", value: "times new roman" }, { "name": "andale mono", value: "andale mono" }],
-			"fontSize": [{ "name": "10px", value: "1" }, { "name": "12px", value: "2" }, { "name": "16px", value: "3", defualt: true }, { "name": "18px", value: "4" }, { "name": "24px", value: "5" }, { "name": "32px", value: "6" }, { "name": "38px", value: "7" }],
+			"fontSize": [{ "name": "10px", value: "10px" }, { "name": "12px", value: "12px" }, { "name": "16px", value: "16px", defualt: true }, { "name": "18px", value: "18px" }, { "name": "24px", value: "24px" }, { "name": "32px", value: "32px" }, { "name": "38px", value: "38px" }],
 			"paragraph": [{ "name": "段落", value: "p", defualt: true }, { "name": "标题1", value: "h1" }, { "name": "标题2", value: "h2" }, { "name": "标题3", value: "h3" }, { "name": "标题4", value: "h4" }, { "name": "标题5", value: "h5" }, { "name": "标题6", value: "h6" }],
 			"icons": [
 			// video map print preview drafts link unlink
@@ -9192,21 +9192,20 @@ var Editor = React.createClass({
 	render: function render() {
 		var editArea = this.genEditArea();
 		var _props = this.props;
+		var fontSize = _props.fontSize;
+		var paragraph = _props.paragraph;
+		var fontFamily = _props.fontFamily;
+		var icons = _props.icons;
+		var plugins = _props.plugins;
 		var onBlur = _props.onBlur;
 		var className = _props.className;
 		var id = _props.id;
 		var onFocus = _props.onFocus;
 		var onClick = _props.onClick;
 
-		var props = _objectWithoutProperties(_props, ['onBlur', 'className', 'id', 'onFocus', 'onClick']);
+		var props = _objectWithoutProperties(_props, ['fontSize', 'paragraph', 'fontFamily', 'icons', 'plugins', 'onBlur', 'className', 'id', 'onFocus', 'onClick']);
 
 		var editorState = this.state.editorState;
-		var _props2 = this.props;
-		var fontSize = _props2.fontSize;
-		var paragraph = _props2.paragraph;
-		var fontFamily = _props2.fontFamily;
-		var icons = _props2.icons;
-
 		var _icons = icons.join(" ").replace(/\|/gm, "separator").split(" ");
 		return React.createElement(
 			'div',
