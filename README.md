@@ -1,6 +1,7 @@
 # react-umeditor
 
 [![Version](https://img.shields.io/npm/v/react-umeditor.svg)](https://www.npmjs.com/package/react-umeditor)
+[![Downloads](https://img.shields.io/npm/dt/react-umeditor.svg)](https://www.npmjs.com/package/react-umeditor)
 
 React Editor like [Umeditor](https://github.com/fex-team/umeditor)
 
@@ -10,6 +11,9 @@ React Editor like [Umeditor](https://github.com/fex-team/umeditor)
 
 ## Use
 
+javascript
+
+	``` js
 	var React = require('react');
 	var Editor = require('react-umeditor');
 
@@ -18,6 +22,36 @@ React Editor like [Umeditor](https://github.com/fex-team/umeditor)
 			return (<Editor ref="editor"/>)
 		}
 	})
+	```
+	
+html
+
+	``` html
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Editor Demo</title>
+		
+		<!-- mathquill & umeditor stylesheet -->
+		<link rel="stylesheet" href="../../dist/third-part/mathquill/mathquill.css"/>
+		<link rel="stylesheet" href="../../dist/react-umeditor.css" type="text/css" />
+		<link rel="stylesheet" href="app.css" type="text/css" />
+	</head>
+	<body>
+		<div id="react-container"></div>
+		
+		<!-- jquery & mathquill javascript -->
+		<script src="../../dist/third-part/jquery.min.js"></script>
+		<script src="../../dist/third-part/mathquill/mathquill.js"></script>
+		
+		<!-- your react script -->
+		<script src="common.js"></script>
+		<script src="bundle.js"></script>
+		<script src="app.js"></script>
+	</body>
+	</html>
+	```
 	
 ## Ref Functions
 
@@ -27,12 +61,12 @@ You can `this.refs.editor.xxx()`! The `xxx` maybe is as follows:
 * setContent: set html of editor
 * getContent: get html of editor
 * onFocus: the focus event
-* focusEditor: focus the editor
 
 ## Props
 
 You can set the `props`!The `props` maybe is as follows:
 
+* focusEditor: focus the editor
 * defaultValue: default value of editor
 * value: value of editor
 * icons: icons of toolbar

@@ -43,8 +43,8 @@ var Uploader = {
             }
         }
 		if(options.type=="qiniu"){
-            options.qiniu.key = options.qiniu.key || options.qiniu.genKey(options);
-			formData.append("token",options.qiniu.upload_token ? options.qiniu.upload_token : QiniuUtils.Utils.genUploadToken(options.qiniu.key,options.qiniu.app));
+            var key = options.qiniu.key || options.qiniu.genKey(options);
+			formData.append("token",options.qiniu.upload_token ? options.qiniu.upload_token : QiniuUtils.Utils.genUploadToken(key,options.qiniu.app));
 			if(options.qiniu.key) formData.append("key",options.qiniu.key);
 			options.filename = "file";
 		}
