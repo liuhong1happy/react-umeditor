@@ -33,16 +33,16 @@
     "crypto-js": "^3.1.6"
   },
   "peerDependencies": {
-    "react": "^15.0.2",
-    "react-dom": "^15.0.2"
+    "react": "^15.3.0",
+	"react-dom": "^15.3.0",
   },
   "devDependencies": {
-    "react-component-gulp-tasks": "^0.7.7",
-    "gulp": "^3.9.0",
     "envify": "^3.4.1",
-    "reactify": "^1.1.1",
-    "react": "^15.0.2",
-    "react-dom": "^15.0.2"
+    "gulp": "^3.9.0",
+    "react": "^15.3.0",
+	"react-dom": "^15.3.0",
+    "react-component-gulp-tasks": "^0.7.7",
+    "reactify": "^1.1.1"
   },
   "browserify": {
     "transform": [
