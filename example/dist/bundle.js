@@ -9532,6 +9532,10 @@ var Editor = React.createClass({
 		var isCollapsed = true;
 		editarea.addEventListener('keydown', this.handleKeyDown);
 		editarea.addEventListener('keyup', this.handleKeyUp);
+		var mount_time = new Date();
+		var start_time = this.props.start;
+		var index = this.props.index;
+		console.log("Mount " + index + ":" + (mount_time.valueOf() - start_time.valueOf()) + "ms");
 	},
 	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 		// update value
@@ -10110,6 +10114,40 @@ var Editor = React.createClass({
 	}
 });
 
-module.exports = Editor;
+var EditorClass = React.createClass({
+	displayName: 'EditorClass',
+
+	getInitialState: function getInitialState() {
+		return {
+			loaded: false
+		};
+	},
+	componentDidMount: function componentDidMount() {
+		var index = this.props.index;
+		var _self = this;
+		setTimeout(function () {
+			_self.setState({
+				loaded: true
+			});
+		}, index * 10 + 500);
+	},
+	render: function render() {
+		var loaded = this.state.loaded;
+
+		var props = _objectWithoutProperties(this.props, []);
+
+		if (!this.state.loaded) {
+			return React.createElement(
+				'div',
+				{ style: { "minHeight": "300px", "border": "1px solid #ddd" } },
+				'正在加载...'
+			);
+		} else {
+			return React.createElement(Editor, props);
+		}
+	}
+});
+
+module.exports = EditorClass;
 
 },{"./components/core/EditorContentEditableDiv.react":39,"./components/core/EditorTextArea.react":41,"./components/core/EditorToolbar.react":42,"./components/plugins/ColorDropdown.react":43,"./components/plugins/EmotionDialog.react":44,"./components/plugins/FontFamilyComboBox.react":45,"./components/plugins/FontSizeComboBox.react":46,"./components/plugins/FormulaDropdown.react":47,"./components/plugins/ImageDialog.react":48,"./components/plugins/ParagraphComboBox.react":49,"./components/plugins/SpecialCharsDialog.react":50,"./components/plugins/TablePickerDropdown.react":51,"./constants/EditorConstants":52,"./utils/EditorDOM":53,"./utils/EditorHistory":54,"./utils/EditorResize.react":55,"./utils/EditorSelection":56,"./utils/EditorTimer":57,"react":undefined,"react-dom":undefined}]},{},[]);

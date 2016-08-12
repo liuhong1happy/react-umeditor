@@ -52,11 +52,14 @@ var App = React.createClass({
 			})
 		}
 		start_render_time = new Date();
+		
 		return (<div>{
 			editors.map(function(ele,pos){
-				return (<Editor key={pos} icons={ele.icons} plugins={ele.plugins}/>)
+				return (<Editor key={pos} icons={ele.icons} plugins={ele.plugins} index={pos} start={start_render_time} />)
 			})
 		}</div>);
+		
+		// return (<Editor icons={icons} plugins={plugins} index={0} start={start_render_time} />)
 	}
 })
 	

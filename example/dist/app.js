@@ -51,13 +51,16 @@ var App = React.createClass({
 			});
 		}
 		start_render_time = new Date();
+
 		return React.createElement(
 			'div',
 			null,
 			editors.map(function (ele, pos) {
-				return React.createElement(Editor, { key: pos, icons: ele.icons, plugins: ele.plugins });
+				return React.createElement(Editor, { key: pos, icons: ele.icons, plugins: ele.plugins, index: pos, start: start_render_time });
 			})
 		);
+
+		// return (<Editor icons={icons} plugins={plugins} index={0} start={start_render_time} />)
 	}
 });
 

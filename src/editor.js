@@ -83,7 +83,7 @@ var Editor = React.createClass({
 				}
 			},
 			defaultValue:this.props.defaultValue?this.props.defaultValue:"<p>This is an Editor</p>",
-			value:this.props.value
+			value:this.props.value,
 		}
 	},
 	propTypes:{
@@ -164,6 +164,10 @@ var Editor = React.createClass({
 		var isCollapsed = true;
     	editarea.addEventListener('keydown', this.handleKeyDown);
     	editarea.addEventListener('keyup', this.handleKeyUp);
+		var mount_time = new Date();
+		var start_time = this.props.start;
+		var index = this.props.index;
+		console.log("Mount "+index+":"+(mount_time.valueOf()-start_time.valueOf())+"ms");
 	},
 	componentWillReceiveProps:function(nextProps){
 		// update value
@@ -705,26 +709,53 @@ var Editor = React.createClass({
 		}
 	},
 	render:function(){
-		var editArea = this.genEditArea();
-		var {fontSize,paragraph,fontFamily,icons,plugins,onBlur,className,id,onFocus,onClick,...props} = this.props;
-		var editorState = this.state.editorState;
-		var _icons = icons.join(" ").replace(/\|/gm,"separator").split(" ");
-		return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onClick={this.handleClick} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
-				<EditorToolbar ref="toolbar" editorState={editorState} onIconClick={this.handleToolbarIconClick} icons={this.props.icons} paragraph={this.props.paragraph}  fontsize={this.props.fontSize}  fontfamily={this.props.fontFamily}>
-					<ImageDialog hidden={_icons.indexOf("image")==-1} ref="image" uploader={this.props.plugins.image.uploader}/>
-					<ColorDropdown hidden={_icons.indexOf("forecolor")==-1 &&_icons.indexOf("forecolor")}   ref="color" />
-					<FormulaDropdown hidden={ _icons.indexOf("formula")==-1} ref="formula"/>
-					<TablePickerDropdown hidden={_icons.indexOf("inserttable")==-1} ref="table" />
-					<SpecialCharsDialog hidden={ _icons.indexOf("spechars")==-1} ref="special" />
-					<EmotionDialog hidden={ _icons.indexOf("emotion")==-1} ref="emotion" />
-					<FontSizeComboBox hidden={ _icons.indexOf("fontsize") ==-1} ref="fontsize" fontsize={this.props.fontSize} value={editorState.icons["fontsize"]?editorState.icons["fontsize"].value: fontSize[0].value}/>
-					<FontFamilyComboBox hidden={ _icons.indexOf("fontfamily") ==-1 } ref="fontfamily" fontfamily={this.props.fontFamily} value={editorState.icons["fontfamily"]?editorState.icons["fontfamily"].value: fontFamily[0].value}/>
-					<ParagraphComboBox hidden={_icons.indexOf("paragraph") ==-1 } ref="paragraph" paragraph={this.props.paragraph} value={editorState.icons["paragraph"]?editorState.icons["paragraph"].value: paragraph[0].value}/>
-				</EditorToolbar>
-				{editArea}
-				<EditorResize ref="resize" />
-				</div>)
+			var editArea = this.genEditArea();
+			var {fontSize,paragraph,fontFamily,icons,plugins,onBlur,className,id,onFocus,onClick,...props} = this.props;
+			var editorState = this.state.editorState;
+			var _icons = icons.join(" ").replace(/\|/gm,"separator").split(" ");
+			return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onClick={this.handleClick} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
+					<EditorToolbar ref="toolbar" editorState={editorState} onIconClick={this.handleToolbarIconClick} icons={this.props.icons} paragraph={this.props.paragraph}  fontsize={this.props.fontSize}  fontfamily={this.props.fontFamily}>
+						<ImageDialog hidden={_icons.indexOf("image")==-1} ref="image" uploader={this.props.plugins.image.uploader}/>
+						<ColorDropdown hidden={_icons.indexOf("forecolor")==-1 &&_icons.indexOf("forecolor")}   ref="color" />
+						<FormulaDropdown hidden={ _icons.indexOf("formula")==-1} ref="formula"/>
+						<TablePickerDropdown hidden={_icons.indexOf("inserttable")==-1} ref="table" />
+						<SpecialCharsDialog hidden={ _icons.indexOf("spechars")==-1} ref="special" />
+						<EmotionDialog hidden={ _icons.indexOf("emotion")==-1} ref="emotion" />
+						<FontSizeComboBox hidden={ _icons.indexOf("fontsize") ==-1} ref="fontsize" fontsize={this.props.fontSize} value={editorState.icons["fontsize"]?editorState.icons["fontsize"].value: fontSize[0].value}/>
+						<FontFamilyComboBox hidden={ _icons.indexOf("fontfamily") ==-1 } ref="fontfamily" fontfamily={this.props.fontFamily} value={editorState.icons["fontfamily"]?editorState.icons["fontfamily"].value: fontFamily[0].value}/>
+						<ParagraphComboBox hidden={_icons.indexOf("paragraph") ==-1 } ref="paragraph" paragraph={this.props.paragraph} value={editorState.icons["paragraph"]?editorState.icons["paragraph"].value: paragraph[0].value}/>
+					</EditorToolbar>
+					{editArea}
+					<EditorResize ref="resize" />
+					</div>)
 	}
 })
 
-module.exports = Editor;
+var EditorClass = React.createClass({
+	getInitialState:function(){
+		return {
+			loaded: false
+		}
+	},
+	componentDidMount: function(){
+		var index = this.props.index;
+		var _self = this;
+		setTimeout(function(){
+			_self.setState({
+				loaded:true
+			})
+		},index*10+500)
+	},
+	render:function(){
+		var loaded = this.state.loaded;
+		var {...props} = this.props;
+		if(!this.state.loaded){
+			return (<div style={{"minHeight":"300px","border":"1px solid #ddd"}}>正在加载...</div>)
+		}else{
+			return (<Editor {...props} />)
+		}
+	}
+})
+
+
+module.exports = EditorClass;
