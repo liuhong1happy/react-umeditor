@@ -12,55 +12,85 @@ var ImageUpload = React.createClass({
 			dragEnter:false
 		}
 	},
-	handleUploadFile:function(file){
+	handleUploadFile:function(obj){
+		/**
+		 * 点击 obj = e.target
+		 * 拖拽 obj = e.dataTransfer
+		 */
 		var _self = this;
 		var images = this.state.images;
 		var mask = ReactDOM.findDOMNode(this.refs.mask);
 		var uploader = this.props.customUploader? this.props.customUploader: Uploader;
-		uploader.uploadFile({
-				file:file,
-				filename:this.props.name,
-				url:this.props.url,
-				type:this.props.type,
-			    qiniu:this.props.qiniu,
-				onLoad:function(e){
-					mask.style.display = "block";
-					mask.innerHTML = "Loading...";
-				},
-				onSuccess:function(res){
-					mask.style.display = "block";
-					mask.innerHTML = "Load Success";
-					
-					if(res && res.status=="success"){
-						images.push({
-							src:res.image_src
-						})
-						_self.setState({
-							images:images
-						})
-						if(_self.props.onChange)
-							_self.props.onChange(0,images);
+
+		var files = obj.files;
+		var fileIndex = 0;
+		single(files[fileIndex]);
+
+		function single(file){
+			uploader.uploadFile({
+					file:file,
+					filename:_self.props.name,
+					url:_self.props.url,
+					type:_self.props.type,
+				    qiniu:_self.props.qiniu,
+					onLoad:function(e){
+						mask.style.display = "block";
+						mask.innerHTML = `${fileIndex + 1}/${files.length} Uploading...`;
+					},
+					onSuccess:function(res){
+						// console.log(`2文件总数：${files.length}`);
+						mask.style.display = "block";
+						mask.innerHTML = "Load Success";
+
+						if(res && res.status=="success"){
+							images.push({
+								src:res.image_src
+							})
+							_self.setState({
+								images:images
+							})
+							if(_self.props.onChange){
+								_self.props.onChange(0,images);
+							}
+							// console.log(`3文件总数：${files.length}`);
+						}
+
+						setTimeout(function(){
+
+							if(fileIndex + 1 < files.length){
+								//判断是否还有图片没有上传
+								fileIndex += 1;
+								single(files[fileIndex]);
+							}else{
+								//去除遮罩层
+								mask.style.display = "none";
+								//图片上传完毕，重置文件索引 fileIndex
+								fileIndex = 0;
+								if(!obj.dropEffect){
+									console.log('done')
+									// clear value
+									obj.value = "";
+								}
+							}
+						},200)
+					},
+					onError:function(e){
+						mask.style.display = "block";
+						mask.innerHTML = "Load Error";
+						setTimeout(function(){
+							mask.style.display = "none";
+						},200)
 					}
-					setTimeout(function(){
-						mask.style.display = "none";
-					},200)
-				},
-				onError:function(e){
-					mask.style.display = "block";
-					mask.innerHTML = "Load Error";
-					setTimeout(function(){
-						mask.style.display = "none";
-					},200)
-				}
-			});
+				});
+		}
 	},
 	handleChange:function(e){
 		e = e || event;
 		var target = e.target || e.srcElement;
 		if(target.files.length>0){
-			this.handleUploadFile(target.files[0])
+			this.handleUploadFile(target)
 			// clear value
-			target.value = "";
+			// target.value = "";
 		}
 	},
 	getImages:function(){
@@ -87,7 +117,8 @@ var ImageUpload = React.createClass({
 		e.preventDefault();
 		var files = e.dataTransfer.files;
 		if(files.length>0){
-			this.handleUploadFile(files[0]);
+			// this.handleUploadFile(files[0]);
+			this.handleUploadFile(e.dataTransfer);
 		}
 		this.setState({
 			dragEnter:false
@@ -124,16 +155,16 @@ var ImageUpload = React.createClass({
 
 			var hasImages = images.length > 0;
 			return (<div className="tab-panel">
-						<div className={"image-content" +(dragEnter?" drag-enter":"")}  onDrop={this.handleDrop} 
-									onDragOver={this.handleDragOver} 
-									onDragEnter={this.handleDragEnter} 
+						<div className={"image-content" +(dragEnter?" drag-enter":"")}  onDrop={this.handleDrop}
+									onDragOver={this.handleDragOver}
+									onDragEnter={this.handleDragEnter}
 									onDragLeave={this.handleDragLeave}
-									onDragEnd={this.handleDragLeave} 
+									onDragEnd={this.handleDragLeave}
 									onDragStart={this.handleDragEnter}>
 							{
 								images.map(function(ele,pos){
 									return (<div className="image-item">
-														<div className="image-close" onClick={handleRemoveImage}></div>
+														<div className="image-close" data-index={pos} onClick={handleRemoveImage}></div>
 														<img src={ele.src} className="image-pic" height="75" width="120" />
 										</div>)
 							   })
@@ -141,7 +172,7 @@ var ImageUpload = React.createClass({
 							<div className="image-upload2" style={ hasImages?showStyle:hideStyle }>
 								<span className="image-icon"></span>
 								<form className="image-form"  method="post" encType="multipart/form-data" target="up" action={action} >
-									<input onChange={this.handleChange} style={{ filter: "alpha(opacity=0)" }} className="image-file" type="file" name="file" accept="image/gif,image/jpeg,image/png,image/jpg,image/bmp" />
+									<input onChange={this.handleChange} multiple="multiple" style={{ filter: "alpha(opacity=0)" }} className="image-file" type="file" hidefocus="" name="file" accept="image/gif,image/jpeg,image/png,image/jpg,image/bmp" />
 								</form>
 							</div>
 						</div>
@@ -149,7 +180,7 @@ var ImageUpload = React.createClass({
 						<div className="image-upload1" style={ hasImages?hideStyle:showStyle }>
 							<span className="image-icon"></span>
 							<form className="image-form" method="post" encType="multipart/form-data" target="up" action={action} >
-								<input onChange={this.handleChange} style={{ filter:"alpha(opacity=0)"}} className="image-file" type="file" name="file" accept="image/gif,image/jpeg,image/png,image/jpg,image/bmp" />
+								<input onChange={this.handleChange} multiple="multiple" style={{ filter:"alpha(opacity=0)"}} className="image-file" type="file" hidefocus="" name="file" accept="image/gif,image/jpeg,image/png,image/jpg,image/bmp" />
 							</form>
 						</div>
 						<div className="image-mask" ref="mask">
@@ -185,7 +216,7 @@ var ImageSearch = React.createClass({
 			if(this.props.onChange)
 				this.props.onChange(1,images);
 			text.value = "";
-		} 
+		}
 	},
 	handleRemoveImage:function(e){
 		e = e || event;
@@ -302,7 +333,7 @@ var ImageDialog = React.createClass({
 		];
 		var tabs = [
 			{title:"本地上传",component:(<ImageUpload ref="image" onChange={this.handleChange} type={uploader.type} name={uploader.name} url={uploader.url} qiniu={uploader.qiniu}/>)},
-			{title:"网络图片",component:(<ImageSearch ref="image" onChange={this.handleChange}/>)},		
+			{title:"网络图片",component:(<ImageSearch ref="image" onChange={this.handleChange}/>)},
 		]
 		if(this.props.hidden){
 			return (<div></div>)
@@ -313,5 +344,5 @@ var ImageDialog = React.createClass({
 		}
 	}
 })
-		
+
 module.exports = ImageDialog;
