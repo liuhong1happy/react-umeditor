@@ -4,15 +4,10 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Editor = require('react-umeditor');
-var start_render_time = null;
-var end_render_time = null;
+
 var App = React.createClass({
 	displayName: 'App',
 
-	componentDidMount: function componentDidMount() {
-		end_render_time = new Date();
-		console.log(end_render_time.valueOf() - start_render_time.valueOf() + "ms");
-	},
 	getIcons: function getIcons() {
 		return ["source | undo redo | bold italic underline strikethrough fontborder | ", "paragraph fontfamily fontsize | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | ", "horizontal date time  | image formula spechars | inserttable"];
 	},
@@ -50,17 +45,16 @@ var App = React.createClass({
 				plugins: plugins
 			});
 		}
-		start_render_time = new Date();
 
 		return React.createElement(
 			'div',
 			null,
 			editors.map(function (ele, pos) {
-				return React.createElement(Editor, { key: pos, icons: ele.icons, plugins: ele.plugins, index: pos, start: start_render_time });
+				return React.createElement(Editor, { key: pos, icons: ele.icons, plugins: ele.plugins });
 			})
 		);
 
-		// return (<Editor icons={icons} plugins={plugins} index={0} start={start_render_time} />)
+		// return (<Editor icons={icons} plugins={plugins} />)
 	}
 });
 

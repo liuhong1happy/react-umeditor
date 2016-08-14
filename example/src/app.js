@@ -1,13 +1,8 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Editor = require('react-umeditor');
-var start_render_time = null;
-var end_render_time = null;
+
 var App = React.createClass({
-	componentDidMount:function(){
-		end_render_time = new Date();
-		console.log( (end_render_time.valueOf() - start_render_time.valueOf())+"ms" );
-	},
 	getIcons:function(){
 		return [
 				"source | undo redo | bold italic underline strikethrough fontborder | ",
@@ -51,15 +46,14 @@ var App = React.createClass({
 				plugins:plugins
 			})
 		}
-		start_render_time = new Date();
-		
+
 		return (<div>{
 			editors.map(function(ele,pos){
-				return (<Editor key={pos} icons={ele.icons} plugins={ele.plugins} index={pos} start={start_render_time} />)
+				return (<Editor key={pos} icons={ele.icons} plugins={ele.plugins} />)
 			})
 		}</div>);
 		
-		// return (<Editor icons={icons} plugins={plugins} index={0} start={start_render_time} />)
+		// return (<Editor icons={icons} plugins={plugins} />)
 	}
 })
 	

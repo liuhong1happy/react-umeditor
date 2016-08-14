@@ -172,7 +172,7 @@ var ImageUpload = React.createClass({
 							<div className="image-upload2" style={ hasImages?showStyle:hideStyle }>
 								<span className="image-icon"></span>
 								<form className="image-form"  method="post" encType="multipart/form-data" target="up" action={action} >
-									<input onChange={this.handleChange} multiple="multiple" style={{ filter: "alpha(opacity=0)" }} className="image-file" type="file" hidefocus="" name="file" accept="image/gif,image/jpeg,image/png,image/jpg,image/bmp" />
+									<input onChange={this.handleChange} multiple="multiple" style={{ filter: "alpha(opacity=0)" }} className="image-file" type="file"  name="file" accept="image/gif,image/jpeg,image/png,image/jpg,image/bmp" />
 								</form>
 							</div>
 						</div>
@@ -180,7 +180,7 @@ var ImageUpload = React.createClass({
 						<div className="image-upload1" style={ hasImages?hideStyle:showStyle }>
 							<span className="image-icon"></span>
 							<form className="image-form" method="post" encType="multipart/form-data" target="up" action={action} >
-								<input onChange={this.handleChange} multiple="multiple" style={{ filter:"alpha(opacity=0)"}} className="image-file" type="file" hidefocus="" name="file" accept="image/gif,image/jpeg,image/png,image/jpg,image/bmp" />
+								<input onChange={this.handleChange} multiple="multiple" style={{ filter:"alpha(opacity=0)"}} className="image-file" type="file"  name="file" accept="image/gif,image/jpeg,image/png,image/jpg,image/bmp" />
 							</form>
 						</div>
 						<div className="image-mask" ref="mask">

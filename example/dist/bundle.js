@@ -6572,6 +6572,350 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 
 }));
 },{"./core":3}],35:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+function EventEmitter() {
+  this._events = this._events || {};
+  this._maxListeners = this._maxListeners || undefined;
+}
+module.exports = EventEmitter;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+EventEmitter.defaultMaxListeners = 10;
+
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+EventEmitter.prototype.setMaxListeners = function(n) {
+  if (!isNumber(n) || n < 0 || isNaN(n))
+    throw TypeError('n must be a positive number');
+  this._maxListeners = n;
+  return this;
+};
+
+EventEmitter.prototype.emit = function(type) {
+  var er, handler, len, args, i, listeners;
+
+  if (!this._events)
+    this._events = {};
+
+  // If there is no 'error' event listener then throw.
+  if (type === 'error') {
+    if (!this._events.error ||
+        (isObject(this._events.error) && !this._events.error.length)) {
+      er = arguments[1];
+      if (er instanceof Error) {
+        throw er; // Unhandled 'error' event
+      }
+      throw TypeError('Uncaught, unspecified "error" event.');
+    }
+  }
+
+  handler = this._events[type];
+
+  if (isUndefined(handler))
+    return false;
+
+  if (isFunction(handler)) {
+    switch (arguments.length) {
+      // fast cases
+      case 1:
+        handler.call(this);
+        break;
+      case 2:
+        handler.call(this, arguments[1]);
+        break;
+      case 3:
+        handler.call(this, arguments[1], arguments[2]);
+        break;
+      // slower
+      default:
+        len = arguments.length;
+        args = new Array(len - 1);
+        for (i = 1; i < len; i++)
+          args[i - 1] = arguments[i];
+        handler.apply(this, args);
+    }
+  } else if (isObject(handler)) {
+    len = arguments.length;
+    args = new Array(len - 1);
+    for (i = 1; i < len; i++)
+      args[i - 1] = arguments[i];
+
+    listeners = handler.slice();
+    len = listeners.length;
+    for (i = 0; i < len; i++)
+      listeners[i].apply(this, args);
+  }
+
+  return true;
+};
+
+EventEmitter.prototype.addListener = function(type, listener) {
+  var m;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events)
+    this._events = {};
+
+  // To avoid recursion in the case that type === "newListener"! Before
+  // adding it to the listeners, first emit "newListener".
+  if (this._events.newListener)
+    this.emit('newListener', type,
+              isFunction(listener.listener) ?
+              listener.listener : listener);
+
+  if (!this._events[type])
+    // Optimize the case of one listener. Don't need the extra array object.
+    this._events[type] = listener;
+  else if (isObject(this._events[type]))
+    // If we've already got an array, just append.
+    this._events[type].push(listener);
+  else
+    // Adding the second element, need to change to array.
+    this._events[type] = [this._events[type], listener];
+
+  // Check for listener leak
+  if (isObject(this._events[type]) && !this._events[type].warned) {
+    var m;
+    if (!isUndefined(this._maxListeners)) {
+      m = this._maxListeners;
+    } else {
+      m = EventEmitter.defaultMaxListeners;
+    }
+
+    if (m && m > 0 && this._events[type].length > m) {
+      this._events[type].warned = true;
+      console.error('(node) warning: possible EventEmitter memory ' +
+                    'leak detected. %d listeners added. ' +
+                    'Use emitter.setMaxListeners() to increase limit.',
+                    this._events[type].length);
+      if (typeof console.trace === 'function') {
+        // not supported in IE 10
+        console.trace();
+      }
+    }
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.once = function(type, listener) {
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  var fired = false;
+
+  function g() {
+    this.removeListener(type, g);
+
+    if (!fired) {
+      fired = true;
+      listener.apply(this, arguments);
+    }
+  }
+
+  g.listener = listener;
+  this.on(type, g);
+
+  return this;
+};
+
+// emits a 'removeListener' event iff the listener was removed
+EventEmitter.prototype.removeListener = function(type, listener) {
+  var list, position, length, i;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events || !this._events[type])
+    return this;
+
+  list = this._events[type];
+  length = list.length;
+  position = -1;
+
+  if (list === listener ||
+      (isFunction(list.listener) && list.listener === listener)) {
+    delete this._events[type];
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+
+  } else if (isObject(list)) {
+    for (i = length; i-- > 0;) {
+      if (list[i] === listener ||
+          (list[i].listener && list[i].listener === listener)) {
+        position = i;
+        break;
+      }
+    }
+
+    if (position < 0)
+      return this;
+
+    if (list.length === 1) {
+      list.length = 0;
+      delete this._events[type];
+    } else {
+      list.splice(position, 1);
+    }
+
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.removeAllListeners = function(type) {
+  var key, listeners;
+
+  if (!this._events)
+    return this;
+
+  // not listening for removeListener, no need to emit
+  if (!this._events.removeListener) {
+    if (arguments.length === 0)
+      this._events = {};
+    else if (this._events[type])
+      delete this._events[type];
+    return this;
+  }
+
+  // emit removeListener for all listeners on all events
+  if (arguments.length === 0) {
+    for (key in this._events) {
+      if (key === 'removeListener') continue;
+      this.removeAllListeners(key);
+    }
+    this.removeAllListeners('removeListener');
+    this._events = {};
+    return this;
+  }
+
+  listeners = this._events[type];
+
+  if (isFunction(listeners)) {
+    this.removeListener(type, listeners);
+  } else {
+    // LIFO order
+    while (listeners.length)
+      this.removeListener(type, listeners[listeners.length - 1]);
+  }
+  delete this._events[type];
+
+  return this;
+};
+
+EventEmitter.prototype.listeners = function(type) {
+  var ret;
+  if (!this._events || !this._events[type])
+    ret = [];
+  else if (isFunction(this._events[type]))
+    ret = [this._events[type]];
+  else
+    ret = this._events[type].slice();
+  return ret;
+};
+
+EventEmitter.listenerCount = function(emitter, type) {
+  var ret;
+  if (!emitter._events || !emitter._events[type])
+    ret = 0;
+  else if (isFunction(emitter._events[type]))
+    ret = 1;
+  else
+    ret = emitter._events[type].length;
+  return ret;
+};
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+
+},{}],36:[function(require,module,exports){
+'use strict';
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function ToObject(val) {
+	if (val == null) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function ownEnumerableKeys(obj) {
+	var keys = Object.getOwnPropertyNames(obj);
+
+	if (Object.getOwnPropertySymbols) {
+		keys = keys.concat(Object.getOwnPropertySymbols(obj));
+	}
+
+	return keys.filter(function (key) {
+		return propIsEnumerable.call(obj, key);
+	});
+}
+
+module.exports = Object.assign || function (target, source) {
+	var from;
+	var keys;
+	var to = ToObject(target);
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = arguments[s];
+		keys = ownEnumerableKeys(Object(from));
+
+		for (var i = 0; i < keys.length; i++) {
+			to[keys[i]] = from[keys[i]];
+		}
+	}
+
+	return to;
+};
+
+},{}],37:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -6644,7 +6988,7 @@ var ComboBox = React.createClass({
 
 module.exports = ComboBox;
 
-},{"react":undefined}],36:[function(require,module,exports){
+},{"react":undefined}],38:[function(require,module,exports){
 "use strict";
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
@@ -6759,7 +7103,7 @@ var Dialog = React.createClass({
 
 module.exports = Dialog;
 
-},{"react":undefined}],37:[function(require,module,exports){
+},{"react":undefined}],39:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -6833,7 +7177,7 @@ var Dropdown = React.createClass({
 
 module.exports = Dropdown;
 
-},{"react":undefined}],38:[function(require,module,exports){
+},{"react":undefined}],40:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -6899,7 +7243,7 @@ var TabGroup = React.createClass({
 
 module.exports = TabGroup;
 
-},{"react":undefined}],39:[function(require,module,exports){
+},{"react":undefined}],41:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -6963,7 +7307,7 @@ var EditorContentEditableDiv = React.createClass({
 });
 module.exports = EditorContentEditableDiv;
 
-},{"../../utils/EditorDOM":53,"../../utils/EditorSelection":56,"react":undefined,"react-dom":undefined}],40:[function(require,module,exports){
+},{"../../utils/EditorDOM":55,"../../utils/EditorSelection":59,"react":undefined,"react-dom":undefined}],42:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -7045,7 +7389,7 @@ var EditorIcon = React.createClass({
 
 module.exports = EditorIcon;
 
-},{"react":undefined,"react-dom":undefined}],41:[function(require,module,exports){
+},{"react":undefined,"react-dom":undefined}],43:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -7083,7 +7427,7 @@ var EditorTextArea = React.createClass({
 });
 module.exports = EditorTextArea;
 
-},{"react":undefined,"react-dom":undefined}],42:[function(require,module,exports){
+},{"react":undefined,"react-dom":undefined}],44:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -7168,7 +7512,7 @@ var EditorToolbar = React.createClass({
 
 module.exports = EditorToolbar;
 
-},{"../../constants/EditorConstants":52,"../../utils/EditorHistory":54,"./EditorIcon.react":40,"react":undefined}],43:[function(require,module,exports){
+},{"../../constants/EditorConstants":54,"../../utils/EditorHistory":57,"./EditorIcon.react":42,"react":undefined}],45:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -7275,7 +7619,7 @@ var ColorDropdown = React.createClass({
 
 module.exports = ColorDropdown;
 
-},{"../../constants/EditorConstants":52,"../../utils/EditorDOM":53,"../base/Dropdown.react":37,"react":undefined}],44:[function(require,module,exports){
+},{"../../constants/EditorConstants":54,"../../utils/EditorDOM":55,"../base/Dropdown.react":39,"react":undefined}],46:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -7400,7 +7744,7 @@ var EmotionDialog = React.createClass({
 
 module.exports = EmotionDialog;
 
-},{"../../constants/EditorConstants":52,"../base/Dialog.react":36,"../base/TabGroup.react":38,"react":undefined,"react-dom":undefined}],45:[function(require,module,exports){
+},{"../../constants/EditorConstants":54,"../base/Dialog.react":38,"../base/TabGroup.react":40,"react":undefined,"react-dom":undefined}],47:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -7472,7 +7816,7 @@ var FontFamilyDropdown = React.createClass({
 
 module.exports = FontFamilyDropdown;
 
-},{"../base/ComboBox.react":35,"react":undefined}],46:[function(require,module,exports){
+},{"../base/ComboBox.react":37,"react":undefined}],48:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -7544,7 +7888,7 @@ var FontSizeDropdown = React.createClass({
 
 module.exports = FontSizeDropdown;
 
-},{"../base/ComboBox.react":35,"react":undefined}],47:[function(require,module,exports){
+},{"../base/ComboBox.react":37,"react":undefined}],49:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -7630,7 +7974,7 @@ var FormulaDropdown = React.createClass({
 
 module.exports = FormulaDropdown;
 
-},{"../../constants/EditorConstants":52,"../base/Dropdown.react":37,"../base/TabGroup.react":38,"react":undefined,"react-dom":undefined}],48:[function(require,module,exports){
+},{"../../constants/EditorConstants":54,"../base/Dropdown.react":39,"../base/TabGroup.react":40,"react":undefined,"react-dom":undefined}],50:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -7649,54 +7993,85 @@ var ImageUpload = React.createClass({
 			dragEnter: false
 		};
 	},
-	handleUploadFile: function handleUploadFile(file) {
+	handleUploadFile: function handleUploadFile(obj) {
+		/**
+   * 点击 obj = e.target
+   * 拖拽 obj = e.dataTransfer
+   */
 		var _self = this;
 		var images = this.state.images;
 		var mask = ReactDOM.findDOMNode(this.refs.mask);
 		var uploader = this.props.customUploader ? this.props.customUploader : Uploader;
-		uploader.uploadFile({
-			file: file,
-			filename: this.props.name,
-			url: this.props.url,
-			type: this.props.type,
-			qiniu: this.props.qiniu,
-			onLoad: function onLoad(e) {
-				mask.style.display = "block";
-				mask.innerHTML = "Loading...";
-			},
-			onSuccess: function onSuccess(res) {
-				mask.style.display = "block";
-				mask.innerHTML = "Load Success";
 
-				if (res && res.status == "success") {
-					images.push({
-						src: res.image_src
-					});
-					_self.setState({
-						images: images
-					});
-					if (_self.props.onChange) _self.props.onChange(0, images);
+		var files = obj.files;
+		var fileIndex = 0;
+		single(files[fileIndex]);
+
+		function single(file) {
+			uploader.uploadFile({
+				file: file,
+				filename: _self.props.name,
+				url: _self.props.url,
+				type: _self.props.type,
+				qiniu: _self.props.qiniu,
+				onLoad: function onLoad(e) {
+					mask.style.display = "block";
+					mask.innerHTML = fileIndex + 1 + '/' + files.length + ' Uploading...';
+				},
+				onSuccess: function onSuccess(res) {
+					// console.log(`2文件总数：${files.length}`);
+					mask.style.display = "block";
+					mask.innerHTML = "Load Success";
+
+					if (res && res.status == "success") {
+						images.push({
+							src: res.image_src
+						});
+						_self.setState({
+							images: images
+						});
+						if (_self.props.onChange) {
+							_self.props.onChange(0, images);
+						}
+						// console.log(`3文件总数：${files.length}`);
+					}
+
+					setTimeout(function () {
+
+						if (fileIndex + 1 < files.length) {
+							//判断是否还有图片没有上传
+							fileIndex += 1;
+							single(files[fileIndex]);
+						} else {
+							//去除遮罩层
+							mask.style.display = "none";
+							//图片上传完毕，重置文件索引 fileIndex
+							fileIndex = 0;
+							if (!obj.dropEffect) {
+								console.log('done');
+								// clear value
+								obj.value = "";
+							}
+						}
+					}, 200);
+				},
+				onError: function onError(e) {
+					mask.style.display = "block";
+					mask.innerHTML = "Load Error";
+					setTimeout(function () {
+						mask.style.display = "none";
+					}, 200);
 				}
-				setTimeout(function () {
-					mask.style.display = "none";
-				}, 200);
-			},
-			onError: function onError(e) {
-				mask.style.display = "block";
-				mask.innerHTML = "Load Error";
-				setTimeout(function () {
-					mask.style.display = "none";
-				}, 200);
-			}
-		});
+			});
+		}
 	},
 	handleChange: function handleChange(e) {
 		e = e || event;
 		var target = e.target || e.srcElement;
 		if (target.files.length > 0) {
-			this.handleUploadFile(target.files[0]);
+			this.handleUploadFile(target);
 			// clear value
-			target.value = "";
+			// target.value = "";
 		}
 	},
 	getImages: function getImages() {
@@ -7722,7 +8097,8 @@ var ImageUpload = React.createClass({
 		e.preventDefault();
 		var files = e.dataTransfer.files;
 		if (files.length > 0) {
-			this.handleUploadFile(files[0]);
+			// this.handleUploadFile(files[0]);
+			this.handleUploadFile(e.dataTransfer);
 		}
 		this.setState({
 			dragEnter: false
@@ -7773,7 +8149,7 @@ var ImageUpload = React.createClass({
 					return React.createElement(
 						'div',
 						{ className: 'image-item' },
-						React.createElement('div', { className: 'image-close', onClick: handleRemoveImage }),
+						React.createElement('div', { className: 'image-close', 'data-index': pos, onClick: handleRemoveImage }),
 						React.createElement('img', { src: ele.src, className: 'image-pic', height: '75', width: '120' })
 					);
 				}),
@@ -7784,7 +8160,7 @@ var ImageUpload = React.createClass({
 					React.createElement(
 						'form',
 						{ className: 'image-form', method: 'post', encType: 'multipart/form-data', target: 'up', action: action },
-						React.createElement('input', { onChange: this.handleChange, style: { filter: "alpha(opacity=0)" }, className: 'image-file', type: 'file', name: 'file', accept: 'image/gif,image/jpeg,image/png,image/jpg,image/bmp' })
+						React.createElement('input', { onChange: this.handleChange, multiple: 'multiple', style: { filter: "alpha(opacity=0)" }, className: 'image-file', type: 'file', name: 'file', accept: 'image/gif,image/jpeg,image/png,image/jpg,image/bmp' })
 					)
 				)
 			),
@@ -7800,7 +8176,7 @@ var ImageUpload = React.createClass({
 				React.createElement(
 					'form',
 					{ className: 'image-form', method: 'post', encType: 'multipart/form-data', target: 'up', action: action },
-					React.createElement('input', { onChange: this.handleChange, style: { filter: "alpha(opacity=0)" }, className: 'image-file', type: 'file', name: 'file', accept: 'image/gif,image/jpeg,image/png,image/jpg,image/bmp' })
+					React.createElement('input', { onChange: this.handleChange, multiple: 'multiple', style: { filter: "alpha(opacity=0)" }, className: 'image-file', type: 'file', name: 'file', accept: 'image/gif,image/jpeg,image/png,image/jpg,image/bmp' })
 				)
 			),
 			React.createElement(
@@ -7986,7 +8362,7 @@ var ImageDialog = React.createClass({
 
 module.exports = ImageDialog;
 
-},{"../../utils/FileUpload":58,"../base/Dialog.react":36,"../base/TabGroup.react":38,"react":undefined,"react-dom":undefined}],49:[function(require,module,exports){
+},{"../../utils/FileUpload":61,"../base/Dialog.react":38,"../base/TabGroup.react":40,"react":undefined,"react-dom":undefined}],51:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -8054,7 +8430,7 @@ var ParagraphDropdown = React.createClass({
 
 module.exports = ParagraphDropdown;
 
-},{"../base/ComboBox.react":35,"react":undefined}],50:[function(require,module,exports){
+},{"../base/ComboBox.react":37,"react":undefined}],52:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -8152,7 +8528,7 @@ var SpecialCharsDialog = React.createClass({
 
 module.exports = SpecialCharsDialog;
 
-},{"../../constants/EditorConstants":52,"../base/Dialog.react":36,"../base/TabGroup.react":38,"react":undefined,"react-dom":undefined}],51:[function(require,module,exports){
+},{"../../constants/EditorConstants":54,"../base/Dialog.react":38,"../base/TabGroup.react":40,"react":undefined,"react-dom":undefined}],53:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -8251,7 +8627,7 @@ var TablePickerDropdown = React.createClass({
 
 module.exports = TablePickerDropdown;
 
-},{"../base/Dropdown.react":37,"react":undefined}],52:[function(require,module,exports){
+},{"../base/Dropdown.react":39,"react":undefined}],54:[function(require,module,exports){
 "use strict";
 
 var EditorIconTypes = {
@@ -8472,7 +8848,7 @@ module.exports = {
 	EmotionImages: EmotionImages
 };
 
-},{}],53:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 "use strict";
 
 var EditorDOM = {
@@ -8502,7 +8878,48 @@ var EditorDOM = {
 };
 module.exports = EditorDOM;
 
-},{}],54:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
+'use strict';
+
+var EventEmitter = require('events').EventEmitter;
+var assign = require('object-assign');
+var EditorEventEmitter = assign({}, EventEmitter.prototype, {
+	editorSum: 0,
+	editorStack: [],
+	isStart: false,
+	startTime: null,
+	addStartListener: function addStartListener(type, callback) {
+		if (this.editorStack.length == 0 && this.isStart == false) {
+			this.startTime = this.startTime || new Date();
+		}
+		this.editorSum = this.editorSum + 1;
+		this.editorStack.push(type);
+		this.on(type, callback);
+
+		this.emitNextListener();
+	},
+	removeStartListener: function removeStartListener(type, callback) {
+		this.removeListener(type, callback);
+	},
+	mountEditorSuccess: function mountEditorSuccess() {
+		this.isStart = false;
+		this.emitNextListener();
+	},
+	emitNextListener: function emitNextListener() {
+		if (this.editorStack.length == 0) this.isStart = false;else if (this.isStart == false) {
+			this.isStart = true;
+			var type = this.editorStack.shift();
+			this.emit(type);
+			var mountTime = new Date();
+			this.startTime = this.startTime || new Date();
+			console.log("emitNextListener:" + type + " " + (mountTime.valueOf() - this.startTime.valueOf()) + "ms");
+		}
+	}
+});
+EditorEventEmitter.setMaxListeners(1000);
+module.exports = EditorEventEmitter;
+
+},{"events":35,"object-assign":36}],57:[function(require,module,exports){
 "use strict";
 
 var EditorHistory = {
@@ -8557,7 +8974,7 @@ var EditorHistory = {
 };
 module.exports = EditorHistory;
 
-},{}],55:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -8784,7 +9201,7 @@ var EditorResize = React.createClass({
 
 module.exports = EditorResize;
 
-},{"react":undefined,"react-dom":undefined}],56:[function(require,module,exports){
+},{"react":undefined,"react-dom":undefined}],59:[function(require,module,exports){
 "use strict";
 
 var EditorDOM = require('./EditorDOM');
@@ -9022,7 +9439,7 @@ var EditorSelection = {
 };
 module.exports = EditorSelection;
 
-},{"./EditorDOM":53}],57:[function(require,module,exports){
+},{"./EditorDOM":55}],60:[function(require,module,exports){
 "use strict";
 
 var INTERVAL_MS = 1000 / 60;
@@ -9143,7 +9560,7 @@ EditorTimer.animate();
 
 module.exports = EditorTimer;
 
-},{}],58:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 'use strict';
 
 var QiniuUtils = require('./QiniuUtils');
@@ -9247,7 +9664,7 @@ module.exports = {
     uploadFiles: function uploadFiles(options) {}
 };
 
-},{"./QiniuUtils":59}],59:[function(require,module,exports){
+},{"./QiniuUtils":62}],62:[function(require,module,exports){
 "use strict";
 
 var CryptoJS = require("crypto-js");
@@ -9408,6 +9825,7 @@ var EditorSelection = require('./utils/EditorSelection');
 var EditorDOM = require('./utils/EditorDOM');
 var EditorResize = require('./utils/EditorResize.react');
 var EditorTimer = require('./utils/EditorTimer');
+var EditorEventEmitter = require('./utils/EditorEventEmitter');
 // dialog & dropdown
 var ColorDropdown = require('./components/plugins/ColorDropdown.react');
 var FormulaDropdown = require('./components/plugins/FormulaDropdown.react');
@@ -9532,10 +9950,8 @@ var Editor = React.createClass({
 		var isCollapsed = true;
 		editarea.addEventListener('keydown', this.handleKeyDown);
 		editarea.addEventListener('keyup', this.handleKeyUp);
-		var mount_time = new Date();
-		var start_time = this.props.start;
-		var index = this.props.index;
-		console.log("Mount " + index + ":" + (mount_time.valueOf() - start_time.valueOf()) + "ms");
+		var onEditorMount = this.props.onEditorMount;
+		setTimeout(onEditorMount, 10);
 	},
 	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 		// update value
@@ -10077,6 +10493,7 @@ var Editor = React.createClass({
 	render: function render() {
 		var editArea = this.genEditArea();
 		var _props = this.props;
+		var index = _props.index;
 		var fontSize = _props.fontSize;
 		var paragraph = _props.paragraph;
 		var fontFamily = _props.fontFamily;
@@ -10087,8 +10504,9 @@ var Editor = React.createClass({
 		var id = _props.id;
 		var onFocus = _props.onFocus;
 		var onClick = _props.onClick;
+		var onEditorMount = _props.onEditorMount;
 
-		var props = _objectWithoutProperties(_props, ['fontSize', 'paragraph', 'fontFamily', 'icons', 'plugins', 'onBlur', 'className', 'id', 'onFocus', 'onClick']);
+		var props = _objectWithoutProperties(_props, ['index', 'fontSize', 'paragraph', 'fontFamily', 'icons', 'plugins', 'onBlur', 'className', 'id', 'onFocus', 'onClick', 'onEditorMount']);
 
 		var editorState = this.state.editorState;
 		var _icons = icons.join(" ").replace(/\|/gm, "separator").split(" ");
@@ -10123,13 +10541,20 @@ var EditorClass = React.createClass({
 		};
 	},
 	componentDidMount: function componentDidMount() {
-		var index = this.props.index;
-		var _self = this;
-		setTimeout(function () {
-			_self.setState({
-				loaded: true
-			});
-		}, index * 10 + 500);
+		this.index = EditorEventEmitter.editorSum;
+		EditorEventEmitter.addStartListener("start-" + this.index, this.handleChange);
+	},
+	componentWillUnmount: function componentWillUnmount() {
+		var index = this.index;
+		EditorEventEmitter.removeStartListener("start-" + index, this.handleChange);
+	},
+	handleChange: function handleChange() {
+		this.setState({
+			loaded: true
+		});
+	},
+	handleMountSuccess: function handleMountSuccess() {
+		EditorEventEmitter.mountEditorSuccess();
 	},
 	render: function render() {
 		var loaded = this.state.loaded;
@@ -10139,15 +10564,15 @@ var EditorClass = React.createClass({
 		if (!this.state.loaded) {
 			return React.createElement(
 				'div',
-				{ style: { "minHeight": "300px", "border": "1px solid #ddd" } },
+				{ className: 'editor-contenteditable-div', style: { "minHeight": "30px", "border": "1px solid #ddd" } },
 				'正在加载...'
 			);
 		} else {
-			return React.createElement(Editor, props);
+			return React.createElement(Editor, _extends({}, props, { onEditorMount: this.handleMountSuccess }));
 		}
 	}
 });
 
 module.exports = EditorClass;
 
-},{"./components/core/EditorContentEditableDiv.react":39,"./components/core/EditorTextArea.react":41,"./components/core/EditorToolbar.react":42,"./components/plugins/ColorDropdown.react":43,"./components/plugins/EmotionDialog.react":44,"./components/plugins/FontFamilyComboBox.react":45,"./components/plugins/FontSizeComboBox.react":46,"./components/plugins/FormulaDropdown.react":47,"./components/plugins/ImageDialog.react":48,"./components/plugins/ParagraphComboBox.react":49,"./components/plugins/SpecialCharsDialog.react":50,"./components/plugins/TablePickerDropdown.react":51,"./constants/EditorConstants":52,"./utils/EditorDOM":53,"./utils/EditorHistory":54,"./utils/EditorResize.react":55,"./utils/EditorSelection":56,"./utils/EditorTimer":57,"react":undefined,"react-dom":undefined}]},{},[]);
+},{"./components/core/EditorContentEditableDiv.react":41,"./components/core/EditorTextArea.react":43,"./components/core/EditorToolbar.react":44,"./components/plugins/ColorDropdown.react":45,"./components/plugins/EmotionDialog.react":46,"./components/plugins/FontFamilyComboBox.react":47,"./components/plugins/FontSizeComboBox.react":48,"./components/plugins/FormulaDropdown.react":49,"./components/plugins/ImageDialog.react":50,"./components/plugins/ParagraphComboBox.react":51,"./components/plugins/SpecialCharsDialog.react":52,"./components/plugins/TablePickerDropdown.react":53,"./constants/EditorConstants":54,"./utils/EditorDOM":55,"./utils/EditorEventEmitter":56,"./utils/EditorHistory":57,"./utils/EditorResize.react":58,"./utils/EditorSelection":59,"./utils/EditorTimer":60,"react":undefined,"react-dom":undefined}]},{},[]);

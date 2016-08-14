@@ -9,7 +9,8 @@ var EditorHistory = require('./utils/EditorHistory');
 var EditorSelection = require('./utils/EditorSelection');
 var EditorDOM = require('./utils/EditorDOM');
 var EditorResize = require('./utils/EditorResize.react');
-var EditorTimer = require('./utils/EditorTimer')
+var EditorTimer = require('./utils/EditorTimer');
+var EditorEventEmitter =  require('./utils/EditorEventEmitter');
 // dialog & dropdown
 var ColorDropdown = require('./components/plugins/ColorDropdown.react');
 var FormulaDropdown = require('./components/plugins/FormulaDropdown.react');
@@ -164,10 +165,8 @@ var Editor = React.createClass({
 		var isCollapsed = true;
     	editarea.addEventListener('keydown', this.handleKeyDown);
     	editarea.addEventListener('keyup', this.handleKeyUp);
-		var mount_time = new Date();
-		var start_time = this.props.start;
-		var index = this.props.index;
-		console.log("Mount "+index+":"+(mount_time.valueOf()-start_time.valueOf())+"ms");
+		var onEditorMount = this.props.onEditorMount;
+		setTimeout(onEditorMount,10);
 	},
 	componentWillReceiveProps:function(nextProps){
 		// update value
@@ -710,7 +709,7 @@ var Editor = React.createClass({
 	},
 	render:function(){
 			var editArea = this.genEditArea();
-			var {fontSize,paragraph,fontFamily,icons,plugins,onBlur,className,id,onFocus,onClick,...props} = this.props;
+			var {index,fontSize,paragraph,fontFamily,icons,plugins,onBlur,className,id,onFocus,onClick,onEditorMount,...props} = this.props;
 			var editorState = this.state.editorState;
 			var _icons = icons.join(" ").replace(/\|/gm,"separator").split(" ");
 			return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onClick={this.handleClick} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
@@ -738,21 +737,28 @@ var EditorClass = React.createClass({
 		}
 	},
 	componentDidMount: function(){
-		var index = this.props.index;
-		var _self = this;
-		setTimeout(function(){
-			_self.setState({
-				loaded:true
-			})
-		},index*10+500)
+		this.index = EditorEventEmitter.editorSum;
+		EditorEventEmitter.addStartListener("start-"+this.index,this.handleChange);
+	},
+	componentWillUnmount: function(){
+		var index = this.index;
+		EditorEventEmitter.removeStartListener("start-"+index,this.handleChange);
+	},
+	handleChange: function(){
+		this.setState({
+			loaded:true
+		})
+	},
+	handleMountSuccess: function(){
+		EditorEventEmitter.mountEditorSuccess();
 	},
 	render:function(){
 		var loaded = this.state.loaded;
 		var {...props} = this.props;
 		if(!this.state.loaded){
-			return (<div style={{"minHeight":"300px","border":"1px solid #ddd"}}>正在加载...</div>)
+			return (<div className="editor-contenteditable-div" style={{"minHeight":"30px","border":"1px solid #ddd"}}>正在加载...</div>)
 		}else{
-			return (<Editor {...props} />)
+			return (<Editor {...props} onEditorMount={this.handleMountSuccess}/>)
 		}
 	}
 })
