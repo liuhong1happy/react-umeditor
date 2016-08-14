@@ -752,13 +752,25 @@ var EditorClass = React.createClass({
 	handleMountSuccess: function(){
 		EditorEventEmitter.mountEditorSuccess();
 	},
+	getContent: function() {
+		return this.refs.editor?this.refs.editor.getContent(): "";
+	},
+	setContent: function(content) {
+		return this.refs.editor?this.refs.editor.setContent(content): "";
+	},
+	focusEditor: function() {
+		return this.refs.editor?this.refs.editor.focusEditor(): "";
+	},
+	findDOMNode: function(refName) {
+		return this.refs.editor?this.refs.editor.findDOMNode(refName): "";
+	},
 	render:function(){
 		var loaded = this.state.loaded;
 		var {...props} = this.props;
 		if(!this.state.loaded){
 			return (<div className="editor-contenteditable-div" style={{"minHeight":"30px","border":"1px solid #ddd"}}>正在加载...</div>)
 		}else{
-			return (<Editor {...props} onEditorMount={this.handleMountSuccess}/>)
+			return (<Editor ref="editor" {...props} onEditorMount={this.handleMountSuccess}/>)
 		}
 	}
 })

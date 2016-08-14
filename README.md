@@ -60,13 +60,12 @@ You can `this.refs.editor.xxx()`! The `xxx` maybe is as follows:
 * findDOMNode: find  refs by ref name  `"root","editarea","toolbar","color" `
 * setContent: set html of editor
 * getContent: get html of editor
-* onFocus: the focus event
+* focusEditor: focus the editor
 
 ## Props
 
 You can set the `props`!The `props` maybe is as follows:
-
-* focusEditor: focus the editor
+* onFocus: the focus event
 * defaultValue: default value of editor
 * value: value of editor
 * icons: icons of toolbar
@@ -103,10 +102,8 @@ open the file `example/dist/index.html`
 
 ## Todo
 
-- [ ] paragraph fontsize fontfamily [liuhong1happy](https://github.com/liuhong1happy)
 - [ ] table-edit [wskongdesheng](https://github.com/wskongdesheng)
 - [ ] insert time date video audio etc. [liuhong1happy](https://github.com/liuhong1happy)
-- [ ] qiniu iamge uploader & multi image upload [liuhong1happy](https://github.com/liuhong1happy)
 
 ## Contribute
 
