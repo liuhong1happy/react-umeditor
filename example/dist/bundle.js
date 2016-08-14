@@ -10556,6 +10556,18 @@ var EditorClass = React.createClass({
 	handleMountSuccess: function handleMountSuccess() {
 		EditorEventEmitter.mountEditorSuccess();
 	},
+	getContent: function getContent() {
+		return this.refs.editor ? this.refs.editor.getContent() : "";
+	},
+	setContent: function setContent(content) {
+		return this.refs.editor ? this.refs.editor.setContent(content) : "";
+	},
+	focusEditor: function focusEditor() {
+		return this.refs.editor ? this.refs.editor.focusEditor() : "";
+	},
+	findDOMNode: function findDOMNode(refName) {
+		return this.refs.editor ? this.refs.editor.findDOMNode(refName) : "";
+	},
 	render: function render() {
 		var loaded = this.state.loaded;
 
@@ -10568,7 +10580,7 @@ var EditorClass = React.createClass({
 				'正在加载...'
 			);
 		} else {
-			return React.createElement(Editor, _extends({}, props, { onEditorMount: this.handleMountSuccess }));
+			return React.createElement(Editor, _extends({ ref: 'editor' }, props, { onEditorMount: this.handleMountSuccess }));
 		}
 	}
 });
