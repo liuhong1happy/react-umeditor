@@ -17,6 +17,8 @@ var EditorEventEmitter = assign({}, EventEmitter.prototype, {
 	  },
 	  removeStartListener: function(type,callback) {
 			this.removeListener(type, callback);
+			(this.editorStack.length == 0)?(this.editorStack = this.editorStack):(this.editorStack = []);
+		    this.editorSum = 0;
 	  },
 	  mountEditorSuccess: function() {
 		    this.isStart = false;
