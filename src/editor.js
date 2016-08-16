@@ -30,7 +30,7 @@ var EditorTextArea = require('./components/core/EditorTextArea.react');
 var EditorContentEditableDiv = require('./components/core/EditorContentEditableDiv.react');
 
 // 需要外部引用MathQuill
-var MQ = MathQuill.getInterface(2);
+var MQ = MathQuill ? MathQuill.getInterface(2) : null;
 
 // key down context
 var saveSceneTimer = null;
@@ -624,10 +624,12 @@ var Editor = React.createClass({
 	addFormula:function(id,latex){
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var htmlElement = document.getElementById(id);
+		
 		var config = {
 		  handlers: { edit: function(){ } },
 		  restrictMismatchedBrackets: true
 		};
+		if(htmlElement==null && MQ==null) return;
 		var mathField = MQ.MathField(htmlElement, config);
 		mathField.latex(latex); 
 		var $htmlElement = $(htmlElement);
@@ -768,9 +770,9 @@ var EditorClass = React.createClass({
 		var loaded = this.state.loaded;
 		var {...props} = this.props;
 		if(!this.state.loaded){
-			return (<div className="editor-contenteditable-div" style={{"minHeight":"30px","border":"1px solid #ddd"}}>正在加载...</div>)
+			return (<div id={props.id} className="editor-contenteditable-div" style={{"minHeight":"30px","border":"1px solid #ddd"}}>正在加载...</div>)
 		}else{
-			return (<Editor ref="editor" {...props} onEditorMount={this.handleMountSuccess}/>)
+			return (<Editor ref="editor" {...props} onEditorMount={this.handleMountSuccess} />)
 		}
 	}
 })
