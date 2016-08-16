@@ -1,23 +1,26 @@
 {
   "name": "react-umeditor",
-  "version": "0.5.3",
+  "version": "0.5.6",
   "description": "React Editor like UMEditor",
   "main": "lib/editor.js",
   "private": false,
   "scripts": {
     "test": "echo \"no tests yet\" && exit 0",
     "build": "gulp clean && NODE_ENV=development gulp build && cp -R images/. dist/images && cp -R third-part/. dist/third-part",
-    "build-win": "gulp clean && set NODE_ENV=development && gulp build && cp -R images/. dist/images && cp -R third-part/. dist/third-part",
+    "build-win": "gulp clean && set NODE_ENV=development && gulp build && xcopy images dist\\images\\ /s /y && xcopy  third-part dist\\third-part\\ /s /y",
     "examples": "gulp dev:server",
     "publish:site": "gulp publish:examples",
     "start": "gulp dev",
     "release": "gulp release",
     "watch": "gulp watch:lib"
   },
-  "author": {
+  "author": [{
     "name": "Holly Liu",
     "email": "liuhong1.happy@163.com"
-  },
+  },{
+    "name": "Lei Haohao",
+    "email": "113864965@qq.com"
+  }],
   "repository": {
     "type": "git",
     "url": "git://github.com/liuhong1happy/react-umeditor.git"
