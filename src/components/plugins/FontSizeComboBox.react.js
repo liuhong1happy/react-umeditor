@@ -45,7 +45,7 @@ var FontSizeDropdown = React.createClass({
 					{
 						fontsize.map(function(ele,pos){
 							return (<li className={ele.value==props.value?"active":""} key={pos} data-value={ele.value} onClick={handleSelect}>
-										<span data-value={ele.value} style={{"fontSize":ele.value}}>{ele.name}</span>
+										<span data-value={ele.value} style={{"fontSize":ele.name}}>{ele.name}</span>
 									</li>)
 						})
 					}

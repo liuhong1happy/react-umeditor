@@ -6876,6 +6876,7 @@ function isUndefined(arg) {
 
 },{}],36:[function(require,module,exports){
 'use strict';
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 
 function ToObject(val) {
 	if (val == null) {
@@ -6885,6 +6886,18 @@ function ToObject(val) {
 	return Object(val);
 }
 
+function ownEnumerableKeys(obj) {
+	var keys = Object.getOwnPropertyNames(obj);
+
+	if (Object.getOwnPropertySymbols) {
+		keys = keys.concat(Object.getOwnPropertySymbols(obj));
+	}
+
+	return keys.filter(function (key) {
+		return propIsEnumerable.call(obj, key);
+	});
+}
+
 module.exports = Object.assign || function (target, source) {
 	var from;
 	var keys;
@@ -6892,7 +6905,7 @@ module.exports = Object.assign || function (target, source) {
 
 	for (var s = 1; s < arguments.length; s++) {
 		from = arguments[s];
-		keys = Object.keys(Object(from));
+		keys = ownEnumerableKeys(Object(from));
 
 		for (var i = 0; i < keys.length; i++) {
 			to[keys[i]] = from[keys[i]];
@@ -6974,7 +6987,6 @@ var ComboBox = React.createClass({
 });
 
 module.exports = ComboBox;
-
 
 },{"react":undefined}],38:[function(require,module,exports){
 "use strict";
@@ -7091,7 +7103,6 @@ var Dialog = React.createClass({
 
 module.exports = Dialog;
 
-
 },{"react":undefined}],39:[function(require,module,exports){
 "use strict";
 
@@ -7166,7 +7177,6 @@ var Dropdown = React.createClass({
 
 module.exports = Dropdown;
 
-
 },{"react":undefined}],40:[function(require,module,exports){
 "use strict";
 
@@ -7233,7 +7243,6 @@ var TabGroup = React.createClass({
 
 module.exports = TabGroup;
 
-
 },{"react":undefined}],41:[function(require,module,exports){
 'use strict';
 
@@ -7297,7 +7306,6 @@ var EditorContentEditableDiv = React.createClass({
 	}
 });
 module.exports = EditorContentEditableDiv;
-
 
 },{"../../utils/EditorDOM":55,"../../utils/EditorSelection":59,"react":undefined,"react-dom":undefined}],42:[function(require,module,exports){
 'use strict';
@@ -7381,7 +7389,6 @@ var EditorIcon = React.createClass({
 
 module.exports = EditorIcon;
 
-
 },{"react":undefined,"react-dom":undefined}],43:[function(require,module,exports){
 'use strict';
 
@@ -7419,7 +7426,6 @@ var EditorTextArea = React.createClass({
 	}
 });
 module.exports = EditorTextArea;
-
 
 },{"react":undefined,"react-dom":undefined}],44:[function(require,module,exports){
 'use strict';
@@ -7505,7 +7511,6 @@ var EditorToolbar = React.createClass({
 });
 
 module.exports = EditorToolbar;
-
 
 },{"../../constants/EditorConstants":54,"../../utils/EditorHistory":57,"./EditorIcon.react":42,"react":undefined}],45:[function(require,module,exports){
 'use strict';
@@ -7613,7 +7618,6 @@ var ColorDropdown = React.createClass({
 });
 
 module.exports = ColorDropdown;
-
 
 },{"../../constants/EditorConstants":54,"../../utils/EditorDOM":55,"../base/Dropdown.react":39,"react":undefined}],46:[function(require,module,exports){
 'use strict';
@@ -7740,7 +7744,6 @@ var EmotionDialog = React.createClass({
 
 module.exports = EmotionDialog;
 
-
 },{"../../constants/EditorConstants":54,"../base/Dialog.react":38,"../base/TabGroup.react":40,"react":undefined,"react-dom":undefined}],47:[function(require,module,exports){
 'use strict';
 
@@ -7813,7 +7816,6 @@ var FontFamilyDropdown = React.createClass({
 
 module.exports = FontFamilyDropdown;
 
-
 },{"../base/ComboBox.react":37,"react":undefined}],48:[function(require,module,exports){
 'use strict';
 
@@ -7873,7 +7875,7 @@ var FontSizeDropdown = React.createClass({
 							{ className: ele.value == props.value ? "active" : "", key: pos, 'data-value': ele.value, onClick: handleSelect },
 							React.createElement(
 								'span',
-								{ 'data-value': ele.value, style: { "fontSize": ele.value } },
+								{ 'data-value': ele.value, style: { "fontSize": ele.name } },
 								ele.name
 							)
 						);
@@ -7885,7 +7887,6 @@ var FontSizeDropdown = React.createClass({
 });
 
 module.exports = FontSizeDropdown;
-
 
 },{"../base/ComboBox.react":37,"react":undefined}],49:[function(require,module,exports){
 'use strict';
@@ -7972,7 +7973,6 @@ var FormulaDropdown = React.createClass({
 });
 
 module.exports = FormulaDropdown;
-
 
 },{"../../constants/EditorConstants":54,"../base/Dropdown.react":39,"../base/TabGroup.react":40,"react":undefined,"react-dom":undefined}],50:[function(require,module,exports){
 'use strict';
@@ -8362,7 +8362,6 @@ var ImageDialog = React.createClass({
 
 module.exports = ImageDialog;
 
-
 },{"../../utils/FileUpload":61,"../base/Dialog.react":38,"../base/TabGroup.react":40,"react":undefined,"react-dom":undefined}],51:[function(require,module,exports){
 'use strict';
 
@@ -8430,7 +8429,6 @@ var ParagraphDropdown = React.createClass({
 });
 
 module.exports = ParagraphDropdown;
-
 
 },{"../base/ComboBox.react":37,"react":undefined}],52:[function(require,module,exports){
 'use strict';
@@ -8530,7 +8528,6 @@ var SpecialCharsDialog = React.createClass({
 
 module.exports = SpecialCharsDialog;
 
-
 },{"../../constants/EditorConstants":54,"../base/Dialog.react":38,"../base/TabGroup.react":40,"react":undefined,"react-dom":undefined}],53:[function(require,module,exports){
 'use strict';
 
@@ -8629,7 +8626,6 @@ var TablePickerDropdown = React.createClass({
 });
 
 module.exports = TablePickerDropdown;
-
 
 },{"../base/Dropdown.react":39,"react":undefined}],54:[function(require,module,exports){
 "use strict";
@@ -8852,7 +8848,6 @@ module.exports = {
 	EmotionImages: EmotionImages
 };
 
-
 },{}],55:[function(require,module,exports){
 "use strict";
 
@@ -8882,7 +8877,6 @@ var EditorDOM = {
 	}
 };
 module.exports = EditorDOM;
-
 
 },{}],56:[function(require,module,exports){
 'use strict';
@@ -8926,7 +8920,6 @@ var EditorEventEmitter = assign({}, EventEmitter.prototype, {
 });
 EditorEventEmitter.setMaxListeners(1000);
 module.exports = EditorEventEmitter;
-
 
 },{"events":35,"object-assign":36}],57:[function(require,module,exports){
 "use strict";
@@ -8982,7 +8975,6 @@ var EditorHistory = {
 	}
 };
 module.exports = EditorHistory;
-
 
 },{}],58:[function(require,module,exports){
 'use strict';
@@ -9210,7 +9202,6 @@ var EditorResize = React.createClass({
 });
 
 module.exports = EditorResize;
-
 
 },{"react":undefined,"react-dom":undefined}],59:[function(require,module,exports){
 "use strict";
@@ -9450,7 +9441,6 @@ var EditorSelection = {
 };
 module.exports = EditorSelection;
 
-
 },{"./EditorDOM":55}],60:[function(require,module,exports){
 "use strict";
 
@@ -9572,7 +9562,6 @@ EditorTimer.animate();
 
 module.exports = EditorTimer;
 
-
 },{}],61:[function(require,module,exports){
 'use strict';
 
@@ -9676,7 +9665,6 @@ module.exports = {
     },
     uploadFiles: function uploadFiles(options) {}
 };
-
 
 },{"./QiniuUtils":62}],62:[function(require,module,exports){
 "use strict";
@@ -9819,7 +9807,6 @@ module.exports = {
     Utils: QiniuUtils
 };
 
-
 },{"crypto-js":9}],"react-umeditor":[function(require,module,exports){
 'use strict';
 
@@ -9951,7 +9938,7 @@ var Editor = React.createClass({
 				}
 			},
 			"fontFamily": [{ "name": "宋体", value: "宋体, SimSun", defualt: true }, { "name": "隶书", value: "隶书, SimLi" }, { "name": "楷体", value: "楷体, SimKai" }, { "name": "微软雅黑", value: "微软雅黑, Microsoft YaHei" }, { "name": "黑体", value: "黑体, SimHei" }, { "name": "arial", value: "arial, helvetica, sans-serif" }, { "name": "arial black", value: "arial black, avant garde" }, { "name": "omic sans ms", value: "omic sans ms" }, { "name": "impact", value: "impact, chicago" }, { "name": "times new roman", value: "times new roman" }, { "name": "andale mono", value: "andale mono" }],
-			"fontSize": [{ "name": "10px", value: "10px" }, { "name": "12px", value: "12px" }, { "name": "16px", value: "16px", defualt: true }, { "name": "18px", value: "18px" }, { "name": "24px", value: "24px" }, { "name": "32px", value: "32px" }, { "name": "38px", value: "38px" }],
+			"fontSize": [{ "name": "10px", value: "1" }, { "name": "12px", value: "2" }, { "name": "16px", value: "3", defualt: true }, { "name": "18px", value: "4" }, { "name": "24px", value: "5" }, { "name": "32px", value: "6" }, { "name": "38px", value: "7" }],
 			"paragraph": [{ "name": "段落", value: "p", defualt: true }, { "name": "标题1", value: "h1" }, { "name": "标题2", value: "h2" }, { "name": "标题3", value: "h3" }, { "name": "标题4", value: "h4" }, { "name": "标题5", value: "h5" }, { "name": "标题6", value: "h6" }],
 			"icons": [
 			// video map print preview drafts link unlink
@@ -10603,6 +10590,5 @@ var EditorClass = React.createClass({
 });
 
 module.exports = EditorClass;
-
 
 },{"./components/core/EditorContentEditableDiv.react":41,"./components/core/EditorTextArea.react":43,"./components/core/EditorToolbar.react":44,"./components/plugins/ColorDropdown.react":45,"./components/plugins/EmotionDialog.react":46,"./components/plugins/FontFamilyComboBox.react":47,"./components/plugins/FontSizeComboBox.react":48,"./components/plugins/FormulaDropdown.react":49,"./components/plugins/ImageDialog.react":50,"./components/plugins/ParagraphComboBox.react":51,"./components/plugins/SpecialCharsDialog.react":52,"./components/plugins/TablePickerDropdown.react":53,"./constants/EditorConstants":54,"./utils/EditorDOM":55,"./utils/EditorEventEmitter":56,"./utils/EditorHistory":57,"./utils/EditorResize.react":58,"./utils/EditorSelection":59,"./utils/EditorTimer":60,"react":undefined,"react-dom":undefined}]},{},[]);

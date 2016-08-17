@@ -131,13 +131,13 @@ var Editor = React.createClass({
 				{"name":"andale mono",value:"andale mono"}
 			],
 			"fontSize": [
-				{"name":"10px",value:"10px"},
-				{"name":"12px",value:"12px"},
-				{"name":"16px",value:"16px",defualt:true},
-				{"name":"18px",value:"18px"},
-				{"name":"24px",value:"24px"},
-				{"name":"32px",value:"32px"},
-				{"name":"38px",value:"38px"}
+				{"name":"10px",value:"1"},
+				{"name":"12px",value:"2"},
+				{"name":"16px",value:"3",defualt:true},
+				{"name":"18px",value:"4"},
+				{"name":"24px",value:"5"},
+				{"name":"32px",value:"6"},
+				{"name":"38px",value:"7"}
 			],
 			"paragraph": [
 				{"name":"段落",value:"p",defualt:true},

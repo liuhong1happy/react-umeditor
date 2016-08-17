@@ -6876,6 +6876,7 @@ function isUndefined(arg) {
 
 },{}],36:[function(require,module,exports){
 'use strict';
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 
 function ToObject(val) {
 	if (val == null) {
@@ -6885,6 +6886,18 @@ function ToObject(val) {
 	return Object(val);
 }
 
+function ownEnumerableKeys(obj) {
+	var keys = Object.getOwnPropertyNames(obj);
+
+	if (Object.getOwnPropertySymbols) {
+		keys = keys.concat(Object.getOwnPropertySymbols(obj));
+	}
+
+	return keys.filter(function (key) {
+		return propIsEnumerable.call(obj, key);
+	});
+}
+
 module.exports = Object.assign || function (target, source) {
 	var from;
 	var keys;
@@ -6892,7 +6905,7 @@ module.exports = Object.assign || function (target, source) {
 
 	for (var s = 1; s < arguments.length; s++) {
 		from = arguments[s];
-		keys = Object.keys(Object(from));
+		keys = ownEnumerableKeys(Object(from));
 
 		for (var i = 0; i < keys.length; i++) {
 			to[keys[i]] = from[keys[i]];
@@ -6975,7 +6988,6 @@ var ComboBox = React.createClass({
 });
 
 module.exports = ComboBox;
-
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],38:[function(require,module,exports){
@@ -7094,7 +7106,6 @@ var Dialog = React.createClass({
 
 module.exports = Dialog;
 
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],39:[function(require,module,exports){
 (function (global){
@@ -7171,7 +7182,6 @@ var Dropdown = React.createClass({
 
 module.exports = Dropdown;
 
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],40:[function(require,module,exports){
 (function (global){
@@ -7240,7 +7250,6 @@ var TabGroup = React.createClass({
 
 module.exports = TabGroup;
 
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],41:[function(require,module,exports){
 (function (global){
@@ -7306,7 +7315,6 @@ var EditorContentEditableDiv = React.createClass({
 	}
 });
 module.exports = EditorContentEditableDiv;
-
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../utils/EditorDOM":56,"../../utils/EditorSelection":60,"react-dom":undefined}],42:[function(require,module,exports){
@@ -7392,7 +7400,6 @@ var EditorIcon = React.createClass({
 
 module.exports = EditorIcon;
 
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"react-dom":undefined}],43:[function(require,module,exports){
 (function (global){
@@ -7432,7 +7439,6 @@ var EditorTextArea = React.createClass({
 	}
 });
 module.exports = EditorTextArea;
-
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"react-dom":undefined}],44:[function(require,module,exports){
@@ -7520,7 +7526,6 @@ var EditorToolbar = React.createClass({
 });
 
 module.exports = EditorToolbar;
-
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":54,"../../utils/EditorHistory":58,"./EditorIcon.react":42}],45:[function(require,module,exports){
@@ -7630,7 +7635,6 @@ var ColorDropdown = React.createClass({
 });
 
 module.exports = ColorDropdown;
-
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":54,"../../utils/EditorDOM":56,"../base/Dropdown.react":39}],46:[function(require,module,exports){
@@ -7759,7 +7763,6 @@ var EmotionDialog = React.createClass({
 
 module.exports = EmotionDialog;
 
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":54,"../base/Dialog.react":38,"../base/TabGroup.react":40,"react-dom":undefined}],47:[function(require,module,exports){
 (function (global){
@@ -7834,7 +7837,6 @@ var FontFamilyDropdown = React.createClass({
 
 module.exports = FontFamilyDropdown;
 
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../base/ComboBox.react":37}],48:[function(require,module,exports){
 (function (global){
@@ -7896,7 +7898,7 @@ var FontSizeDropdown = React.createClass({
 							{ className: ele.value == props.value ? "active" : "", key: pos, 'data-value': ele.value, onClick: handleSelect },
 							React.createElement(
 								'span',
-								{ 'data-value': ele.value, style: { "fontSize": ele.value } },
+								{ 'data-value': ele.value, style: { "fontSize": ele.name } },
 								ele.name
 							)
 						);
@@ -7908,7 +7910,6 @@ var FontSizeDropdown = React.createClass({
 });
 
 module.exports = FontSizeDropdown;
-
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../base/ComboBox.react":37}],49:[function(require,module,exports){
@@ -7997,7 +7998,6 @@ var FormulaDropdown = React.createClass({
 });
 
 module.exports = FormulaDropdown;
-
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":54,"../base/Dropdown.react":39,"../base/TabGroup.react":40,"react-dom":undefined}],50:[function(require,module,exports){
@@ -8389,7 +8389,6 @@ var ImageDialog = React.createClass({
 
 module.exports = ImageDialog;
 
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../utils/FileUpload":62,"../base/Dialog.react":38,"../base/TabGroup.react":40,"react-dom":undefined}],51:[function(require,module,exports){
 (function (global){
@@ -8459,7 +8458,6 @@ var ParagraphDropdown = React.createClass({
 });
 
 module.exports = ParagraphDropdown;
-
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../base/ComboBox.react":37}],52:[function(require,module,exports){
@@ -8561,7 +8559,6 @@ var SpecialCharsDialog = React.createClass({
 
 module.exports = SpecialCharsDialog;
 
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":54,"../base/Dialog.react":38,"../base/TabGroup.react":40,"react-dom":undefined}],53:[function(require,module,exports){
 (function (global){
@@ -8662,7 +8659,6 @@ var TablePickerDropdown = React.createClass({
 });
 
 module.exports = TablePickerDropdown;
-
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../base/Dropdown.react":39}],54:[function(require,module,exports){
@@ -8886,7 +8882,6 @@ module.exports = {
 	EmotionImages: EmotionImages
 };
 
-
 },{}],55:[function(require,module,exports){
 (function (global){
 'use strict';
@@ -9019,7 +9014,7 @@ var Editor = React.createClass({
 				}
 			},
 			"fontFamily": [{ "name": "宋体", value: "宋体, SimSun", defualt: true }, { "name": "隶书", value: "隶书, SimLi" }, { "name": "楷体", value: "楷体, SimKai" }, { "name": "微软雅黑", value: "微软雅黑, Microsoft YaHei" }, { "name": "黑体", value: "黑体, SimHei" }, { "name": "arial", value: "arial, helvetica, sans-serif" }, { "name": "arial black", value: "arial black, avant garde" }, { "name": "omic sans ms", value: "omic sans ms" }, { "name": "impact", value: "impact, chicago" }, { "name": "times new roman", value: "times new roman" }, { "name": "andale mono", value: "andale mono" }],
-			"fontSize": [{ "name": "10px", value: "10px" }, { "name": "12px", value: "12px" }, { "name": "16px", value: "16px", defualt: true }, { "name": "18px", value: "18px" }, { "name": "24px", value: "24px" }, { "name": "32px", value: "32px" }, { "name": "38px", value: "38px" }],
+			"fontSize": [{ "name": "10px", value: "1" }, { "name": "12px", value: "2" }, { "name": "16px", value: "3", defualt: true }, { "name": "18px", value: "4" }, { "name": "24px", value: "5" }, { "name": "32px", value: "6" }, { "name": "38px", value: "7" }],
 			"paragraph": [{ "name": "段落", value: "p", defualt: true }, { "name": "标题1", value: "h1" }, { "name": "标题2", value: "h2" }, { "name": "标题3", value: "h3" }, { "name": "标题4", value: "h4" }, { "name": "标题5", value: "h5" }, { "name": "标题6", value: "h6" }],
 			"icons": [
 			// video map print preview drafts link unlink
@@ -9672,7 +9667,6 @@ var EditorClass = React.createClass({
 
 module.exports = EditorClass;
 
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./components/core/EditorContentEditableDiv.react":41,"./components/core/EditorTextArea.react":43,"./components/core/EditorToolbar.react":44,"./components/plugins/ColorDropdown.react":45,"./components/plugins/EmotionDialog.react":46,"./components/plugins/FontFamilyComboBox.react":47,"./components/plugins/FontSizeComboBox.react":48,"./components/plugins/FormulaDropdown.react":49,"./components/plugins/ImageDialog.react":50,"./components/plugins/ParagraphComboBox.react":51,"./components/plugins/SpecialCharsDialog.react":52,"./components/plugins/TablePickerDropdown.react":53,"./constants/EditorConstants":54,"./utils/EditorDOM":56,"./utils/EditorEventEmitter":57,"./utils/EditorHistory":58,"./utils/EditorResize.react":59,"./utils/EditorSelection":60,"./utils/EditorTimer":61,"react-dom":undefined}],56:[function(require,module,exports){
 "use strict";
@@ -9703,7 +9697,6 @@ var EditorDOM = {
 	}
 };
 module.exports = EditorDOM;
-
 
 },{}],57:[function(require,module,exports){
 'use strict';
@@ -9747,7 +9740,6 @@ var EditorEventEmitter = assign({}, EventEmitter.prototype, {
 });
 EditorEventEmitter.setMaxListeners(1000);
 module.exports = EditorEventEmitter;
-
 
 },{"events":35,"object-assign":36}],58:[function(require,module,exports){
 "use strict";
@@ -9803,7 +9795,6 @@ var EditorHistory = {
 	}
 };
 module.exports = EditorHistory;
-
 
 },{}],59:[function(require,module,exports){
 (function (global){
@@ -10032,7 +10023,6 @@ var EditorResize = React.createClass({
 });
 
 module.exports = EditorResize;
-
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"react-dom":undefined}],60:[function(require,module,exports){
@@ -10273,7 +10263,6 @@ var EditorSelection = {
 };
 module.exports = EditorSelection;
 
-
 },{"./EditorDOM":56}],61:[function(require,module,exports){
 "use strict";
 
@@ -10395,7 +10384,6 @@ EditorTimer.animate();
 
 module.exports = EditorTimer;
 
-
 },{}],62:[function(require,module,exports){
 'use strict';
 
@@ -10499,7 +10487,6 @@ module.exports = {
     },
     uploadFiles: function uploadFiles(options) {}
 };
-
 
 },{"./QiniuUtils":63}],63:[function(require,module,exports){
 "use strict";
@@ -10641,7 +10628,6 @@ var QiniuUtils = {
 module.exports = {
     Utils: QiniuUtils
 };
-
 
 },{"crypto-js":9}]},{},[55])(55)
 });
