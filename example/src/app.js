@@ -47,13 +47,13 @@ var App = React.createClass({
 			})
 		}
 
-		return (<div>{
-			editors.map(function(ele,pos){
-				return (<Editor key={pos} icons={ele.icons} plugins={ele.plugins} />)
-			})
-		}</div>);
+//		return (<div>{
+//			editors.map(function(ele,pos){
+//				return (<Editor key={pos} icons={ele.icons} plugins={ele.plugins} />)
+//			})
+//		}</div>);
 		
-		// return (<Editor icons={icons} plugins={plugins} />)
+		 return (<Editor icons={icons} plugins={plugins} />)
 	}
 })
 	

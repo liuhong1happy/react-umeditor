@@ -46,15 +46,13 @@ var App = React.createClass({
 			});
 		}
 
-		return React.createElement(
-			'div',
-			null,
-			editors.map(function (ele, pos) {
-				return React.createElement(Editor, { key: pos, icons: ele.icons, plugins: ele.plugins });
-			})
-		);
+		//		return (<div>{
+		//			editors.map(function(ele,pos){
+		//				return (<Editor key={pos} icons={ele.icons} plugins={ele.plugins} />)
+		//			})
+		//		}</div>);
 
-		// return (<Editor icons={icons} plugins={plugins} />)
+		return React.createElement(Editor, { icons: icons, plugins: plugins });
 	}
 });
 

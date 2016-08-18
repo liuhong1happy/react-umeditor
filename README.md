@@ -90,15 +90,20 @@ You can set the `props`!The `props` maybe is as follows:
 
 ## Develop
 
+	// clone code
 	git clone https://github.com/liuhong1happy/react-umeditor
 	cd react-umeditor
+	// install require
 	npm install
     npm install envify browserify
     npm install react browserify
     npm install reactify browserify
+	// build
 	npm run build
-
-open the file `example/dist/index.html`
+	// run example server
+	node server.js
+	
+open the local site  `http://localhost:8080/example/dist/index.html`
 
 ## Todo
 
