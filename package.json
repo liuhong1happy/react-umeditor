@@ -1,6 +1,6 @@
 {
   "name": "react-umeditor",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "description": "React Editor like UMEditor",
   "main": "lib/editor.js",
   "private": false,
@@ -14,13 +14,16 @@
     "release": "gulp release",
     "watch": "gulp watch:lib"
   },
-  "author": [{
-    "name": "Holly Liu",
-    "email": "liuhong1.happy@163.com"
-  },{
-    "name": "Lei Haohao",
-    "email": "113864965@qq.com"
-  }],
+  "author": [
+    {
+      "name": "Holly Liu",
+      "email": "liuhong1.happy@163.com"
+    },
+    {
+      "name": "Lei Haohao",
+      "email": "113864965@qq.com"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/liuhong1happy/react-umeditor.git"
@@ -33,17 +36,17 @@
   ],
   "dependencies": {
     "classnames": "^2.2.1",
-    "crypto-js": "^3.1.6"
+    "hmacsha1": "^1.0.0"
   },
   "peerDependencies": {
     "react": "^15.3.0",
-	"react-dom": "^15.3.0"
+    "react-dom": "^15.3.0"
   },
   "devDependencies": {
     "envify": "^3.4.1",
     "gulp": "^3.9.0",
     "react": "^15.3.0",
-	"react-dom": "^15.3.0",
+    "react-dom": "^15.3.0",
     "react-component-gulp-tasks": "^0.7.7",
     "reactify": "^1.1.1"
   },

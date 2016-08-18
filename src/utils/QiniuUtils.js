@@ -1,4 +1,4 @@
-var CryptoJS = require("crypto-js")
+var HmacSHA1 = require('hmacsha1');
 var QiniuApp = {
         Bucket: "qtestbucket",
         //qiniu test account
@@ -118,7 +118,7 @@ var QiniuUtils = {
         console.log("encoded = ", encoded);
 
         //SETP 4
-        var hash = CryptoJS.HmacSHA1(encoded, secretKey);
+        var hash = HmacSHA1(encoded, secretKey);
         var encoded_signed = hash.toString(CryptoJS.enc.Base64);
 
         //SETP 5
