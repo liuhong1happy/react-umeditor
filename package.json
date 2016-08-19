@@ -39,8 +39,8 @@
     "hmacsha1": "^1.0.0"
   },
   "peerDependencies": {
-    "react": "^15.3.0",
-    "react-dom": "^15.3.0"
+    "react": ">0.14.8",
+    "react-dom": ">0.14.8"
   },
   "devDependencies": {
     "envify": "^3.4.1",
