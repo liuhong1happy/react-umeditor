@@ -36,7 +36,9 @@
   ],
   "dependencies": {
     "classnames": "^2.2.1",
-    "hmacsha1": "^1.0.0"
+    "events": "^1.1.1",
+    "hmacsha1": "^1.0.0",
+    "object-assign": "^4.1.0"
   },
   "peerDependencies": {
     "react": "^15.3.0",
