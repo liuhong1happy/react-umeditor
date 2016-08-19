@@ -46,7 +46,7 @@
     "envify": "^3.4.1",
     "gulp": "^3.9.0",
     "react": ">0.14.8",
-    "react-dom": ">0.14.8"
+    "react-dom": ">0.14.8",
     "react-component-gulp-tasks": "^0.7.7",
     "reactify": "^1.1.1"
   },
