@@ -119,4 +119,5 @@ See more [document](https://github.com/liuhong1happy/react-umeditor/blob/master/
 ## Concat
 
 Email: [liuhong1.happy@163.com](mailto:liuhong1.happy@163.com)
+
 QQ Group: 247978846
