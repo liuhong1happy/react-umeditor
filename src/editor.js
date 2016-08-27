@@ -292,6 +292,8 @@ var Editor = React.createClass({
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var editorState = this.state.editorState;
 		EditorSelection.cloneRange();
+		//关闭所有Dialog、Box、Dropdown
+		this.closeAllOpenDialog();
 		switch(state.icon){
 			case "source":
 				editorState.showHtml = !editorState.showHtml;
@@ -424,7 +426,7 @@ var Editor = React.createClass({
 			case "forecolor":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
-				this.refs.color.open(offsetPosition,function(e,color){
+				this.refs.color.toggle(offsetPosition,function(e,color){
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('forecolor',false,color);
@@ -435,7 +437,7 @@ var Editor = React.createClass({
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
 				
-				this.refs.color.open(offsetPosition,function(e,color){
+				this.refs.color.toggle(offsetPosition,function(e,color){
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('backcolor',false,color);
@@ -446,7 +448,7 @@ var Editor = React.createClass({
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
 				
-				this.refs.fontsize.open(offsetPosition,function(e,fontsize){
+				this.refs.fontsize.toggle(offsetPosition,function(e,fontsize){
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('fontsize',false,fontsize);
@@ -457,7 +459,7 @@ var Editor = React.createClass({
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
 				
-				this.refs.fontfamily.open(offsetPosition,function(e,fontfamily){
+				this.refs.fontfamily.toggle(offsetPosition,function(e,fontfamily){
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('fontname',false,fontfamily);
@@ -468,7 +470,7 @@ var Editor = React.createClass({
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
 				
-				this.refs.paragraph.open(offsetPosition,function(e,paragraph){
+				this.refs.paragraph.toggle(offsetPosition,function(e,paragraph){
 					editarea.focus();
 					EditorSelection.restoreRange();
 					var paragraphs = EditorSelection.getParagraphs();
@@ -525,7 +527,7 @@ var Editor = React.createClass({
 				break;
 			case "image":
 				EditorSelection.storeRange();
-				this.refs.image.open(function(e,html){
+				this.refs.image.toggle(function(e,html){
 					editarea.focus();
 					EditorSelection.restoreRange();
 					
@@ -543,7 +545,7 @@ var Editor = React.createClass({
 				offsetPosition.y += offsetPosition.h+5;
 				offsetPosition.x -= offsetPosition.w/2;
 				var _self = this;
-				this.refs.formula.open(offsetPosition,function(e,latex,id){
+				this.refs.formula.toggle(offsetPosition,function(e,latex,id){
 					editarea.focus();
 					EditorSelection.restoreRange();
 					
@@ -565,7 +567,7 @@ var Editor = React.createClass({
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
                 offsetPosition.x -= offsetPosition.w/2;
-				this.refs.table.open(offsetPosition,function(e,html){
+				this.refs.table.toggle(offsetPosition,function(e,html){
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('inserthtml',false,html);
@@ -576,7 +578,7 @@ var Editor = React.createClass({
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
                 offsetPosition.x -= offsetPosition.w/2;
-				this.refs.special.open(offsetPosition,function(e,char){
+				this.refs.special.toggle(offsetPosition,function(e,char){
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('inserthtml',false,char);
@@ -586,7 +588,7 @@ var Editor = React.createClass({
 			case "emotion":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
-				this.refs.emotion.open(offsetPosition,function(e,html){
+				this.refs.emotion.toggle(offsetPosition,function(e,html){
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('inserthtml',false,html);
@@ -604,6 +606,13 @@ var Editor = React.createClass({
 			editorState:editorState
 		})
 		EditorDOM.stopPropagation(e);
+	},
+	closeAllOpenDialog: function(){
+		var refsDialog = ["image","color","formula","table","special","emotion","fontsize","fontfamily","paragraph"];
+		for(var i=0;i<refsDialog.length;i++){
+			this.refs[refsDialog[i]].close();
+			console.log("closeDialog",refsDialog[i]);
+		}
 	},
     // utils
 	getOffsetRootParentPosition:function(target){

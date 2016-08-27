@@ -32,6 +32,13 @@ var EditorIcon = React.createClass({
 		}
 	},
 	handleClick:function(e){
+		e = e || event;
+		var target = e.target || e.srcElement;
+		while(target.className.indexOf("editor-icon")==-1){
+			target = target.parentElement;
+		}
+		e.target = target;
+		
 		var {onClick,...props} = this.props;
 		if(this.props.onClick){
 			this.props.onClick(e,{...props})

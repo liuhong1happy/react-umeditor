@@ -44,7 +44,8 @@ var EmotionDialog = React.createClass({
 		this.refs.root.open(position);
 	},
 	close:function(){
-		this.refs.root.close();
+		if(this.refs.root)
+			this.refs.root.close();
 	},
 	toggle:function(position){
 		this.refs.root.toggle(position);

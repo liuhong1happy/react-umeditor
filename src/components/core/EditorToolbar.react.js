@@ -15,6 +15,7 @@ var EditorToolbar = React.createClass({
 		}
 	},
 	handleIconClick:function(e,state){
+		
 		if(this.props.onIconClick){
 			this.props.onIconClick(e,state)
 		}

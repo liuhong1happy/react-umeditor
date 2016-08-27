@@ -887,6 +887,13 @@ var EditorIcon = React.createClass({
 		}
 	},
 	handleClick: function handleClick(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		while (target.className.indexOf("editor-icon") == -1) {
+			target = target.parentElement;
+		}
+		e.target = target;
+
 		var _props = this.props;
 		var onClick = _props.onClick;
 
@@ -997,6 +1004,7 @@ var EditorToolbar = React.createClass({
 		};
 	},
 	handleIconClick: function handleIconClick(e, state) {
+
 		if (this.props.onIconClick) {
 			this.props.onIconClick(e, state);
 		}
@@ -1085,7 +1093,7 @@ var ColorDropdown = React.createClass({
 		this.refs.root.open(position);
 	},
 	close: function close() {
-		this.refs.root.close();
+		if (this.refs.root) this.refs.root.close();
 	},
 	toggle: function toggle(position) {
 		this.refs.root.toggle(position);
@@ -1227,7 +1235,7 @@ var EmotionDialog = React.createClass({
 		this.refs.root.open(position);
 	},
 	close: function close() {
-		this.refs.root.close();
+		if (this.refs.root) this.refs.root.close();
 	},
 	toggle: function toggle(position) {
 		this.refs.root.toggle(position);
@@ -1318,7 +1326,7 @@ var FontFamilyDropdown = React.createClass({
 		this.refs.root.open(position);
 	},
 	close: function close() {
-		this.refs.root.close();
+		if (this.refs.root) this.refs.root.close();
 	},
 	toggle: function toggle(position) {
 		this.refs.root.toggle(position);
@@ -1393,7 +1401,7 @@ var FontSizeDropdown = React.createClass({
 		this.refs.root.open(position);
 	},
 	close: function close() {
-		this.refs.root.close();
+		if (this.refs.root) this.refs.root.close();
 	},
 	toggle: function toggle(position) {
 		this.refs.root.toggle(position);
@@ -1500,7 +1508,7 @@ var FormulaDropdown = React.createClass({
 		this.refs.root.open(position);
 	},
 	close: function close() {
-		this.refs.root.close();
+		if (this.refs.root) this.refs.root.close();
 	},
 	toggle: function toggle(position) {
 		this.refs.root.toggle(position);
@@ -1875,11 +1883,13 @@ var ImageDialog = React.createClass({
 		this.refs.modal.open();
 	},
 	close: function close() {
-		this.refs.modal.close();
-		if (this.state.handle) {
-			this.state.handle();
+		if (this.refs.modal) {
+			this.refs.modal.close();
+			if (this.state.handle) {
+				this.state.handle();
+			}
+			this.refs.image.clearImages();
 		}
-		this.refs.image.clearImages();
 	},
 	toggle: function toggle() {
 		this.refs.modal.toggle();
@@ -1948,7 +1958,7 @@ var ParagraphDropdown = React.createClass({
 		this.refs.root.open(position);
 	},
 	close: function close() {
-		this.refs.root.close();
+		if (this.refs.root) this.refs.root.close();
 	},
 	toggle: function toggle(position) {
 		this.refs.root.toggle(position);
@@ -2055,7 +2065,7 @@ var SpecialCharsDialog = React.createClass({
 		this.refs.root.open(position);
 	},
 	close: function close() {
-		this.refs.root.close();
+		if (this.refs.root) this.refs.root.close();
 	},
 	toggle: function toggle(position) {
 		this.refs.root.toggle(position);
@@ -2124,7 +2134,7 @@ var TablePickerDropdown = React.createClass({
         this.refs.root.open(position);
     },
     close: function close() {
-        this.refs.root.close();
+        if (this.refs.root) this.refs.root.close();
     },
     toggle: function toggle(position) {
         this.refs.root.toggle(position);
@@ -2693,6 +2703,8 @@ var Editor = React.createClass({
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var editorState = this.state.editorState;
 		EditorSelection.cloneRange();
+		//关闭所有Dialog、Box、Dropdown
+		this.closeAllOpenDialog();
 		switch (state.icon) {
 			case "source":
 				editorState.showHtml = !editorState.showHtml;
@@ -2826,7 +2838,7 @@ var Editor = React.createClass({
 			case "forecolor":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h + 5;
-				this.refs.color.open(offsetPosition, function (e, color) {
+				this.refs.color.toggle(offsetPosition, function (e, color) {
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('forecolor', false, color);
@@ -2837,7 +2849,7 @@ var Editor = React.createClass({
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h + 5;
 
-				this.refs.color.open(offsetPosition, function (e, color) {
+				this.refs.color.toggle(offsetPosition, function (e, color) {
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('backcolor', false, color);
@@ -2848,7 +2860,7 @@ var Editor = React.createClass({
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h + 5;
 
-				this.refs.fontsize.open(offsetPosition, function (e, fontsize) {
+				this.refs.fontsize.toggle(offsetPosition, function (e, fontsize) {
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('fontsize', false, fontsize);
@@ -2859,7 +2871,7 @@ var Editor = React.createClass({
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h + 5;
 
-				this.refs.fontfamily.open(offsetPosition, function (e, fontfamily) {
+				this.refs.fontfamily.toggle(offsetPosition, function (e, fontfamily) {
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('fontname', false, fontfamily);
@@ -2870,7 +2882,7 @@ var Editor = React.createClass({
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h + 5;
 
-				this.refs.paragraph.open(offsetPosition, function (e, paragraph) {
+				this.refs.paragraph.toggle(offsetPosition, function (e, paragraph) {
 					editarea.focus();
 					EditorSelection.restoreRange();
 					var paragraphs = EditorSelection.getParagraphs();
@@ -2927,7 +2939,7 @@ var Editor = React.createClass({
 				break;
 			case "image":
 				EditorSelection.storeRange();
-				this.refs.image.open(function (e, html) {
+				this.refs.image.toggle(function (e, html) {
 					editarea.focus();
 					EditorSelection.restoreRange();
 
@@ -2945,7 +2957,7 @@ var Editor = React.createClass({
 				offsetPosition.y += offsetPosition.h + 5;
 				offsetPosition.x -= offsetPosition.w / 2;
 				var _self = this;
-				this.refs.formula.open(offsetPosition, function (e, latex, id) {
+				this.refs.formula.toggle(offsetPosition, function (e, latex, id) {
 					editarea.focus();
 					EditorSelection.restoreRange();
 
@@ -2967,7 +2979,7 @@ var Editor = React.createClass({
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h + 5;
 				offsetPosition.x -= offsetPosition.w / 2;
-				this.refs.table.open(offsetPosition, function (e, html) {
+				this.refs.table.toggle(offsetPosition, function (e, html) {
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('inserthtml', false, html);
@@ -2978,7 +2990,7 @@ var Editor = React.createClass({
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h + 5;
 				offsetPosition.x -= offsetPosition.w / 2;
-				this.refs.special.open(offsetPosition, function (e, char) {
+				this.refs.special.toggle(offsetPosition, function (e, char) {
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('inserthtml', false, char);
@@ -2988,7 +3000,7 @@ var Editor = React.createClass({
 			case "emotion":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h + 5;
-				this.refs.emotion.open(offsetPosition, function (e, html) {
+				this.refs.emotion.toggle(offsetPosition, function (e, html) {
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('inserthtml', false, html);
@@ -3006,6 +3018,13 @@ var Editor = React.createClass({
 			editorState: editorState
 		});
 		EditorDOM.stopPropagation(e);
+	},
+	closeAllOpenDialog: function closeAllOpenDialog() {
+		var refsDialog = ["image", "color", "formula", "table", "special", "emotion", "fontsize", "fontfamily", "paragraph"];
+		for (var i = 0; i < refsDialog.length; i++) {
+			this.refs[refsDialog[i]].close();
+			console.log("closeDialog", refsDialog[i]);
+		}
 	},
 	// utils
 	getOffsetRootParentPosition: function getOffsetRootParentPosition(target) {

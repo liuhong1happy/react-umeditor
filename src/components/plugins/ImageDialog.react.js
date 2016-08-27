@@ -294,11 +294,13 @@ var ImageDialog = React.createClass({
 		this.refs.modal.open();
 	},
 	close:function(){
-		this.refs.modal.close();
-		if(this.state.handle){
-			this.state.handle();
+		if(this.refs.modal){
+			this.refs.modal.close();
+			if(this.state.handle){
+				this.state.handle();
+			}
+			this.refs.image.clearImages();
 		}
-		this.refs.image.clearImages();
 	},
 	toggle:function(){
 		this.refs.modal.toggle();
