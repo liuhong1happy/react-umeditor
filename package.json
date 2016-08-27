@@ -1,6 +1,6 @@
 {
   "name": "react-umeditor",
-  "version": "0.5.9",
+  "version": "0.5.10",
   "description": "React Editor like UMEditor",
   "main": "lib/editor.js",
   "private": false,
@@ -54,7 +54,7 @@
   },
   "browserify": {
     "transform": [
-      "reactify",
+      ["reactify", {"es6": true}],
       "envify"
     ]
   },
