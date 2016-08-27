@@ -1,4 +1,138 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.editor = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/* OAuthSimple
+* A simpler version of OAuth
+*
+* author:     jr conlin
+* mail:       src@anticipatr.com
+* copyright:  unitedHeroes.net
+* version:    1.0
+* url:        http://unitedHeroes.net/OAuthSimple
+*
+* Copyright (c) 2009, unitedHeroes.net
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*     * Redistributions of source code must retain the above copyright
+*       notice, this list of conditions and the following disclaimer.
+*     * Redistributions in binary form must reproduce the above copyright
+*       notice, this list of conditions and the following disclaimer in the
+*       documentation and/or other materials provided with the distribution.
+*     * Neither the name of the unitedHeroes.net nor the
+*       names of its contributors may be used to endorse or promote products
+*       derived from this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY UNITEDHEROES.NET ''AS IS'' AND ANY
+* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL UNITEDHEROES.NET BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* Computes a HMAC-SHA1 code.
+*
+* @param {string} k Secret key.
+* @param {string} d Data to be hashed.
+* @return {string} The hashed string.
+*/
+function b64_hmac_sha1(k,d,_p,_z){
+  // heavily optimized and compressed version of http://pajhome.org.uk/crypt/md5/sha1.js
+  // _p = b64pad, _z = character size; not used here but I left them available just in case
+  if(!_p){_p='=';}if(!_z){_z=8;}function _f(t,b,c,d){if(t<20){return(b&c)|((~b)&d);}if(t<40){return b^c^d;}if(t<60){return(b&c)|(b&d)|(c&d);}return b^c^d;}function _k(t){return(t<20)?1518500249:(t<40)?1859775393:(t<60)?-1894007588:-899497514;}function _s(x,y){var l=(x&0xFFFF)+(y&0xFFFF),m=(x>>16)+(y>>16)+(l>>16);return(m<<16)|(l&0xFFFF);}function _r(n,c){return(n<<c)|(n>>>(32-c));}function _c(x,l){x[l>>5]|=0x80<<(24-l%32);x[((l+64>>9)<<4)+15]=l;var w=[80],a=1732584193,b=-271733879,c=-1732584194,d=271733878,e=-1009589776;for(var i=0;i<x.length;i+=16){var o=a,p=b,q=c,r=d,s=e;for(var j=0;j<80;j++){if(j<16){w[j]=x[i+j];}else{w[j]=_r(w[j-3]^w[j-8]^w[j-14]^w[j-16],1);}var t=_s(_s(_r(a,5),_f(j,b,c,d)),_s(_s(e,w[j]),_k(j)));e=d;d=c;c=_r(b,30);b=a;a=t;}a=_s(a,o);b=_s(b,p);c=_s(c,q);d=_s(d,r);e=_s(e,s);}return[a,b,c,d,e];}function _b(s){var b=[],m=(1<<_z)-1;for(var i=0;i<s.length*_z;i+=_z){b[i>>5]|=(s.charCodeAt(i/8)&m)<<(32-_z-i%32);}return b;}function _h(k,d){var b=_b(k);if(b.length>16){b=_c(b,k.length*_z);}var p=[16],o=[16];for(var i=0;i<16;i++){p[i]=b[i]^0x36363636;o[i]=b[i]^0x5C5C5C5C;}var h=_c(p.concat(_b(d)),512+d.length*_z);return _c(o.concat(h),512+160);}function _n(b){var t="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",s='';for(var i=0;i<b.length*4;i+=3){var r=(((b[i>>2]>>8*(3-i%4))&0xFF)<<16)|(((b[i+1>>2]>>8*(3-(i+1)%4))&0xFF)<<8)|((b[i+2>>2]>>8*(3-(i+2)%4))&0xFF);for(var j=0;j<4;j++){if(i*8+j*6>b.length*32){s+=_p;}else{s+=t.charAt((r>>6*(3-j))&0x3F);}}}return s;}function _x(k,d){return _n(_h(k,d));}return _x(k,d);
+}
+module.exports = b64_hmac_sha1;
+
+},{}],2:[function(require,module,exports){
+'use strict';
+/* eslint-disable no-unused-vars */
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function shouldUseNative() {
+	try {
+		if (!Object.assign) {
+			return false;
+		}
+
+		// Detect buggy property enumeration order in older V8 versions.
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+		var test1 = new String('abc');  // eslint-disable-line
+		test1[5] = 'de';
+		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test2 = {};
+		for (var i = 0; i < 10; i++) {
+			test2['_' + String.fromCharCode(i)] = i;
+		}
+		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+			return test2[n];
+		});
+		if (order2.join('') !== '0123456789') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test3 = {};
+		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+			test3[letter] = letter;
+		});
+		if (Object.keys(Object.assign({}, test3)).join('') !==
+				'abcdefghijklmnopqrst') {
+			return false;
+		}
+
+		return true;
+	} catch (e) {
+		// We don't expect any of the above to throw, but better to be safe.
+		return false;
+	}
+}
+
+module.exports = shouldUseNative() ? Object.assign : function (target, source) {
+	var from;
+	var to = toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (Object.getOwnPropertySymbols) {
+			symbols = Object.getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
+
+},{}],3:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -301,96 +435,6 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],2:[function(require,module,exports){
-/* OAuthSimple
-* A simpler version of OAuth
-*
-* author:     jr conlin
-* mail:       src@anticipatr.com
-* copyright:  unitedHeroes.net
-* version:    1.0
-* url:        http://unitedHeroes.net/OAuthSimple
-*
-* Copyright (c) 2009, unitedHeroes.net
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the unitedHeroes.net nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY UNITEDHEROES.NET ''AS IS'' AND ANY
-* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL UNITEDHEROES.NET BE LIABLE FOR ANY
-* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-/**
-* Computes a HMAC-SHA1 code.
-*
-* @param {string} k Secret key.
-* @param {string} d Data to be hashed.
-* @return {string} The hashed string.
-*/
-function b64_hmac_sha1(k,d,_p,_z){
-  // heavily optimized and compressed version of http://pajhome.org.uk/crypt/md5/sha1.js
-  // _p = b64pad, _z = character size; not used here but I left them available just in case
-  if(!_p){_p='=';}if(!_z){_z=8;}function _f(t,b,c,d){if(t<20){return(b&c)|((~b)&d);}if(t<40){return b^c^d;}if(t<60){return(b&c)|(b&d)|(c&d);}return b^c^d;}function _k(t){return(t<20)?1518500249:(t<40)?1859775393:(t<60)?-1894007588:-899497514;}function _s(x,y){var l=(x&0xFFFF)+(y&0xFFFF),m=(x>>16)+(y>>16)+(l>>16);return(m<<16)|(l&0xFFFF);}function _r(n,c){return(n<<c)|(n>>>(32-c));}function _c(x,l){x[l>>5]|=0x80<<(24-l%32);x[((l+64>>9)<<4)+15]=l;var w=[80],a=1732584193,b=-271733879,c=-1732584194,d=271733878,e=-1009589776;for(var i=0;i<x.length;i+=16){var o=a,p=b,q=c,r=d,s=e;for(var j=0;j<80;j++){if(j<16){w[j]=x[i+j];}else{w[j]=_r(w[j-3]^w[j-8]^w[j-14]^w[j-16],1);}var t=_s(_s(_r(a,5),_f(j,b,c,d)),_s(_s(e,w[j]),_k(j)));e=d;d=c;c=_r(b,30);b=a;a=t;}a=_s(a,o);b=_s(b,p);c=_s(c,q);d=_s(d,r);e=_s(e,s);}return[a,b,c,d,e];}function _b(s){var b=[],m=(1<<_z)-1;for(var i=0;i<s.length*_z;i+=_z){b[i>>5]|=(s.charCodeAt(i/8)&m)<<(32-_z-i%32);}return b;}function _h(k,d){var b=_b(k);if(b.length>16){b=_c(b,k.length*_z);}var p=[16],o=[16];for(var i=0;i<16;i++){p[i]=b[i]^0x36363636;o[i]=b[i]^0x5C5C5C5C;}var h=_c(p.concat(_b(d)),512+d.length*_z);return _c(o.concat(h),512+160);}function _n(b){var t="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",s='';for(var i=0;i<b.length*4;i+=3){var r=(((b[i>>2]>>8*(3-i%4))&0xFF)<<16)|(((b[i+1>>2]>>8*(3-(i+1)%4))&0xFF)<<8)|((b[i+2>>2]>>8*(3-(i+2)%4))&0xFF);for(var j=0;j<4;j++){if(i*8+j*6>b.length*32){s+=_p;}else{s+=t.charAt((r>>6*(3-j))&0x3F);}}}return s;}function _x(k,d){return _n(_h(k,d));}return _x(k,d);
-}
-module.exports = b64_hmac_sha1;
-
-},{}],3:[function(require,module,exports){
-'use strict';
-var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-function ToObject(val) {
-	if (val == null) {
-		throw new TypeError('Object.assign cannot be called with null or undefined');
-	}
-
-	return Object(val);
-}
-
-function ownEnumerableKeys(obj) {
-	var keys = Object.getOwnPropertyNames(obj);
-
-	if (Object.getOwnPropertySymbols) {
-		keys = keys.concat(Object.getOwnPropertySymbols(obj));
-	}
-
-	return keys.filter(function (key) {
-		return propIsEnumerable.call(obj, key);
-	});
-}
-
-module.exports = Object.assign || function (target, source) {
-	var from;
-	var keys;
-	var to = ToObject(target);
-
-	for (var s = 1; s < arguments.length; s++) {
-		from = arguments[s];
-		keys = ownEnumerableKeys(Object(from));
-
-		for (var i = 0; i < keys.length; i++) {
-			to[keys[i]] = from[keys[i]];
-		}
-	}
-
-	return to;
-};
-
 },{}],4:[function(require,module,exports){
 (function (global){
 "use strict";
@@ -464,6 +508,7 @@ var ComboBox = React.createClass({
 });
 
 module.exports = ComboBox;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],5:[function(require,module,exports){
@@ -582,6 +627,7 @@ var Dialog = React.createClass({
 
 module.exports = Dialog;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],6:[function(require,module,exports){
 (function (global){
@@ -658,6 +704,7 @@ var Dropdown = React.createClass({
 
 module.exports = Dropdown;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],7:[function(require,module,exports){
 (function (global){
@@ -726,6 +773,7 @@ var TabGroup = React.createClass({
 
 module.exports = TabGroup;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],8:[function(require,module,exports){
 (function (global){
@@ -764,6 +812,8 @@ var EditorContentEditableDiv = React.createClass({
 		this.setState({
 			content: content
 		});
+		var target = ReactDOM.findDOMNode(this.refs.root);
+		target.innerHTML = content;
 	},
 	getName: function getName() {
 		return "div";
@@ -791,6 +841,7 @@ var EditorContentEditableDiv = React.createClass({
 	}
 });
 module.exports = EditorContentEditableDiv;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../utils/EditorDOM":23,"../../utils/EditorSelection":27,"react-dom":undefined}],9:[function(require,module,exports){
@@ -876,6 +927,7 @@ var EditorIcon = React.createClass({
 
 module.exports = EditorIcon;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"react-dom":undefined}],10:[function(require,module,exports){
 (function (global){
@@ -915,6 +967,7 @@ var EditorTextArea = React.createClass({
 	}
 });
 module.exports = EditorTextArea;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"react-dom":undefined}],11:[function(require,module,exports){
@@ -1002,6 +1055,7 @@ var EditorToolbar = React.createClass({
 });
 
 module.exports = EditorToolbar;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":21,"../../utils/EditorHistory":25,"./EditorIcon.react":9}],12:[function(require,module,exports){
@@ -1111,6 +1165,7 @@ var ColorDropdown = React.createClass({
 });
 
 module.exports = ColorDropdown;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":21,"../../utils/EditorDOM":23,"../base/Dropdown.react":6}],13:[function(require,module,exports){
@@ -1239,6 +1294,7 @@ var EmotionDialog = React.createClass({
 
 module.exports = EmotionDialog;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":21,"../base/Dialog.react":5,"../base/TabGroup.react":7,"react-dom":undefined}],14:[function(require,module,exports){
 (function (global){
@@ -1313,6 +1369,7 @@ var FontFamilyDropdown = React.createClass({
 
 module.exports = FontFamilyDropdown;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../base/ComboBox.react":4}],15:[function(require,module,exports){
 (function (global){
@@ -1386,6 +1443,7 @@ var FontSizeDropdown = React.createClass({
 });
 
 module.exports = FontSizeDropdown;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../base/ComboBox.react":4}],16:[function(require,module,exports){
@@ -1474,6 +1532,7 @@ var FormulaDropdown = React.createClass({
 });
 
 module.exports = FormulaDropdown;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":21,"../base/Dropdown.react":6,"../base/TabGroup.react":7,"react-dom":undefined}],17:[function(require,module,exports){
@@ -1865,6 +1924,7 @@ var ImageDialog = React.createClass({
 
 module.exports = ImageDialog;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../utils/FileUpload":29,"../base/Dialog.react":5,"../base/TabGroup.react":7,"react-dom":undefined}],18:[function(require,module,exports){
 (function (global){
@@ -1934,6 +1994,7 @@ var ParagraphDropdown = React.createClass({
 });
 
 module.exports = ParagraphDropdown;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../base/ComboBox.react":4}],19:[function(require,module,exports){
@@ -2035,6 +2096,7 @@ var SpecialCharsDialog = React.createClass({
 
 module.exports = SpecialCharsDialog;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../constants/EditorConstants":21,"../base/Dialog.react":5,"../base/TabGroup.react":7,"react-dom":undefined}],20:[function(require,module,exports){
 (function (global){
@@ -2135,6 +2197,7 @@ var TablePickerDropdown = React.createClass({
 });
 
 module.exports = TablePickerDropdown;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../base/Dropdown.react":6}],21:[function(require,module,exports){
@@ -2357,6 +2420,7 @@ module.exports = {
 	SpecialChars: SpecialChars,
 	EmotionImages: EmotionImages
 };
+
 
 },{}],22:[function(require,module,exports){
 (function (global){
@@ -3143,6 +3207,7 @@ var EditorClass = React.createClass({
 
 module.exports = EditorClass;
 
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./components/core/EditorContentEditableDiv.react":8,"./components/core/EditorTextArea.react":10,"./components/core/EditorToolbar.react":11,"./components/plugins/ColorDropdown.react":12,"./components/plugins/EmotionDialog.react":13,"./components/plugins/FontFamilyComboBox.react":14,"./components/plugins/FontSizeComboBox.react":15,"./components/plugins/FormulaDropdown.react":16,"./components/plugins/ImageDialog.react":17,"./components/plugins/ParagraphComboBox.react":18,"./components/plugins/SpecialCharsDialog.react":19,"./components/plugins/TablePickerDropdown.react":20,"./constants/EditorConstants":21,"./utils/EditorDOM":23,"./utils/EditorEventEmitter":24,"./utils/EditorHistory":25,"./utils/EditorResize.react":26,"./utils/EditorSelection":27,"./utils/EditorTimer":28,"react-dom":undefined}],23:[function(require,module,exports){
 "use strict";
@@ -3173,6 +3238,7 @@ var EditorDOM = {
 	}
 };
 module.exports = EditorDOM;
+
 
 },{}],24:[function(require,module,exports){
 'use strict';
@@ -3217,7 +3283,8 @@ var EditorEventEmitter = assign({}, EventEmitter.prototype, {
 EditorEventEmitter.setMaxListeners(1000);
 module.exports = EditorEventEmitter;
 
-},{"events":1,"object-assign":3}],25:[function(require,module,exports){
+
+},{"events":3,"object-assign":2}],25:[function(require,module,exports){
 "use strict";
 
 var EditorHistory = {
@@ -3271,6 +3338,7 @@ var EditorHistory = {
 	}
 };
 module.exports = EditorHistory;
+
 
 },{}],26:[function(require,module,exports){
 (function (global){
@@ -3499,6 +3567,7 @@ var EditorResize = React.createClass({
 });
 
 module.exports = EditorResize;
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"react-dom":undefined}],27:[function(require,module,exports){
@@ -3739,6 +3808,7 @@ var EditorSelection = {
 };
 module.exports = EditorSelection;
 
+
 },{"./EditorDOM":23}],28:[function(require,module,exports){
 "use strict";
 
@@ -3860,6 +3930,7 @@ EditorTimer.animate();
 
 module.exports = EditorTimer;
 
+
 },{}],29:[function(require,module,exports){
 'use strict';
 
@@ -3963,6 +4034,7 @@ module.exports = {
     },
     uploadFiles: function uploadFiles(options) {}
 };
+
 
 },{"./QiniuUtils":30}],30:[function(require,module,exports){
 "use strict";
@@ -4105,5 +4177,6 @@ module.exports = {
     Utils: QiniuUtils
 };
 
-},{"hmacsha1":2}]},{},[22])(22)
+
+},{"hmacsha1":1}]},{},[22])(22)
 });

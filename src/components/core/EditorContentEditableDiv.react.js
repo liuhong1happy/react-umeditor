@@ -29,6 +29,8 @@ var EditorContentEditableDiv = React.createClass({
 		this.setState({
 			content:content
 		})
+		var target = ReactDOM.findDOMNode(this.refs.root);
+		target.innerHTML = content;
 	},
 	getName:function(){
 		return "div";
