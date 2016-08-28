@@ -52,9 +52,9 @@ var App = React.createClass({
 //				return (<Editor key={pos} icons={ele.icons} plugins={ele.plugins} />)
 //			})
 //		}</div>);
-		
-		 return (<Editor icons={icons} plugins={plugins} />)
-	}
+        
+		return (<Editor icons={icons} plugins={plugins} />)
+}
 })
 	
 ReactDOM.render(<App />, document.getElementById('react-container'));

@@ -4059,6 +4059,8 @@ module.exports = {
 "use strict";
 
 var HmacSHA1 = require('hmacsha1');
+// var CryptoJS = require("crypto-js");
+
 var QiniuApp = {
     Bucket: "qtestbucket",
     //qiniu test account
@@ -4176,7 +4178,9 @@ var QiniuUtils = {
         var encoded = Base.base64encode(Base.utf16to8(put_policy));
         console.log("encoded = ", encoded);
         //SETP 4
-        var encoded_signed = HmacSHA1(encoded, secretKey);
+        var encoded_signed = HmacSHA1(secretKey, encoded);
+        //        var hash = CryptoJS.HmacSHA1(encoded, secretKey);
+        //        var encoded_signed = hash.toString(CryptoJS.enc.Base64);
         console.log("encoded_signed = ", encoded_signed);
         //SETP 5
         var upload_token = accessKey + ":" + Base.safe64(encoded_signed) + ":" + encoded;
