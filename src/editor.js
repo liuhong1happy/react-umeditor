@@ -292,8 +292,10 @@ var Editor = React.createClass({
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var editorState = this.state.editorState;
 		EditorSelection.cloneRange();
+        EditorSelection.storeRange();
 		//关闭所有Dialog、Box、Dropdown
-		this.closeAllOpenDialog();
+		this.closeAllOpenDialog(state.icon);
+        EditorSelection.restoreRange();
 		switch(state.icon){
 			case "source":
 				editorState.showHtml = !editorState.showHtml;
@@ -485,7 +487,7 @@ var Editor = React.createClass({
 									paraElement.appendChild(childNodes[j]);
 								}
 								paragraphs[i].appendChild(paraElement);
-								break;
+                                break;
 							case "P":
 							case "H1":
 							case "H2":
@@ -604,8 +606,10 @@ var Editor = React.createClass({
 		})
 		EditorDOM.stopPropagation(e);
 	},
-	closeAllOpenDialog: function(){
+	closeAllOpenDialog: function(icon){
 		var refsDialog = ["image","color","formula","table","special","emotion","fontsize","fontfamily","paragraph"];
+        var icons = ["forecolor","backcolor","image","emotion","spechars","inserttable","formula","paragraph","fontsize","fontfamily"]
+        if(icons.indexOf(icon)==-1) return;
 		for(var i=0;i<refsDialog.length;i++){
 			this.refs[refsDialog[i]].close();
 			console.log("closeDialog",refsDialog[i]);

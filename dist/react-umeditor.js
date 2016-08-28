@@ -1412,7 +1412,10 @@ var FontSizeDropdown = React.createClass({
 	close: function close() {
 		if (this.refs.root) this.refs.root.close();
 	},
-	toggle: function toggle(position) {
+	toggle: function toggle(position, handle) {
+		this.setState({
+			handle: handle
+		});
 		this.refs.root.toggle(position);
 	},
 	handleSelect: function handleSelect(e) {
@@ -2143,14 +2146,12 @@ var TablePickerDropdown = React.createClass({
         return {
             row: 0,
             column: 0,
-            handle: function handle() {},
-            position: { x: 0, y: 0 }
+            handle: function handle() {}
         };
     },
     open: function open(position, handle) {
         this.setState({
-            handle: handle,
-            position: position
+            handle: handle
         });
         this.refs.root.open(position);
     },
@@ -2727,8 +2728,10 @@ var Editor = React.createClass({
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var editorState = this.state.editorState;
 		EditorSelection.cloneRange();
+		EditorSelection.storeRange();
 		//关闭所有Dialog、Box、Dropdown
-		this.closeAllOpenDialog();
+		this.closeAllOpenDialog(state.icon);
+		EditorSelection.restoreRange();
 		switch (state.icon) {
 			case "source":
 				editorState.showHtml = !editorState.showHtml;
@@ -3040,8 +3043,10 @@ var Editor = React.createClass({
 		});
 		EditorDOM.stopPropagation(e);
 	},
-	closeAllOpenDialog: function closeAllOpenDialog() {
+	closeAllOpenDialog: function closeAllOpenDialog(icon) {
 		var refsDialog = ["image", "color", "formula", "table", "special", "emotion", "fontsize", "fontfamily", "paragraph"];
+		var icons = ["forecolor", "backcolor", "image", "emotion", "spechars", "inserttable", "formula", "paragraph", "fontsize", "fontfamily"];
+		if (icons.indexOf(icon) == -1) return;
 		for (var i = 0; i < refsDialog.length; i++) {
 			this.refs[refsDialog[i]].close();
 			console.log("closeDialog", refsDialog[i]);
@@ -3696,10 +3701,14 @@ var EditorSelection = {
 	getSpanNodes: function getSpanNodes() {
 		if (this.range.collapsed) return [];
 		var parent = this.range.commonAncestorContainer;
+		if (parent.nodeType == 3) parent = parent.parentElement;
 		var startNode = this.range.startContainer;
 		var endNode = this.range.endContainer;
 		var spanNodes = [];
 
+		if (EditorDOM.isSpanNode(parent)) {
+			spanNodes.push(parent);
+		}
 		if (startNode === endNode && EditorDOM.isSpanNode(startNode)) {
 			spanNodes.push(startNode);
 		} else {
@@ -3732,7 +3741,17 @@ var EditorSelection = {
 		var textNodes = this.getTextNodes();
 		var parents = [];
 		for (var i = 0; i < textNodes.length; i++) {
-			if (parents.indexOf(textNodes[i].childNode.parentElement) == -1) parents.push(textNodes[i].childNode.parentElement);
+			var currentNode = null;
+			switch (textNodes[i].childNode.parentElement.tagName.toUpperCase()) {
+				case "FONT":
+					currentNode = textNodes[i].childNode.parentElement;
+					break;
+				default:
+					currentNode = textNodes[i].childNode;
+					break;
+			}
+
+			if (parents.indexOf(currentNode.parentElement) == -1) parents.push(currentNode.parentElement);
 		}
 		return parents;
 	},

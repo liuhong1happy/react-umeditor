@@ -6,14 +6,12 @@ var TablePickerDropdown = React.createClass({
         return {
             row:0,
             column:0,
-            handle:function(){},
-            position:{x:0,y:0}
+            handle:function(){}
         }
     },
 	open:function(position,handle){
 		this.setState({
-			handle:handle,
-            position:position
+			handle:handle
 		})
 		this.refs.root.open(position);
 	},

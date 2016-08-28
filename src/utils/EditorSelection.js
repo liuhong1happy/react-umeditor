@@ -84,10 +84,14 @@ var EditorSelection = {
 	getSpanNodes:function(){
 		if(this.range.collapsed) return [];
 		var parent = this.range.commonAncestorContainer;
+        if(parent.nodeType==3) parent = parent.parentElement;
 		var startNode = this.range.startContainer;
 		var endNode = this.range.endContainer;
 		var spanNodes = [];
-
+        
+        if(EditorDOM.isSpanNode(parent)){
+            spanNodes.push(parent)
+        }
 		if(startNode===endNode && EditorDOM.isSpanNode(startNode)){
 			spanNodes.push(startNode)
 		}
@@ -119,8 +123,18 @@ var EditorSelection = {
 		var textNodes = this.getTextNodes();
 		var parents = [];
 		for(var i=0;i<textNodes.length;i++){
-			if(parents.indexOf(textNodes[i].childNode.parentElement)==-1)
-				parents.push(textNodes[i].childNode.parentElement);
+            var currentNode = null;
+            switch(textNodes[i].childNode.parentElement.tagName.toUpperCase()){
+                case "FONT":
+                    currentNode = textNodes[i].childNode.parentElement;
+                    break;
+                default:
+                    currentNode = textNodes[i].childNode;
+                    break;
+            }
+
+			if(parents.indexOf(currentNode.parentElement)==-1)
+				parents.push(currentNode.parentElement);
 		}
 		return parents;
 	},
