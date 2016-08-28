@@ -44,7 +44,10 @@ var FormulaDropdown = React.createClass({
 		if(this.refs.root)
 			this.refs.root.close();
 	},
-	toggle:function(position){
+	toggle:function(position,handle){
+		this.setState({
+			handle:handle
+		})
 		this.refs.root.toggle(position);
 	},
 	handleSelectFormula:function(e,latex,id){

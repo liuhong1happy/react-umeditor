@@ -1078,7 +1078,10 @@ var ColorDropdown = React.createClass({
 	close: function close() {
 		if (this.refs.root) this.refs.root.close();
 	},
-	toggle: function toggle(position) {
+	toggle: function toggle(position, handle) {
+		this.setState({
+			handle: handle
+		});
 		this.refs.root.toggle(position);
 	},
 	handleSelectColor: function handleSelectColor(e) {
@@ -1209,17 +1212,20 @@ var EmotionDialog = React.createClass({
 			handle: function handle() {}
 		};
 	},
-	open: function open(position, handle) {
+	open: function open(handle) {
 		this.setState({
 			handle: handle
 		});
-		this.refs.root.open(position);
+		this.refs.root.open();
 	},
 	close: function close() {
 		if (this.refs.root) this.refs.root.close();
 	},
-	toggle: function toggle(position) {
-		this.refs.root.toggle(position);
+	toggle: function toggle(handle) {
+		this.setState({
+			handle: handle
+		});
+		this.refs.root.toggle();
 	},
 	handleSelectImage: function handleSelectImage(e, char) {
 		e = e || event;
@@ -1307,7 +1313,10 @@ var FontFamilyDropdown = React.createClass({
 	close: function close() {
 		if (this.refs.root) this.refs.root.close();
 	},
-	toggle: function toggle(position) {
+	toggle: function toggle(position, handle) {
+		this.setState({
+			handle: handle
+		});
 		this.refs.root.toggle(position);
 	},
 	handleSelect: function handleSelect(e) {
@@ -1485,7 +1494,10 @@ var FormulaDropdown = React.createClass({
 	close: function close() {
 		if (this.refs.root) this.refs.root.close();
 	},
-	toggle: function toggle(position) {
+	toggle: function toggle(position, handle) {
+		this.setState({
+			handle: handle
+		});
 		this.refs.root.toggle(position);
 	},
 	handleSelectFormula: function handleSelectFormula(e, latex, id) {
@@ -1864,7 +1876,10 @@ var ImageDialog = React.createClass({
 			this.refs.image.clearImages();
 		}
 	},
-	toggle: function toggle() {
+	toggle: function toggle(handle) {
+		this.setState({
+			handle: handle
+		});
 		this.refs.modal.toggle();
 	},
 	handleOkClick: function handleOkClick(e) {
@@ -1931,7 +1946,10 @@ var ParagraphDropdown = React.createClass({
 	close: function close() {
 		if (this.refs.root) this.refs.root.close();
 	},
-	toggle: function toggle(position) {
+	toggle: function toggle(position, handle) {
+		this.setState({
+			handle: handle
+		});
 		this.refs.root.toggle(position);
 	},
 	handleSelect: function handleSelect(e) {
@@ -2027,17 +2045,20 @@ var SpecialCharsDialog = React.createClass({
 			handle: function handle() {}
 		};
 	},
-	open: function open(position, handle) {
+	open: function open(handle) {
 		this.setState({
 			handle: handle
 		});
-		this.refs.root.open(position);
+		this.refs.root.open();
 	},
 	close: function close() {
 		if (this.refs.root) this.refs.root.close();
 	},
-	toggle: function toggle(position) {
-		this.refs.root.toggle(position);
+	toggle: function toggle(handle) {
+		this.setState({
+			handle: handle
+		});
+		this.refs.root.toggle();
 	},
 	handleSelectChar: function handleSelectChar(e, char) {
 		e = e || event;
@@ -2103,7 +2124,10 @@ var TablePickerDropdown = React.createClass({
     close: function close() {
         if (this.refs.root) this.refs.root.close();
     },
-    toggle: function toggle(position) {
+    toggle: function toggle(position, handle) {
+        this.setState({
+            handle: handle
+        });
         this.refs.root.toggle(position);
     },
     handleMouseEvent: function handleMouseEvent(e) {
@@ -3921,9 +3945,7 @@ var Editor = React.createClass({
 				break;
 			case "spechars":
 				EditorSelection.storeRange();
-				offsetPosition.y += offsetPosition.h + 5;
-				offsetPosition.x -= offsetPosition.w / 2;
-				this.refs.special.toggle(offsetPosition, function (e, char) {
+				this.refs.special.toggle(function (e, char) {
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('inserthtml', false, char);
@@ -3932,8 +3954,7 @@ var Editor = React.createClass({
 				break;
 			case "emotion":
 				EditorSelection.storeRange();
-				offsetPosition.y += offsetPosition.h + 5;
-				this.refs.emotion.toggle(offsetPosition, function (e, html) {
+				this.refs.emotion.toggle(function (e, html) {
 					editarea.focus();
 					EditorSelection.restoreRange();
 					EditorHistory.execCommand('inserthtml', false, html);

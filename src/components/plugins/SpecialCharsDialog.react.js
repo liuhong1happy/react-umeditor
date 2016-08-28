@@ -34,17 +34,20 @@ var SpecialCharsDialog = React.createClass({
 			handle:function(){}
 		}
 	},
-	open:function(position,handle){
+	open:function(handle){
 		this.setState({
 			handle:handle
 		})
-		this.refs.root.open(position);
+		this.refs.root.open();
 	},
 	close:function(){
 		if(this.refs.root) this.refs.root.close();
 	},
-	toggle:function(position){
-		this.refs.root.toggle(position);
+	toggle:function(handle){
+		this.setState({
+			handle:handle
+		})
+		this.refs.root.toggle();
 	},
 	handleSelectChar:function(e,char){
 		e = e || event;

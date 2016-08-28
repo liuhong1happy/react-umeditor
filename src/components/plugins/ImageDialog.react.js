@@ -302,7 +302,10 @@ var ImageDialog = React.createClass({
 			this.refs.image.clearImages();
 		}
 	},
-	toggle:function(){
+	toggle:function(handle){
+		this.setState({
+			handle:handle
+		})
 		this.refs.modal.toggle();
 	},
 	handleOkClick:function(e){

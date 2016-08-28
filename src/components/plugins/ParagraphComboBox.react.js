@@ -16,7 +16,10 @@ var ParagraphDropdown = React.createClass({
 	close:function(){
 		if(this.refs.root) this.refs.root.close();
 	},
-	toggle:function(position){
+	toggle:function(position,handle){
+		this.setState({
+			handle:handle
+		})
 		this.refs.root.toggle(position);
 	},
 	handleSelect:function(e){
