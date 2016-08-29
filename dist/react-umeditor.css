@@ -501,6 +501,10 @@ blockquote {
   max-width: 35px;
   max-height: 35px;
 }
+.editor-container .font-border {
+  display: inline-block;
+  height: auto;
+}
 .editor-default .editor-toolbar {
   position: relative;
   width: auto;
