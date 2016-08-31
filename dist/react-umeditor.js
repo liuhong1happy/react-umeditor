@@ -2618,7 +2618,10 @@ var Editor = React.createClass({
 	},
 	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 		// update value
-		if (this.props.value != nextProps.value) {
+		if (!this.props.value || !nextProps.value) {
+			return;
+		}
+		if (this.props.value != nextProps.value && this.getContent() != nextProps) {
 			this.setContent(nextProps.value ? nextProps.value : nextProps.defaultValue);
 		}
 	},
