@@ -170,9 +170,13 @@ var Editor = React.createClass({
 	},
 	componentWillReceiveProps:function(nextProps){
 		// update value
-		if(!(!this.props.value || !nextProps || !nextProps.value) && this.props.value!=nextProps.value && this.getContent()!=nextProps){
+		if(!(!this.props.value || !nextProps || !nextProps.value) && this.props.value!=nextProps.value && this.getContent()!=nextProps.value){
 			this.setContent(nextProps.value?nextProps.value:nextProps.defaultValue);
 		}
+	},
+	shouldComponentUpdate: function(nextProps, nextState){
+		// is render
+		return (!(!this.props.value || !nextProps || !nextProps.value) && this.props.value!=nextProps.value && this.getContent()!=nextProps.value);
 	},
 	componentDidUpdate:function(){
 		var editorState = this.state.editorState;
