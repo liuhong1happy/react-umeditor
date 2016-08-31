@@ -7,7 +7,7 @@ React Editor like [Umeditor](https://github.com/fex-team/umeditor)
 
 ## Install 
 
-	npm install -g react-umeditor
+	npm install react-umeditor --save
 
 ## Use
 
