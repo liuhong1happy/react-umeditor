@@ -36,6 +36,14 @@ var EditorContentEditableDiv = React.createClass({
 		return "div";
 	},
 	handleWindowMouseDown:function(e){
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var tagName = target.tagName.toUpperCase();
+		var FormControls = ["TEXTAREA","INPUT","SELECT","OPTIONS"];
+		if(FormControls.indexOf(tagName)!=-1){
+			console.log("in FormControls");
+			return;
+		}
 		EditorSelection.clearRange();
 	},
 	handleMouseDown:function(e){

@@ -16,6 +16,7 @@ var App = React.createClass({
 			url: 'http://upload.qiniu.com',
 			type: 'qiniu',
 			name: "file",
+			request: "url",
 			qiniu: {
 				app: {
 					Bucket: "liuhong1happy",
@@ -52,7 +53,14 @@ var App = React.createClass({
 		//			})
 		//		}</div>);
 
-		return React.createElement(Editor, { icons: icons, plugins: plugins });
+		// return (<Editor icons={icons} plugins={plugins} />)
+
+		return React.createElement(
+			'div',
+			null,
+			React.createElement(Editor, { icons: icons, plugins: plugins }),
+			React.createElement('input', { type: 'text' })
+		);
 	}
 });
 

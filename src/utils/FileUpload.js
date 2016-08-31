@@ -64,7 +64,7 @@ var Uploader = {
                 var res = getBody(xhr);
                 var body = {};
                 body.status = "success";
-                body.image_src =options.qiniu.domain +"/"+ res.key;
+                body.image_src = options.qiniu.domain +"/"+ res.key;
                 options.onSuccess(body);
             }else{
                 options.onSuccess(getBody(xhr));

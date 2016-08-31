@@ -819,6 +819,14 @@ var EditorContentEditableDiv = React.createClass({
 		return "div";
 	},
 	handleWindowMouseDown: function handleWindowMouseDown(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var tagName = target.tagName.toUpperCase();
+		var FormControls = ["TEXTAREA", "INPUT", "SELECT", "OPTIONS"];
+		if (FormControls.indexOf(tagName) != -1) {
+			console.log("in FormControls");
+			return;
+		}
 		EditorSelection.clearRange();
 	},
 	handleMouseDown: function handleMouseDown(e) {
@@ -1585,6 +1593,7 @@ var ImageUpload = React.createClass({
    */
 		var _self = this;
 		var images = this.state.images;
+		var request = this.state.request;
 		var mask = ReactDOM.findDOMNode(this.refs.mask);
 		var uploader = this.props.customUploader ? this.props.customUploader : Uploader;
 
@@ -1610,7 +1619,7 @@ var ImageUpload = React.createClass({
 
 					if (res && res.status == "success") {
 						images.push({
-							src: res.image_src
+							src: res[request || "image_src"]
 						});
 						_self.setState({
 							images: images
@@ -1879,6 +1888,7 @@ var ImageDialog = React.createClass({
 				type: "default", // qiniu
 				name: "file",
 				url: "/upload",
+				request: "image_src",
 				qiniu: {
 					app: {
 						bucket: "qtestbucket",
@@ -1937,7 +1947,7 @@ var ImageDialog = React.createClass({
 	render: function render() {
 		var uploader = this.props.uploader;
 		var buttons = [{ name: "btn-ok", content: "确定", onClick: this.handleOkClick }, { name: "btn-cancel", content: "取消", onClick: this.close }];
-		var tabs = [{ title: "本地上传", component: React.createElement(ImageUpload, { ref: 'image', onChange: this.handleChange, type: uploader.type, name: uploader.name, url: uploader.url, qiniu: uploader.qiniu }) }, { title: "网络图片", component: React.createElement(ImageSearch, { ref: 'image', onChange: this.handleChange }) }];
+		var tabs = [{ title: "本地上传", component: React.createElement(ImageUpload, { ref: 'image', onChange: this.handleChange, request: uploader.request, type: uploader.type, name: uploader.name, url: uploader.url, qiniu: uploader.qiniu }) }, { title: "网络图片", component: React.createElement(ImageSearch, { ref: 'image', onChange: this.handleChange }) }];
 		if (this.props.hidden) {
 			return React.createElement('div', null);
 		} else {
