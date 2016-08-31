@@ -19,6 +19,7 @@ var ImageUpload = React.createClass({
 		 */
 		var _self = this;
 		var images = this.state.images;
+		var request = this.state.request;
 		var mask = ReactDOM.findDOMNode(this.refs.mask);
 		var uploader = this.props.customUploader? this.props.customUploader: Uploader;
 
@@ -44,7 +45,7 @@ var ImageUpload = React.createClass({
 
 						if(res && res.status=="success"){
 							images.push({
-								src:res.image_src
+								src: res[request || "image_src"]
 							})
 							_self.setState({
 								images:images
@@ -275,6 +276,7 @@ var ImageDialog = React.createClass({
 				type:"default", // qiniu
 				name:"file",
 				url:"/upload",
+				request: "image_src",
 				qiniu:{
 					app:{
 						bucket: "qtestbucket",
@@ -337,7 +339,7 @@ var ImageDialog = React.createClass({
 			{ name:"btn-cancel", content:"取消", onClick:this.close}
 		];
 		var tabs = [
-			{title:"本地上传",component:(<ImageUpload ref="image" onChange={this.handleChange} type={uploader.type} name={uploader.name} url={uploader.url} qiniu={uploader.qiniu}/>)},
+			{title:"本地上传",component:(<ImageUpload ref="image" onChange={this.handleChange} request={ uploader.request } type={uploader.type} name={uploader.name} url={uploader.url} qiniu={uploader.qiniu}/>)},
 			{title:"网络图片",component:(<ImageSearch ref="image" onChange={this.handleChange}/>)},
 		]
 		if(this.props.hidden){
