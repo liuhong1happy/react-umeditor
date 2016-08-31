@@ -170,8 +170,7 @@ var Editor = React.createClass({
 	},
 	componentWillReceiveProps:function(nextProps){
 		// update value
-		if(!this.props.value || !nextProps.value){ return;}
-		if(this.props.value!=nextProps.value && this.getContent()!=nextProps){
+		if(!(!this.props.value || !nextProps || !nextProps.value) && this.props.value!=nextProps.value && this.getContent()!=nextProps){
 			this.setContent(nextProps.value?nextProps.value:nextProps.defaultValue);
 		}
 	},
