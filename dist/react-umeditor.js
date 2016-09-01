@@ -1593,7 +1593,7 @@ var ImageUpload = React.createClass({
    */
 		var _self = this;
 		var images = this.state.images;
-		var request = this.state.request;
+		var request = this.props.request;
 		var mask = ReactDOM.findDOMNode(this.refs.mask);
 		var uploader = this.props.customUploader ? this.props.customUploader : Uploader;
 
