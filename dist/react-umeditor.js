@@ -1619,7 +1619,7 @@ var ImageUpload = React.createClass({
 
 					if (res && res.status == "success") {
 						images.push({
-							src: res[request || "image_src"]
+							src: res.data[request || "image_src"]
 						});
 						_self.setState({
 							images: images
