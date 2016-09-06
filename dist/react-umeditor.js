@@ -2553,6 +2553,7 @@ var Editor = React.createClass({
 	getInitialState: function getInitialState() {
 		return {
 			editorState: {
+				icon: "source",
 				showHtml: false,
 				icons: {
 					"forecolor": { color: 'transparent', icon: "forecolor" },
@@ -2608,7 +2609,7 @@ var Editor = React.createClass({
 	},
 	componentDidMount: function componentDidMount() {
 		EditorHistory.clear();
-		this.setContent(this.state.value ? this.state.value : this.state.defaultValue);
+		this.setContent(this.state.value || this.state.defaultValue);
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var isCollapsed = true;
 		editarea.addEventListener('keydown', this.handleKeyDown);
@@ -2618,22 +2619,32 @@ var Editor = React.createClass({
 	},
 	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 		// update value
-		if (!(!this.props.value || !nextProps || !nextProps.value) && this.props.value != nextProps.value && this.getContent() != nextProps.value) {
-			this.setContent(nextProps.value ? nextProps.value : nextProps.defaultValue);
+		var currentValue = this.getContent() || this.props.value || this.state.defaultValue;
+		var nextValue = nextProps || nextProps.value || this.state.defaultValue;
+
+		if (nextValue != currentValue) {
+			this.setContent(nextProps.value || nextProps.defaultValue);
+		} else {
+			var editorState = this.state.editorState;
+			editorState.icon = false;
+			this.setState({
+				editorState: editorState
+			});
 		}
 	},
-	shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-		// is render
-		return !(!this.props.value || !nextProps || !nextProps.value) && this.props.value != nextProps.value && this.getContent() != nextProps.value;
-	},
+	//	shouldComponentUpdate: function(nextProps, nextState){
+	//		// is render
+	//		var editorState = nextState.editorState;
+	//		return !!editorState.icon;
+	//	},
 	componentDidUpdate: function componentDidUpdate() {
 		var editorState = this.state.editorState;
 		switch (editorState.icon) {
 			case "source":
-				this.setContent(editorState.content);
+				if (editorState.content) this.setContent(editorState.content);
 				break;
 			case "cleardoc":
-				this.setContent(editorState.content);
+				if (editorState.content) this.setContent(editorState.content);
 				break;
 		}
 	},
@@ -2720,6 +2731,7 @@ var Editor = React.createClass({
 		if (selection && selection.rangeCount > 0) {
 			var editorState = this.state.editorState;
 			editorState = this.exchangeRangeState(editorState);
+			// editorState.icon = false;
 			this.setState({
 				editorState: editorState
 			});
@@ -3802,7 +3814,7 @@ var EditorSelection = {
 	getRangeState: function getRangeState() {
 		var rangeState = {};
 		// init icons state
-		var canActiveIcons = "bold italic underline strikethrough superscript subscript justifycenter justifyleft justifyright";
+		var canActiveIcons = "bold italic underline strikethrough fontborder superscript subscript justifycenter justifyleft justifyright";
 		var icons = canActiveIcons.split(" ");
 		for (var i = 0; i < icons.length; i++) {
 			rangeState[icons[i]] = { icon: icons[i], active: false };
@@ -3852,7 +3864,13 @@ var EditorSelection = {
 						break;
 					case "BLOCKQUOTE":
 						rangeState["indent"] = { active: true, icon: "indent" };
-						rangeState["outdent"] = { active: false, icon: "indent" };
+						rangeState["outdent"] = { active: false, icon: "outdent" };
+						break;
+					case "SPAN":
+						var className = parentElement.className || "";
+						if (className.indexOf("font-border") != -1) {
+							rangeState["fontborder"] = { active: true, icon: "fontborder" };
+						}
 						break;
 				}
 				parentElement = parentElement.parentElement;
