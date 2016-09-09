@@ -1192,7 +1192,10 @@ var EmotionPanel = React.createClass({
 		var title = target.getAttribute("data-title");
 
 		if (this.props.onSelectImage) {
-			this.props.onSelectImage(e, '<img src="' + url + '" title="' + title + '" />');
+			var img = document.createElement('img');
+			img.src = url;
+			img.title = title;
+			this.props.onSelectImage(e, img);
 		}
 	},
 	render: function render() {
@@ -1235,10 +1238,10 @@ var EmotionDialog = React.createClass({
 		});
 		this.refs.root.toggle();
 	},
-	handleSelectImage: function handleSelectImage(e, char) {
+	handleSelectImage: function handleSelectImage(e, img) {
 		e = e || event;
 		if (this.state.handle) {
-			this.state.handle(e, char);
+			this.state.handle(e, img);
 		}
 		if (e.stopPropagation) {
 			e.stopPropagation();
@@ -2175,7 +2178,7 @@ var TablePickerDropdown = React.createClass({
                 Td.width = 200;
             }
         }
-        this.state.handle(e, Table.outerHTML);
+        this.state.handle(e, Table);
         this.refs.root.close();
     },
     render: function render() {
@@ -2474,6 +2477,22 @@ var EditorDOM = {
 			offsetParent = offsetParent.offsetParent;
 		}
 		return position;
+	},
+	createTextNode: function createTextNode(text) {
+		return document.createTextNode(text);
+	},
+	createNodeByTag: function createNodeByTag(tag, html) {
+		var node = document.createElement(tag);
+		node.innerHTML = html;
+		return node;
+	},
+	createHR: function createHR() {
+		var node = document.createElement('hr');
+		return node;
+	},
+	createBR: function createBR() {
+		var node = document.createElement('br');
+		return node;
 	}
 };
 module.exports = EditorDOM;
@@ -3074,6 +3093,19 @@ var EditorSelection = {
 		this.range = this.storedRange ? this.storedRange.cloneRange() : null;
 		this.storedRange = null;
 		this.cloneRange();
+	},
+	insertNode: function insertNode(node) {
+		if (this.range) {
+			EditorSelection.range.insertNode(node);
+			var lastNode = node.lastChild || node;
+			if (lastNode) {
+				// this.range.setEndAfter(lastNode);
+				this.range.setStartAfter(lastNode);
+				this.range.setEndAfter(lastNode);
+			}
+			this.selection.removeAllRanges();
+			this.selection.addRange(this.range);
+		}
 	}
 };
 module.exports = EditorSelection;
@@ -3153,15 +3185,15 @@ var EditorTimer = {
 		for (var i = 0; i < timeouts.length; i++) {
 			timeouts[i].prototype.endTime = new Date().valueOf();
 			if (timeouts[i].prototype.endTime - timeouts[i].prototype.startTime >= timeouts[i].prototype.ms && !timeouts[i].prototype.disabled) {
-				timeouts[i].call(timeouts[i].prototype, timeouts[i].prototype.endTime);
 				timeouts[i].prototype.disabled = true;
+				timeouts[i].call(timeouts[i].prototype, timeouts[i].prototype.endTime);
 			}
 		}
 		for (var i = 0; i < intervals.length; i++) {
 			intervals[i].prototype.endTime = new Date().valueOf();
 			if (intervals[i].prototype.endTime - intervals[i].prototype.lastTime >= intervals[i].prototype.ms && !intervals[i].prototype.disabled) {
-				intervals[i].call(intervals[i].prototype, intervals[i].prototype.endTime);
 				intervals[i].prototype.lastTime = intervals[i].prototype.endTime;
+				intervals[i].call(intervals[i].prototype, intervals[i].prototype.endTime);
 			}
 		}
 		timeouts = timeouts.filter(function (ele, pos) {
@@ -3962,15 +3994,38 @@ var Editor = React.createClass({
 				editorState.content = "<p><br/></p>";
 				break;
 			case "horizontal":
-				EditorHistory.execCommand('inserthtml', false, "<hr/><p><br/></p>");
+				if (EditorSelection.range.pasteHTML) {
+					EditorSelection.range.pasteHTML(strTime);
+				} else {
+					var hr = EditorDOM.createHR();
+					var p = EditorDOM.createNodeByTag('p', '<br/>');
+					EditorSelection.range.deleteContents();
+					EditorSelection.insertNode(p);
+					EditorSelection.insertNode(hr);
+				}
+				// EditorHistory.execCommand('inserthtml',false,"<hr/><p><br/></p>");
 				break;
 			case "date":
 				var strDate = new Date().Format("yyyy-MM-dd");
-				EditorHistory.execCommand('inserthtml', false, strDate);
+				if (EditorSelection.range.pasteHTML) {
+					EditorSelection.range.pasteHTML(strTime);
+				} else {
+					var textNode = EditorDOM.createTextNode(strDate);
+					EditorSelection.range.deleteContents();
+					EditorSelection.insertNode(textNode);
+				}
+				// EditorHistory.execCommand('inserthtml',false, strDate);
 				break;
 			case "time":
 				var strTime = new Date().Format('hh:mm:ss');
-				EditorHistory.execCommand('inserthtml', false, strTime);
+				if (EditorSelection.range.pasteHTML) {
+					EditorSelection.range.pasteHTML(strTime);
+				} else {
+					var textNode = EditorDOM.createTextNode(strTime);
+					EditorSelection.range.deleteContents();
+					EditorSelection.insertNode(textNode);
+				}
+				// EditorHistory.execCommand('inserthtml',false,strTime);
 				break;
 			case "image":
 				EditorSelection.storeRange();
@@ -3980,10 +4035,17 @@ var Editor = React.createClass({
 
 					if (html && html.length > 0) {
 						if (EditorSelection.range) {
-							EditorHistory.execCommand('inserthtml', false, html);
+							if (EditorSelection.range.pasteHTML) {
+								EditorSelection.range.pasteHTML('<p>' + html + '</p>');
+							} else {
+								var p = EditorDOM.createNodeByTag('p', html);
+								EditorSelection.range.deleteContents();
+								EditorSelection.insertNode(p);
+							}
+							// EditorHistory.execCommand('inserthtml',false,html);
 						} else {
-							editarea.innerHTML += html;
-						}
+								editarea.innerHTML += '<p>' + html + '</p>';
+							}
 					}
 				});
 				break;
@@ -3999,10 +4061,17 @@ var Editor = React.createClass({
 					if (latex && latex.length > 0) {
 						var html = '<p>&nbsp;<span class="mathquill-embedded-latex" id="' + id + '"></span>&nbsp;</p>';
 						if (EditorSelection.range) {
-							EditorHistory.execCommand('inserthtml', false, html);
+							if (EditorSelection.range.pasteHTML) {
+								EditorSelection.range.pasteHTML(html);
+							} else {
+								var p = EditorDOM.createNodeByTag('p', '&nbsp;<span class="mathquill-embedded-latex" id="' + id + '"></span>&nbsp;');
+								EditorSelection.range.deleteContents();
+								EditorSelection.insertNode(p);
+							}
+							// EditorHistory.execCommand('inserthtml',false,html);
 						} else {
-							editarea.innerHTML += html;
-						}
+								editarea.innerHTML += html;
+							}
 						EditorTimer.setTimeout(function () {
 							_self.addFormula(id, latex);
 						}, 200);
@@ -4014,10 +4083,16 @@ var Editor = React.createClass({
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h + 5;
 				offsetPosition.x -= offsetPosition.w / 2;
-				this.refs.table.toggle(offsetPosition, function (e, html) {
+				this.refs.table.toggle(offsetPosition, function (e, table) {
 					editarea.focus();
 					EditorSelection.restoreRange();
-					EditorHistory.execCommand('inserthtml', false, html);
+					if (EditorSelection.range.pasteHTML) {
+						EditorSelection.range.pasteHTML(table.outerHTML);
+					} else {
+						EditorSelection.range.deleteContents();
+						EditorSelection.insertNode(table);
+					}
+					// EditorHistory.execCommand('inserthtml',false,html);
 					handleRangeChange();
 				});
 				break;
@@ -4026,16 +4101,32 @@ var Editor = React.createClass({
 				this.refs.special.toggle(function (e, char) {
 					editarea.focus();
 					EditorSelection.restoreRange();
-					EditorHistory.execCommand('inserthtml', false, char);
+
+					if (EditorSelection.range.pasteHTML) {
+						EditorSelection.range.pasteHTML(char);
+					} else {
+						var textNode = EditorDOM.createTextNode(char);
+						EditorSelection.range.deleteContents();
+						EditorSelection.insertNode(textNode);
+					}
+					// EditorHistory.execCommand('inserthtml',false,char);
 					handleRangeChange();
 				});
 				break;
 			case "emotion":
 				EditorSelection.storeRange();
-				this.refs.emotion.toggle(function (e, html) {
+				this.refs.emotion.toggle(function (e, img) {
 					editarea.focus();
 					EditorSelection.restoreRange();
-					EditorHistory.execCommand('inserthtml', false, html);
+
+					if (EditorSelection.range.pasteHTML) {
+						EditorSelection.range.pasteHTML(img.outerHTML);
+					} else {
+						EditorSelection.range.deleteContents();
+						EditorSelection.insertNode(img);
+					}
+
+					// EditorHistory.execCommand('inserthtml',false,html);
 					handleRangeChange();
 				});
 				break;

@@ -37,5 +37,21 @@ var EditorDOM = {
 		}
 		return position;
 	},
+	createTextNode: function(text){
+		return document.createTextNode(text);
+	},
+	createNodeByTag: function(tag,html){
+		var node = document.createElement(tag);
+		node.innerHTML = html;
+		return node;
+	},
+	createHR: function(){
+		var node = document.createElement('hr');
+		return node;
+	},
+	createBR: function(){
+		var node = document.createElement('br');
+		return node;
+	}
 }
 module.exports = EditorDOM;

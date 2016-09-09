@@ -13,7 +13,10 @@ var EmotionPanel = React.createClass({
 		var title = target.getAttribute("data-title");
 		
 		if(this.props.onSelectImage){
-			this.props.onSelectImage(e,'<img src="'+url+'" title="'+title+'" />');
+			var img = document.createElement('img');
+			img.src = url;
+			img.title = title;
+			this.props.onSelectImage(e,img);
 		}
 	},
 	render:function(){
@@ -53,10 +56,10 @@ var EmotionDialog = React.createClass({
 		})
 		this.refs.root.toggle();
 	},
-	handleSelectImage:function(e,char){
+	handleSelectImage:function(e,img){
 		e = e || event;
 		if(this.state.handle){
-			this.state.handle(e,char);
+			this.state.handle(e,img);
 		}
 		if(e.stopPropagation){
 			e.stopPropagation()

@@ -254,6 +254,19 @@ var EditorSelection = {
 		this.range = this.storedRange?this.storedRange.cloneRange():null;
 		this.storedRange = null;
 		this.cloneRange();
+	},
+	insertNode: function(node){
+		if(this.range){
+			EditorSelection.range.insertNode(node);
+			var lastNode = node.lastChild || node;
+			if(lastNode){
+			   // this.range.setEndAfter(lastNode);
+				this.range.setStartAfter(lastNode);
+			   this.range.setEndAfter(lastNode);
+			}
+			this.selection.removeAllRanges();
+			this.selection.addRange(this.range);
+		}
 	}
 }
 module.exports = EditorSelection;
