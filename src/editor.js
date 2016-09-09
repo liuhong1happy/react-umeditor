@@ -302,7 +302,8 @@ var Editor = React.createClass({
     handleToolbarIconClick:function(e,state){
 		e = e || event;
 		var target = e.target || e.srcElement;
-		var offsetPosition = this.getOffsetRootParentPosition(target);
+		var root = ReactDOM.findDOMNode(this.refs.root);
+		var offsetPosition = EditorDOM.getOffsetRootParentPosition(target,root);
 		
 		var handleRangeChange = this.handleRangeChange;
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
@@ -632,21 +633,6 @@ var Editor = React.createClass({
 		}
 	},
     // utils
-	getOffsetRootParentPosition:function(target){
-		var position = {x:0,y:0,w:0,h:0}
-		var root = ReactDOM.findDOMNode(this.refs.root);
-		position.w = target.offsetWidth;
-		position.h = target.offsetHeight;
-		position.x = target.offsetLeft;
-		position.y = target.offsetTop;
-		var offsetParent = target.offsetParent;
-		while(offsetParent && offsetParent!=root){
-			 position.x+= offsetParent.offsetLeft;
-			 position.y+=offsetParent.offsetTop;
-			 offsetParent = offsetParent.offsetParent;
-		}
-		return position;
-	},
 	addFormula:function(id,latex){
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var htmlElement = document.getElementById(id);

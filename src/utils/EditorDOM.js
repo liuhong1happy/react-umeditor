@@ -21,6 +21,21 @@ var EditorDOM = {
 		}else{
 			return false;
 		}
-	}
+	},
+	getOffsetRootParentPosition:function(target,root){
+		var position = {x:0,y:0,w:0,h:0}
+		
+		position.w = target.offsetWidth;
+		position.h = target.offsetHeight;
+		position.x = target.offsetLeft;
+		position.y = target.offsetTop;
+		var offsetParent = target.offsetParent;
+		while(offsetParent && offsetParent!=root && offsetParent.offsetParent!= root.offsetParent){
+			 position.x+= offsetParent.offsetLeft;
+			 position.y+=offsetParent.offsetTop;
+			 offsetParent = offsetParent.offsetParent;
+		}
+		return position;
+	},
 }
 module.exports = EditorDOM;
