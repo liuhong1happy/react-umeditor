@@ -1,3 +1,4 @@
+var EditorSelection = require('./EditorSelection');
 var EditorHistory = {
 	curCommand:null,
 	commandStack:[],
@@ -25,9 +26,18 @@ var EditorHistory = {
 		return this.canRedo();
 	},
 	execCommand:function(command,flag,args){
-		document.execCommand(command,flag,args);
-		if(command=="selectall") 
-			return;
+		switch(command){
+			case "inserthtml":
+				var selection = EditorSelection.getSelection();
+				if(selection.pasteHTML) selection.pasteHTML(args);
+				else document.execCommand(command,flag,args);
+				break;
+			default:
+				document.execCommand(command,flag,args);
+				break;
+		}
+		
+		if(command=="selectall")  return;
 		this.commandIndex = this.commandIndex+1;
 		this.curCommand = {command,flag,args};
 		// 必需移除index后的command

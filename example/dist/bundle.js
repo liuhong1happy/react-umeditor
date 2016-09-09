@@ -2526,6 +2526,7 @@ module.exports = EditorEventEmitter;
 },{"events":3,"object-assign":2}],24:[function(require,module,exports){
 "use strict";
 
+var EditorSelection = require('./EditorSelection');
 var EditorHistory = {
 	curCommand: null,
 	commandStack: [],
@@ -2553,7 +2554,16 @@ var EditorHistory = {
 		return this.canRedo();
 	},
 	execCommand: function execCommand(command, flag, args) {
-		document.execCommand(command, flag, args);
+		switch (command) {
+			case "inserthtml":
+				var selection = EditorSelection.getSelection();
+				if (selection.pasteHTML) selection.pasteHTML(args);else document.execCommand(command, flag, args);
+				break;
+			default:
+				document.execCommand(command, flag, args);
+				break;
+		}
+
 		if (command == "selectall") return;
 		this.commandIndex = this.commandIndex + 1;
 		this.curCommand = { command: command, flag: flag, args: args };
@@ -2579,7 +2589,7 @@ var EditorHistory = {
 module.exports = EditorHistory;
 
 
-},{}],25:[function(require,module,exports){
+},{"./EditorSelection":26}],25:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
