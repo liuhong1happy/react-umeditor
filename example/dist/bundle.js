@@ -2893,7 +2893,7 @@ var EditorSelection = {
 	getSpanNodes: function getSpanNodes() {
 		if (this.range.collapsed) return [];
 		var parent = this.range.commonAncestorContainer;
-		if (parent.nodeType == 3) parent = parent.parentElement;
+		if (parent.nodeType == 3) parent = parent.parentNode;
 		var startNode = this.range.startContainer;
 		var endNode = this.range.endContainer;
 		var spanNodes = [];
@@ -2934,16 +2934,17 @@ var EditorSelection = {
 		var parents = [];
 		for (var i = 0; i < textNodes.length; i++) {
 			var currentNode = null;
-			switch (textNodes[i].childNode.parentElement.tagName.toUpperCase()) {
+			var tagName = textNodes[i].childNode.parentNode.tagName || textNodes[i].childNode.parentNode.nodeName;
+			switch (tagName.toUpperCase()) {
 				case "FONT":
-					currentNode = textNodes[i].childNode.parentElement;
+					currentNode = textNodes[i].childNode.parentNode;
 					break;
 				default:
 					currentNode = textNodes[i].childNode;
 					break;
 			}
 
-			if (parents.indexOf(currentNode.parentElement) == -1) parents.push(currentNode.parentElement);
+			if (parents.indexOf(currentNode.parentNode) == -1) parents.push(currentNode.parentNode);
 		}
 		return parents;
 	},
@@ -2987,9 +2988,11 @@ var EditorSelection = {
 		}
 		// change  icons state
 		if (this.range) {
-			var parentElement = this.range.startContainer.parentElement;
-			while (parentElement.tagName.toUpperCase() != "DIV") {
-				switch (parentElement.tagName.toUpperCase()) {
+			// IE 没有parentElement 固修改成parentNode
+			var parentElement = this.range.startContainer.parentNode;
+			while ((parentElement.tagName || parentElement.nodeName).toUpperCase() != "DIV") {
+				var tagName = parentElement.tagName || parentElement.nodeName;
+				switch (tagName.toUpperCase()) {
 					case "I":
 						rangeState["italic"] = { active: true, icon: "italic" };
 						break;
@@ -3039,7 +3042,7 @@ var EditorSelection = {
 						}
 						break;
 				}
-				parentElement = parentElement.parentElement;
+				parentElement = parentElement.parentNode;
 			}
 		}
 
