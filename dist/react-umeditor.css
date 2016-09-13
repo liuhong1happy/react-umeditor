@@ -1,6 +1,39 @@
 blockquote {
   font-size: inherit;
 }
+font[face="宋体, SimSun"] {
+  font-family: "宋体", SimSun;
+}
+font[face="隶书, SimLi"] {
+  font-family: "隶书", SimLi;
+}
+font[face="楷体, SimKai"] {
+  font-family: "楷体", SimKai;
+}
+font[face="微软雅黑, Microsoft YaHei"] {
+  font-family: "微软雅黑", Microsoft YaHei;
+}
+font[face="黑体, SimHei"] {
+  font-family: "黑体", SimHei;
+}
+font[face="arial, helvetica, sans-serif"] {
+  font-family: arial, helvetica, sans-serif;
+}
+font[face="arial black, avant garde"] {
+  font-family: arial black, avant garde;
+}
+font[face="impact, chicago"] {
+  font-family: impact, chicago;
+}
+font[face="times new roman"] {
+  font-family: times new roman;
+}
+font[face="andale mono"] {
+  font-family: andale mono;
+}
+font[face="omic sans ms"] {
+  font-family: omic sans ms;
+}
 .editor-container {
   width: auto;
   height: auto;
