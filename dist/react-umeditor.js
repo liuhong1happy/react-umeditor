@@ -2620,26 +2620,6 @@ var Editor = React.createClass({
 		var onEditorMount = this.props.onEditorMount;
 		setTimeout(onEditorMount, 10);
 	},
-	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-		// update value
-		var currentValue = this.getContent() || this.props.value || this.state.defaultValue;
-		var nextValue = nextProps || nextProps.value || this.state.defaultValue;
-
-		if (nextValue != currentValue) {
-			this.setContent(nextProps.value || nextProps.defaultValue);
-		} else {
-			var editorState = this.state.editorState;
-			editorState.icon = false;
-			this.setState({
-				editorState: editorState
-			});
-		}
-	},
-	//	shouldComponentUpdate: function(nextProps, nextState){
-	//		// is render
-	//		var editorState = nextState.editorState;
-	//		return !!editorState.icon;
-	//	},
 	componentDidUpdate: function componentDidUpdate() {
 		var editorState = this.state.editorState;
 		switch (editorState.icon) {
@@ -3194,6 +3174,7 @@ var Editor = React.createClass({
 		};
 	},
 	setContent: function setContent(content) {
+		var content = content || this.state.defaultValue || "";
 		// 后续添加校验方法
 		this.refs.editarea.setContent(content);
 		// mathquill supports
@@ -3276,7 +3257,8 @@ var EditorClass = React.createClass({
 
 	getInitialState: function getInitialState() {
 		return {
-			loaded: false
+			loaded: false,
+			reload: true
 		};
 	},
 	componentDidMount: function componentDidMount() {
@@ -3287,6 +3269,11 @@ var EditorClass = React.createClass({
 		var index = this.index;
 		EditorEventEmitter.removeStartListener("start-" + index, this.handleChange);
 	},
+	componentDidUpdate: function componentDidUpdate() {
+		if (this.state.loaded && this.state.reload) {
+			this.refs.editor.setContent(this.props.value || this.props.defaultValue);
+		}
+	},
 	handleChange: function handleChange() {
 		this.setState({
 			loaded: true
@@ -3294,6 +3281,24 @@ var EditorClass = React.createClass({
 	},
 	handleMountSuccess: function handleMountSuccess() {
 		EditorEventEmitter.mountEditorSuccess();
+	},
+	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+		var currentValue = this.props.value || this.props.defaultValue;
+		var editorValue = this.getContent();
+		var nextValue = nextProps.value;
+
+		if (nextValue == currentValue || nextValue == editorValue) {
+			this.setState({
+				reload: false
+			});
+		} else {
+			this.setState({
+				reload: true
+			});
+		}
+	},
+	shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+		return nextState.reload;
 	},
 	getContent: function getContent() {
 		return this.refs.editor ? this.refs.editor.getContent() : "";
@@ -3309,8 +3314,11 @@ var EditorClass = React.createClass({
 	},
 	render: function render() {
 		var loaded = this.state.loaded;
+		var _props2 = this.props;
+		var value = _props2.value;
+		var defaultValue = _props2.defaultValue;
 
-		var props = _objectWithoutProperties(this.props, []);
+		var props = _objectWithoutProperties(_props2, ['value', 'defaultValue']);
 
 		if (!this.state.loaded) {
 			return React.createElement(

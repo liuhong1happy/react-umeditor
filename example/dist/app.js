@@ -8,6 +8,14 @@ var Editor = require('react-umeditor');
 var App = React.createClass({
 	displayName: 'App',
 
+	getInitialState: function getInitialState() {
+		return {
+			form_data: {
+				text: "123",
+				editor: "123"
+			}
+		};
+	},
 	getIcons: function getIcons() {
 		return ["source | undo redo | bold italic underline strikethrough fontborder | ", "paragraph fontfamily fontsize | superscript subscript | ", "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ", "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | ", "horizontal date time  | image formula spechars | inserttable"];
 	},
@@ -30,6 +38,22 @@ var App = React.createClass({
 			}
 		};
 	},
+	handleFormChange: function handleFormChange(e) {
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var value = target.value;
+		var editor = this.refs.editor.getContent();
+		var form_data = this.state.form_data;
+		form_data.text = value;
+		form_data.editor = editor;
+		this.setState({
+			form_data: form_data
+		});
+	},
+	handleSubmitForm: function handleSubmitForm() {
+		var form_data = this.state.form_data;
+		alert(form_data.editor);
+	},
 	render: function render() {
 		var icons = this.getIcons();
 		var uploader = this.getQiniuUploader();
@@ -46,7 +70,7 @@ var App = React.createClass({
 				plugins: plugins
 			});
 		}
-
+		var form_data = this.state.form_data;
 		//		return (<div>{
 		//			editors.map(function(ele,pos){
 		//				return (<Editor key={pos} icons={ele.icons} plugins={ele.plugins} />)
@@ -58,8 +82,9 @@ var App = React.createClass({
 		return React.createElement(
 			'div',
 			null,
-			React.createElement(Editor, { icons: icons, plugins: plugins }),
-			React.createElement('input', { type: 'text' })
+			React.createElement(Editor, { ref: 'editor', icons: icons, plugins: plugins, value: form_data.editor }),
+			React.createElement('input', { type: 'text', value: form_data.text, onChange: this.handleFormChange }),
+			React.createElement('input', { type: 'submit', value: '提交', onClick: this.handleSubmitForm })
 		);
 	}
 });

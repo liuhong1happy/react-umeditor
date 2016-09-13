@@ -3,6 +3,14 @@ var ReactDOM = require('react-dom');
 var Editor = require('react-umeditor');
 
 var App = React.createClass({
+	getInitialState: function(){
+		return {
+			form_data: {
+				text: "123",
+				editor: "123"
+			}
+		}
+	},
 	getIcons:function(){
 		return [
 				"source | undo redo | bold italic underline strikethrough fontborder | ",
@@ -31,6 +39,22 @@ var App = React.createClass({
 			}
 		}
 	},
+	handleFormChange: function(e){
+		e = e || event;
+		var target = e.target || e.srcElement;
+		var value = target.value;
+		var editor = this.refs.editor.getContent();
+		var form_data = this.state.form_data;
+		form_data.text = value;
+		form_data.editor = editor;
+		this.setState({
+			form_data: form_data
+		})
+	},
+	handleSubmitForm: function(){
+		var form_data = this.state.form_data;
+		alert(form_data.editor);
+	},
 	render:function(){
 		var icons = this.getIcons();
 		var uploader = this.getQiniuUploader();
@@ -47,7 +71,7 @@ var App = React.createClass({
 				plugins:plugins
 			})
 		}
-
+		var form_data = this.state.form_data;
 //		return (<div>{
 //			editors.map(function(ele,pos){
 //				return (<Editor key={pos} icons={ele.icons} plugins={ele.plugins} />)
@@ -58,8 +82,9 @@ var App = React.createClass({
 		
 		
 		return (<div>
-				<Editor icons={icons} plugins={plugins} />
-				<input type="text" />
+				<Editor ref="editor" icons={icons} plugins={plugins} value={form_data.editor}/>
+				<input type="text" value={form_data.text} onChange={this.handleFormChange}/>
+				<input type="submit" value="提交" onClick={this.handleSubmitForm} />
 			   </div>)
 }
 })
