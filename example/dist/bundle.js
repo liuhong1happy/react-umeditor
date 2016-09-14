@@ -4295,7 +4295,7 @@ var EditorClass = React.createClass({
 	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 		var currentValue = this.props.value || this.props.defaultValue;
 		var editorValue = this.getContent();
-		var nextValue = nextProps.value;
+		var nextValue = nextProps.value || nextProps.defaultValue;
 
 		if (nextValue == currentValue || nextValue == editorValue) {
 			this.setState({
