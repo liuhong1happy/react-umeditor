@@ -321,7 +321,7 @@ var Editor = React.createClass({
 							}
 							parentNode.removeChild(spanNodes[i]);
 							break;
-						case "text-emphasis":
+						case "emphasis":
 							var spanNode = spanNodes[i];
 							var parentNode = spanNode.parentNode;
 							var nextSibling = spanNode.nextSibling || spanNode;
@@ -447,7 +447,7 @@ var Editor = React.createClass({
 					var borderText = cloneNode.nodeValue.substring(start,end);
 					var span = null;
 					var textParentNode = textNodes[i].childNode.parentNode;
-					if( textParentNode && textParentNode.className && textParentNode.className=="text-emphasis"){
+					if( textParentNode && textParentNode.className && textParentNode.className=="emphasis"){
 						if(i==0){
 							startNode = textNodes[i].childNode;
 							startOffset = start;
@@ -460,7 +460,7 @@ var Editor = React.createClass({
 						// 重新赋值
 						node.nodeValue = startText;
 						span = document.createElement("span");
-						span.className = "text-emphasis";
+						span.className = "emphasis";
 						span.innerHTML = borderText;
 						node.parentNode.insertBefore(span, node.nextSibling || node);
 						if(endText!=""){
