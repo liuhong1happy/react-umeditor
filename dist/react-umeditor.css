@@ -35,9 +35,9 @@ font[face="omic sans ms"] {
   font-family: omic sans ms;
 }
 .emphasis {
-  -webkit-text-emphasis: dot;
+  -webkit-text-emphasis: circle;
   -webkit-text-emphasis-position: under;
-  text-emphasis: dot;
+  text-emphasis: circle;
   text-emphasis-position: under;
 }
 .editor-container {
