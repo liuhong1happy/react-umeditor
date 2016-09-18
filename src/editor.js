@@ -151,7 +151,7 @@ var Editor = React.createClass({
 			],
 			"icons":[
 				// video map print preview drafts link unlink
-				"source | undo redo | bold italic underline strikethrough fontborder | ",
+				"source | undo redo | bold italic underline strikethrough fontborder emphasis | ",
 				"paragraph fontfamily fontsize | superscript subscript | ",
 				"forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ",
 				"cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | ",
@@ -314,9 +314,19 @@ var Editor = React.createClass({
 						case "font-border":
 							var spanNode = spanNodes[i];
 							var parentNode = spanNode.parentNode;
-							var nextSibling = spanNode.nextSibling;
-							
-							for(var c=0;c<spanNode.childNodes.length;c++){
+							var nextSibling = spanNode.nextSibling || spanNode;
+							var childSum = spanNode.childNodes.length;
+							for(var c=0;c<childSum;c++){
+								parentNode.insertBefore(spanNode.childNodes[c].cloneNode(),nextSibling);
+							}
+							parentNode.removeChild(spanNodes[i]);
+							break;
+						case "text-emphasis":
+							var spanNode = spanNodes[i];
+							var parentNode = spanNode.parentNode;
+							var nextSibling = spanNode.nextSibling || spanNode;
+							var childSum = spanNode.childNodes.length;
+							for(var c=0;c<childSum;c++){
 								parentNode.insertBefore(spanNode.childNodes[c].cloneNode(),nextSibling);
 							}
 							parentNode.removeChild(spanNodes[i]);
@@ -387,7 +397,72 @@ var Editor = React.createClass({
 						span.className = "font-border";
 						span.innerHTML = borderText;
 						span.style.border = "1px solid #000";
-						node.parentNode.insertBefore(span, node.nextSibling);
+						node.parentNode.insertBefore(span, node.nextSibling || node);
+						if(endText!=""){
+							node.parentNode.insertBefore(document.createTextNode(endText), span.nextSibling);
+						}
+						if(i==0) startNode = span.childNodes[0];
+						if(i==textNodes.length-1) {
+							endNode = span.childNodes[0];
+							endOffset = span.childNodes[0].length;
+						}
+					}
+				}
+				EditorSelection.addRange(startNode,startOffset,endNode,endOffset);
+				// 合并相同font-border元素
+				var spanNodes = EditorSelection.getSpanNodes();
+				for(var i=0;i<spanNodes.length-1;i++){
+					var spanNode = spanNodes[i];
+					var parentNode = spanNodes[i].parentNode;
+					
+					if(EditorDOM.isNullOfTextNode(spanNode.nextSibling)){
+						// 移除空元素
+						parentNode.removeChild(spanNode.nextSibling);
+					}
+					if(spanNode.nextSibling===spanNodes[i+1]){
+						var nextSiblingChildNodes = spanNodes[i+1].childNodes;
+						for(var c=0;c<nextSiblingChildNodes.length;c++){
+							spanNode.appendChild(nextSiblingChildNodes[c].cloneNode());
+						}
+						// 移除老元素
+						parentNode.removeChild(spanNodes[i+1]);
+						// 删除过后，重新指向
+						spanNodes[i+1] = spanNodes[i];
+					}
+				}
+				EditorHistory.execCommand(state.icon,false,null);
+				break;
+			case "emphasis":
+				var textNodes = EditorSelection.getTextNodes();
+				var startNode = null,endNode = null,startOffset=0,endOffset=0;
+				for(var i=0;i<textNodes.length;i++){
+					// 获取
+					var node = textNodes[i].childNode;
+					var start = textNodes[i].startOffset;
+					var end = textNodes[i].endOffset;
+					// 拷贝
+					var cloneNode = node.cloneNode();
+					var startText = cloneNode.nodeValue.substring(0,start);
+					var endText = cloneNode.nodeValue.substring(end,cloneNode.length);
+					var borderText = cloneNode.nodeValue.substring(start,end);
+					var span = null;
+					var textParentNode = textNodes[i].childNode.parentNode;
+					if( textParentNode && textParentNode.className && textParentNode.className=="text-emphasis"){
+						if(i==0){
+							startNode = textNodes[i].childNode;
+							startOffset = start;
+						}
+						if(i==textNodes.length-1) {
+							endNode = textNodes[i].childNode;
+							endOffset = end;
+						}
+					}else{
+						// 重新赋值
+						node.nodeValue = startText;
+						span = document.createElement("span");
+						span.className = "text-emphasis";
+						span.innerHTML = borderText;
+						node.parentNode.insertBefore(span, node.nextSibling || node);
 						if(endText!=""){
 							node.parentNode.insertBefore(document.createTextNode(endText), span.nextSibling);
 						}

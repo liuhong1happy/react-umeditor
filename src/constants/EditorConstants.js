@@ -170,6 +170,10 @@ var EditorIconTypes = {
         title:"插入时间",
         disabled:false
     },
+	"emphasis":{
+		title: "着重号",
+		disabled: false
+	}
 }
 var ColorTypes = {
 	themeColors:[

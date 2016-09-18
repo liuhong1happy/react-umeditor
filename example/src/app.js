@@ -7,13 +7,13 @@ var App = React.createClass({
 		return {
 			form_data: {
 				text: "123",
-				editor: "123"
+				editor: "<p>1234567890</p>"
 			}
 		}
 	},
 	getIcons:function(){
 		return [
-				"source | undo redo | bold italic underline strikethrough fontborder | ",
+				"source | undo redo | bold italic underline strikethrough fontborder emphasis | ",
 				"paragraph fontfamily fontsize | superscript subscript | ",
 				"forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ",
 				"cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | ",

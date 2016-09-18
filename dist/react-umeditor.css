@@ -34,6 +34,12 @@ font[face="andale mono"] {
 font[face="omic sans ms"] {
   font-family: omic sans ms;
 }
+.text-emphasis {
+  -webkit-text-emphasis: dot;
+  -webkit-text-emphasis-position: under;
+  text-emphasis: dot;
+  text-emphasis-position: under;
+}
 .editor-container {
   width: auto;
   height: auto;
@@ -580,6 +586,9 @@ font[face="omic sans ms"] {
 }
 .editor-default .editor-toolbar .editor-icon.icon-bold {
   background-position: 0 0;
+}
+.editor-default .editor-toolbar .editor-icon.icon-emphasis {
+  background-position: 0 -20px;
 }
 .editor-default .editor-toolbar .editor-icon.icon-italic {
   background-position: -60px 0;
