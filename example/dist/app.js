@@ -24,7 +24,7 @@ var App = React.createClass({
 			url: 'http://upload.qiniu.com',
 			type: 'qiniu',
 			name: "file",
-			request: "url",
+			request: "image_src",
 			qiniu: {
 				app: {
 					Bucket: "liuhong1happy",

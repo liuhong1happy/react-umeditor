@@ -50,6 +50,7 @@ font[face="omic sans ms"] {
   border-radius: 4px;
   font-size: 16px;
   font-family: '宋体', 'SimSun';
+  overflow-x: hidden;
 }
 .editor-container .editor-toolbar {
   position: relative;
