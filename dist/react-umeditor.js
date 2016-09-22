@@ -3369,7 +3369,7 @@ var EditorClass = React.createClass({
 		var editorValue = this.getContent();
 		var nextValue = nextProps.value || nextProps.defaultValue;
 
-		if (nextValue == currentValue || nextValue == editorValue) {
+		if (currentValue == editorValue && (nextValue == currentValue || nextValue == editorValue)) {
 			this.setState({
 				reload: false
 			});
