@@ -77,15 +77,13 @@ var App = React.createClass({
 		//			})
 		//		}</div>);
 
-		// return (<Editor icons={icons} plugins={plugins} />)
+		return React.createElement(Editor, { plugins: plugins, value: form_data.editor });
 
-		return React.createElement(
-			'div',
-			null,
-			React.createElement(Editor, { ref: 'editor', icons: icons, plugins: plugins, value: form_data.editor }),
-			React.createElement('input', { type: 'text', value: form_data.text, onChange: this.handleFormChange }),
-			React.createElement('input', { type: 'submit', value: '提交', onClick: this.handleSubmitForm })
-		);
+		//		return (<div>
+		//				<Editor ref="editor" icons={icons} plugins={plugins} value={form_data.editor}/>
+		//				<input type="text" value={form_data.text} onChange={this.handleFormChange}/>
+		//				<input type="submit" value="提交" onClick={this.handleSubmitForm} />
+		//			   </div>)
 	}
 });
 

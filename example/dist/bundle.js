@@ -4398,7 +4398,9 @@ var EditorClass = React.createClass({
 		}
 	},
 	shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-		return nextState.reload;
+		// reload判断当前是否可以允许刷新
+		// loaded状态变化时，务必重新刷新
+		return nextState.reload || this.state.loaded != nextState.loaded;
 	},
 	getContent: function getContent() {
 		return this.refs.editor ? this.refs.editor.getContent() : "";
