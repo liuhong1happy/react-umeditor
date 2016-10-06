@@ -589,6 +589,7 @@ var Editor = React.createClass({
 				editorState.content = "<p><br/></p>"
 				break;
 			case "horizontal":
+                var strTime = "<hr/><p></br></p>";
 				if(EditorSelection.range.pasteHTML){
 					EditorSelection.range.pasteHTML(strTime);
 				}else{
@@ -603,7 +604,7 @@ var Editor = React.createClass({
 			case "date":
 				var strDate = new Date().Format("yyyy-MM-dd");
 				if(EditorSelection.range.pasteHTML){
-					EditorSelection.range.pasteHTML(strTime);
+					EditorSelection.range.pasteHTML(strDate);
 				}else{
 					var textNode = EditorDOM.createTextNode(strDate);
 					EditorSelection.range.deleteContents();
