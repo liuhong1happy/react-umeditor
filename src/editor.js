@@ -655,14 +655,14 @@ var Editor = React.createClass({
 					EditorSelection.restoreRange();
 					
 					if(latex && latex.length>0){
-						var html = '<p>&nbsp;<span class="mathquill-embedded-latex" id="'+id+'"></span>&nbsp;</p>';
+						var html = '<span>&nbsp;<span class="mathquill-embedded-latex" id="'+id+'"></span>&nbsp;</span>';
 						if(EditorSelection.range){
 							if(EditorSelection.range.pasteHTML){
 								EditorSelection.range.pasteHTML(html);
 							}else{
-								var p = EditorDOM.createNodeByTag('p','&nbsp;<span class="mathquill-embedded-latex" id="'+id+'"></span>&nbsp;');
+								var span = EditorDOM.createNodeByTag('span','&nbsp;<span class="mathquill-embedded-latex" id="'+id+'"></span>&nbsp;');
 								EditorSelection.range.deleteContents();
-								EditorSelection.insertNode(p);
+								EditorSelection.insertNode(span);
 							}
 							// EditorHistory.execCommand('inserthtml',false,html);
 						}else{
