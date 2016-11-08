@@ -19,7 +19,6 @@ var EditorEventEmitter = assign({}, EventEmitter.prototype, {
 			this.removeListener(type, callback);
 			var index = this.editorStack.indexOf(type);
 			this.editorStack.splice(index ,1);
-
 	  },
 	  mountEditorSuccess: function() {
 		    this.isStart = false;
