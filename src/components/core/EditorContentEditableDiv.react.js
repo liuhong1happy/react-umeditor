@@ -2,6 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var EditorSelection = require('../../utils/EditorSelection');
 var EditorDOM = require('../../utils/EditorDOM');
+var EditorResize = require('../../utils/EditorResize.react');
 
 var EditorContentEditableDiv = React.createClass({
 	getInitialState:function(){
@@ -22,14 +23,14 @@ var EditorContentEditableDiv = React.createClass({
 		EditorSelection.cloneRange();
 	},
 	getContent:function(){
-		var target = ReactDOM.findDOMNode(this.refs.root);
+		var target = ReactDOM.findDOMNode(this.refs.edit);
 		return target.innerHTML;
 	},
 	setContent:function(content){
 		this.setState({
 			content:content
 		})
-		var target = ReactDOM.findDOMNode(this.refs.root);
+		var target = ReactDOM.findDOMNode(this.refs.edit);
 		target.innerHTML = content;
 	},
 	getName:function(){
@@ -59,11 +60,23 @@ var EditorContentEditableDiv = React.createClass({
 			this.props.onRangeChange(e);
 		EditorDOM.stopPropagation(e);
 	},
+	setResizeTarget: function(target){
+		this.refs.resize.setTarget(target);
+	},
+	clearResizeTarget: function(){
+		this.refs.resize.clearTarget();
+	},
+	getEditorRange: function(){
+		return ReactDOM.findDOMNode(this.refs.edit);
+	},
 	render:function(){
-		return (<div ref="root" className="editor-contenteditable-div" 
-				onMouseUp={this.handleMouseUp} 
-				onMouseDown={this.handleMouseDown}
-				contentEditable={true} dangerouslySetInnerHTML={{__html:this.state.content}}></div>)
+		return (
+			<div className="editor-contenteditable-div">
+				<EditorResize ref="resize" />
+				<div className="editable-range" ref="edit" onMouseUp={this.handleMouseUp} onMouseDown={this.handleMouseDown}
+					contentEditable={true} dangerouslySetInnerHTML={{__html:this.state.content}}>
+				</div>
+			</div>)
 	}
 })
 module.exports = EditorContentEditableDiv;

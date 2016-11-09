@@ -28,6 +28,7 @@ var EditorSelection = {
 		}
 	},
 	getTextNodes:function(){
+		if(!this.range) return [];
 		if(this.range.collapsed) return [];
 		var parent = this.range.commonAncestorContainer;
 		var startNode = this.range.startContainer;
@@ -82,6 +83,7 @@ var EditorSelection = {
 		return textNodes;
 	},
 	getSpanNodes:function(){
+		if(!this.range) return [];
 		if(this.range.collapsed) return [];
 		var parent = this.range.commonAncestorContainer;
         if(parent.nodeType==3) parent = parent.parentNode;

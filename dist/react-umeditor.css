@@ -50,7 +50,7 @@ font[face="omic sans ms"] {
   border-radius: 4px;
   font-size: 16px;
   font-family: '宋体', 'SimSun';
-  overflow-x: hidden;
+  overflow-y: visible;
 }
 .editor-container .editor-toolbar {
   position: relative;
@@ -59,13 +59,23 @@ font[face="omic sans ms"] {
 }
 .editor-container .editor-contenteditable-div {
   position: relative;
+  left: 0px;
+  top: 0px;
+  padding: 0px;
+}
+.editor-container .editor-contenteditable-div .editable-range {
+  position: relative;
+  left: 0px;
+  top: 0px;
   border-top-right-radius: 2px;
   border-top-left-radius: 2px;
   min-height: 100px;
   outline: none;
   resize: vertical;
+  margin: 0px 10px;
+  overflow-x: hidden;
 }
-.editor-container .editor-contenteditable-div:focus {
+.editor-container .editor-contenteditable-div .editable-range:focus {
   outline: none;
 }
 .editor-container .editor-textarea {
@@ -432,7 +442,14 @@ font[face="omic sans ms"] {
   margin-left: 20px;
   cursor: pointer;
 }
-.editor-container .editor-resize {
+.editor-container .editor-resize-container {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  width: 0px;
+  height: 0px;
+}
+.editor-container .editor-resize-container .editor-resize {
   z-index: 999;
   border: 2px solid #38B2CE;
   position: absolute;
@@ -440,28 +457,28 @@ font[face="omic sans ms"] {
   top: 0px;
   box-sizing: border-box;
 }
-.editor-container .editor-resize .block-resize {
+.editor-container .editor-resize-container .editor-resize .block-resize {
   position: absolute;
   width: 10px;
   height: 10px;
   background-color: #38B2CE;
 }
-.editor-container .editor-resize .nw-resize {
+.editor-container .editor-resize-container .editor-resize .nw-resize {
   cursor: nw-resize;
   top: -4px;
   left: -4px;
 }
-.editor-container .editor-resize .ne-resize {
+.editor-container .editor-resize-container .editor-resize .ne-resize {
   cursor: ne-resize;
   top: -4px;
   right: -4px;
 }
-.editor-container .editor-resize .se-resize {
+.editor-container .editor-resize-container .editor-resize .se-resize {
   cursor: se-resize;
   bottom: -4px;
   right: -4px;
 }
-.editor-container .editor-resize .sw-resize {
+.editor-container .editor-resize-container .editor-resize .sw-resize {
   cursor: sw-resize;
   bottom: -4px;
   left: -4px;
@@ -982,9 +999,6 @@ font[face="omic sans ms"] {
   margin: 0;
   padding: 0;
   background: url(images/icons.png) -741px 0;
-}
-.editor-default .editor-contenteditable-div {
-  padding: 0px 10px;
 }
 .editor-default .editor-contenteditable-div p {
   margin: 5px 0;

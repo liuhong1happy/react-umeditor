@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-
+var EditorDOM = require('./EditorDOM');
 // resize context
 var minWidth = 12;
 var minHeight = 12;
@@ -22,16 +22,17 @@ var EditorResize = React.createClass({
 		}	
 	},
 	setTarget:function(target){
-		var width =parseFloat(target.width || target.style.width);
-		var height = parseFloat(target.height || target.style.height);
-		var offsetLeft = target.offsetLeft+target.offsetParent.offsetLeft;
-		var offsetTop = target.offsetTop+target.offsetParent.offsetTop;;
+		var root = ReactDOM.findDOMNode(this.refs.root);
+		var position = EditorDOM.getOffsetRootParentPosition(target,root.parentElement);
+		var width = position.w;
+		var height = position.h;
+		var offsetPosition = { x: position.x, y: position.y}
 		this.setState({
 			target:target,
 			width:width,
 			height:height,
 			show:true,
-			position:{x:offsetLeft,y:offsetTop}
+			position:offsetPosition
 		})
 	},
 	getTarget:function(){
@@ -210,12 +211,14 @@ var EditorResize = React.createClass({
 			display:this.state.show?"block":"none",
 			positoin:"absolute"
 		};		
-		return (<div className="editor-resize" style={style}>
-				<div className="block-resize nw-resize" onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp}></div>
-				<div className="block-resize ne-resize" onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp}></div>
-				<div className="block-resize sw-resize" onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp}></div>
-				<div className="block-resize se-resize" onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp}></div>
-		</div>)
+		return (<div className="editor-resize-container" ref="root">
+				<div className="editor-resize" style={style}>
+					<div className="block-resize nw-resize" onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp}></div>
+					<div className="block-resize ne-resize" onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp}></div>
+					<div className="block-resize sw-resize" onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp}></div>
+					<div className="block-resize se-resize" onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp}></div>
+				</div>
+			</div>)
 	}
 })		
 

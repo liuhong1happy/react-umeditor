@@ -54,7 +54,7 @@ font{
 	border-radius: 4px;
 	font-size: 16px;
 	font-family: '宋体', 'SimSun';
-    overflow-x: hidden;
+    overflow-y: visible;
 	.editor-toolbar{
 		position: relative;
 		border-top-right-radius: 2px;
@@ -62,13 +62,23 @@ font{
 	}
 	.editor-contenteditable-div{
 		position: relative;
-		border-top-right-radius: 2px;
-		border-top-left-radius: 2px;
-		min-height: 100px;
-		outline: none;
-		resize: vertical;
-		&:focus{
+		left: 0px;
+		top: 0px;
+		padding: 0px;
+		.editable-range{
+			position: relative;
+			left: 0px;
+			top: 0px;
+			border-top-right-radius: 2px;
+			border-top-left-radius: 2px;
+			min-height: 100px;
 			outline: none;
+			resize: vertical;
+			margin: 0px 10px;
+			overflow-x: hidden;
+			&:focus{
+				outline: none;
+			}
 		}
 	}
 	.editor-textarea{
@@ -443,38 +453,45 @@ font{
 			}
 		}
 	}
-	.editor-resize{
-		z-index: 999;
-		border:2px solid #38B2CE;
-		position: absolute;
-		left: 0px;
+	.editor-resize-container{
+		position: relative;
 		top: 0px;
-		box-sizing: border-box;
-		.block-resize{
+		left: 0px;
+		width: 0px;
+		height: 0px;
+		.editor-resize{
+			z-index: 999;
+			border:2px solid #38B2CE;
 			position: absolute;
-			width:10px;
-			height: 10px;
-			background-color: #38B2CE;
-		}
-		.nw-resize{
-			cursor: nw-resize;
-			top: -4px;
-			left: -4px;
-		}
-		.ne-resize{
-			cursor: ne-resize;
-			top: -4px;
-			right:-4px;
-		}
-		.se-resize{
-			cursor: se-resize;
-			bottom: -4px;
-			right:-4px;
-		}
-		.sw-resize{
-			cursor: sw-resize;
-			bottom: -4px;
-			left:-4px;
+			left: 0px;
+			top: 0px;
+			box-sizing: border-box;
+			.block-resize{
+				position: absolute;
+				width:10px;
+				height: 10px;
+				background-color: #38B2CE;
+			}
+			.nw-resize{
+				cursor: nw-resize;
+				top: -4px;
+				left: -4px;
+			}
+			.ne-resize{
+				cursor: ne-resize;
+				top: -4px;
+				right:-4px;
+			}
+			.se-resize{
+				cursor: se-resize;
+				bottom: -4px;
+				right:-4px;
+			}
+			.sw-resize{
+				cursor: sw-resize;
+				bottom: -4px;
+				left:-4px;
+			}
 		}
 	}
 	.formula-dropdown{
@@ -994,7 +1011,6 @@ font{
 		}
 	}
 	.editor-contenteditable-div{
-		padding: 0px 10px;
 		p{
 			margin: 5px 0;
 		}
