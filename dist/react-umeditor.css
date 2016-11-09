@@ -72,7 +72,7 @@ font[face="omic sans ms"] {
   min-height: 100px;
   outline: none;
   resize: vertical;
-  margin: 0px 10px;
+  margin-left: 10px;
   overflow-x: hidden;
 }
 .editor-container .editor-contenteditable-div .editable-range:focus {
