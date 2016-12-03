@@ -40,7 +40,8 @@ class App extends React.Component {
 		return icons;
 	}
 	render(){
-		return (<Editor ref="editor" value={this.state.content} onChange={this.handleChange} plugins={{"image": { "uploader": { "name":"file", "url": "/api/upload" } } }}/>)
+	    var icons = this.getIcons();
+		return (<Editor ref="editor" icons={icons} value={this.state.content} onChange={this.handleChange} plugins={{"image": { "uploader": { "name":"file", "url": "/api/upload" } } }}/>)
 	}
 }
 ```
@@ -111,9 +112,9 @@ Support icons, As fllow:
 
 	source undo redo bold italic underline strikethrough fontborder emphasis 
 	paragraph fontfamily fontsize superscript subscript 
-	forecolor backcolor removeformat | insertorderedlist insertunorderedlist  selectall 
+	forecolor backcolor removeformat insertorderedlist insertunorderedlist  selectall 
 	cleardoc  indent outdent justifyleft justifycenter justifyright  touppercase tolowercase 
-	horizontal date time  image emotion spechars inserttable
+	horizontal date time  image emotion spechars inserttable formula
 
 ## Snapshot
 

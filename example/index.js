@@ -87,13 +87,12 @@ class App extends React.Component{
 		//			})
 		//		}</div>);
 
-		// return (<Editor  plugins={plugins} value={form_data.editor} onChange={this.handleChange.bind(this)}/>)
-
-		return (<div>
-				<Editor ref="editor" icons={icons} plugins={plugins} value={form_data.editor} onChange={this.handleChange.bind(this)}/>
-				<input type="text" value={form_data.text} onChange={this.handleFormChange.bind(this)}/>
-				<input type="submit" value="提交" onClick={this.handleSubmitForm.bind(this)} />
-		   </div>)
+		return (<Editor icons={icons}  plugins={plugins} value={form_data.editor} onChange={this.handleChange.bind(this)}/>)
+//		return (<div>
+//				<Editor ref="editor" icons={icons} plugins={plugins} value={form_data.editor} onChange={this.handleChange.bind(this)}/>
+//				<input type="text" value={form_data.text} onChange={this.handleFormChange.bind(this)}/>
+//				<input type="submit" value="提交" onClick={this.handleSubmitForm.bind(this)} />
+//		   </div>)
 	}
 }
 	
