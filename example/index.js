@@ -8,7 +8,7 @@ class App extends React.Component{
 		this.state = {
 			form_data: {
 				text: "123",
-				editor: "<p>1234567890</p>"
+				editor: ""
 			}
 		}
 	}
@@ -87,7 +87,7 @@ class App extends React.Component{
 		//			})
 		//		}</div>);
 
-		return (<Editor icons={icons}  plugins={plugins} value={form_data.editor} onChange={this.handleChange.bind(this)}/>)
+		return (<Editor icons={icons}  plugins={plugins} value={form_data.editor} defaultValue="<p>React Umeditor</p>" onChange={this.handleChange.bind(this)}/>)
 //		return (<div>
 //				<Editor ref="editor" icons={icons} plugins={plugins} value={form_data.editor} onChange={this.handleChange.bind(this)}/>
 //				<input type="text" value={form_data.text} onChange={this.handleFormChange.bind(this)}/>

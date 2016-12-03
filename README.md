@@ -39,9 +39,24 @@ class App extends React.Component {
 		]
 		return icons;
 	}
+	getPlugins(){
+		return {
+			"image": { 
+				"uploader": { 
+					"name":"file", 
+					"url": "/api/upload" 
+				} 
+			} 
+		}
+	}
 	render(){
 	    var icons = this.getIcons();
-		return (<Editor ref="editor" icons={icons} value={this.state.content} onChange={this.handleChange} plugins={{"image": { "uploader": { "name":"file", "url": "/api/upload" } } }}/>)
+		var plugins = this.getPlugins();
+		return (<Editor ref="editor" 
+			icons={icons} 
+			value={this.state.content} defaultValue="<p>React Umeditor</p>" 
+			onChange={this.handleChange.bind(this)} 
+			plugins={plugins} />)
 	}
 }
 ```
@@ -118,7 +133,7 @@ Support icons, As fllow:
 
 ## Snapshot
 
-![snapshot](https://raw.githubusercontent.com/liuhong1happy/react-umeditor/cfedda64f6e19830936d323c2e4d836bb14576b2/snapshot/editor.png)
+![snapshot](editor.png)
 
 ## Develop
 
