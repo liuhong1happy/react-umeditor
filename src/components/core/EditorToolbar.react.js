@@ -1,26 +1,18 @@
 var React = require('react');
 var EditorIcon = require('./EditorIcon.react');
+var EditorDOM = require('../../utils/EditorDOM');
 var { 
 	EditorIconTypes
 } = require('../../constants/EditorConstants');
 var EditorHistory = require('../../utils/EditorHistory');
 
-var EditorToolbar = React.createClass({
-	propTypes:{
-		icons:React.PropTypes.array
-	},
-	getDefaultProps:function(){
-		return {
-			icons:[]
-		}
-	},
-	handleIconClick:function(e,state){
-		
+class EditorToolbar extends React.Component{
+	handleIconClick(e,state){
 		if(this.props.onIconClick){
 			this.props.onIconClick(e,state)
 		}
-	},
-	getNameByValue:function(arr,value){
+	}
+	getNameByValue(arr,value){
 		var filterArr = arr.filter(function(ele,pos){
 			return ele.value == value;
 		})
@@ -29,8 +21,8 @@ var EditorToolbar = React.createClass({
 		}else{
 			return "";
 		}
-	},
-	getIcons:function(){
+	}
+	getIcons(){
 		var editorState = this.props.editorState;
 		editorState.icons["undo"] = { disabled:!EditorHistory.canUndo()}
 		editorState.icons["redo"] = { disabled:!EditorHistory.canRedo()}
@@ -44,7 +36,7 @@ var EditorToolbar = React.createClass({
 		var returnArray = [];
 		for(var i=0;i<_icons.length;i++){
 			returnArray[i]  = EditorIconTypes[_icons[i]];
-			returnArray[i].onClick = this.handleIconClick;
+			returnArray[i].onClick = this.handleIconClick.bind(this);
 			returnArray[i].icon = _icons[i];
 			if(editorState.icons[_icons[i]]){
 				returnArray[i].disabled = !!editorState.icons[_icons[i]].disabled;
@@ -56,10 +48,10 @@ var EditorToolbar = React.createClass({
 			returnArray[i].showHtml = !! editorState.showHtml;
 		}
 		return returnArray;
-	},
-	render:function(){
+	}
+	render(){
 		var icons = this.getIcons();
-		return (<div className="editor-toolbar">{
+		return (<div className="editor-toolbar" onMouseDown={EditorDOM.stopPropagation} onClick={EditorDOM.stopPropagation}>{
 					icons.map(function(icon,pos){
 						var props = icon;
 						return(<EditorIcon key={pos} {...props} />)
@@ -67,6 +59,13 @@ var EditorToolbar = React.createClass({
 					
 				}{this.props.children}</div>)
 	}
-})
+}
 
+EditorToolbar.propTypes = {
+	icons:React.PropTypes.array
+}
+EditorToolbar.defaultProps = {
+	icons:[]
+}
+	
 module.exports = EditorToolbar;

@@ -28,28 +28,29 @@ var SCChars = React.createClass({
 	}
 })
 
-var SpecialCharsDialog = React.createClass({
-	getInitialState:function(){
-		return {
+class SpecialCharsDialog extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
 			handle:function(){}
 		}
-	},
-	open:function(handle){
+	}
+	open(handle){
 		this.setState({
 			handle:handle
 		})
 		this.refs.root.open();
-	},
-	close:function(){
+	}
+	close(){
 		if(this.refs.root) this.refs.root.close();
-	},
-	toggle:function(handle){
+	}
+	toggle(handle){
 		this.setState({
 			handle:handle
 		})
 		this.refs.root.toggle();
-	},
-	handleSelectChar:function(e,char){
+	}
+	handleSelectChar(e,char){
 		e = e || event;
 		if(this.state.handle){
 			this.state.handle(e,char);
@@ -61,25 +62,25 @@ var SpecialCharsDialog = React.createClass({
 			e.cancelBubble = true;
 		}
 		this.close();
-	},
-	render:function(){
+	}
+	render(){
 		var tabs = [];
 		for(var i=0;i<SpecialChars.length;i++){
 			tabs.push({
 				title:SpecialChars[i].title,
 				chars:SpecialChars[i].chars,
-				component:(<SCChars chars={SpecialChars[i].chars} name="common-chars" onSelectChar={this.handleSelectChar} />)
+				component:(<SCChars chars={SpecialChars[i].chars} name="common-chars" onSelectChar={this.handleSelectChar.bind(this)} />)
 			})
 		}
 		var buttons = [];
 		if(this.props.hidden){
 			return (<div></div>)
 		}else{
-			return (<Dialog ref="root" className="special-chars-dialog" width={700} height={508} title="特殊字符" buttons={buttons} onClose={this.close}>
+			return (<Dialog ref="root" className="special-chars-dialog" width={700} height={508} title="特殊字符" buttons={buttons} onClose={this.close.bind(this)}>
 					<TabGroup tabs={tabs} />
 			</Dialog>)
 		}
 	}
-})
+}
 		
 module.exports = SpecialCharsDialog;

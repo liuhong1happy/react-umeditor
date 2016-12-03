@@ -26,6 +26,7 @@ var EditorSelection = {
 			this.selection.addRange(this.range.cloneRange());
 			this.range = this.range.cloneRange();
 		}
+		
 	},
 	getTextNodes:function(){
 		if(!this.range) return [];
@@ -164,9 +165,20 @@ var EditorSelection = {
 			this.range = this.range.cloneRange();
 		}
 	},
+	validateSelection:function(selection){
+		var selection = selection || this.selection;
+		var anchorNode = selection.anchorNode;
+		if(!anchorNode) return false;
+		var parentNode = anchorNode.parentNode;
+		if(!parentNode) return false;
+		if(anchorNode.offsetParent && anchorNode.offsetParent.className=="editor-toolbar") return false;
+		if(parentNode.offsetParent && parentNode.offsetParent.className=="editor-toolbar") return false;
+		return true;
+	},
 	createRange:function(){
 		if(this.storedRange) return;
-		this.selection = this.getSelection()
+		this.selection = this.getSelection();
+		if(!this.validateSelection()) return;
 		if(this.selection && this.selection.rangeCount>0) {
 			this.range = this.selection.getRangeAt(0).cloneRange();
 		}else{
@@ -266,6 +278,7 @@ var EditorSelection = {
 		this.cloneRange();
 	},
 	insertNode: function(node){
+		
 		if(this.range){
 			EditorSelection.range.insertNode(node);
 			var lastNode = node.lastChild || node;

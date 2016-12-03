@@ -1,20 +1,21 @@
 var React = require('react');
 
-var TabGroup = React.createClass({
-	getInitialState:function(){
-		return {
+class TabGroup extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
 			tabIndex:0
 		}
-	},
-	setTabIndex:function(index){
+	}
+	setTabIndex(index){
 		this.setState({
 			tabIndex:index
 		})
-	},
-	getTabIndex:function(){
+	}
+	getTabIndex(){
 		return this.state.tabIndex;
-	},
-	handleClick:function(e){
+	}
+	handleClick(e){
 		e = e || event;
 		var target = e.target || e.srcElement;
 		var index = parseInt(target.getAttribute("data-index"));
@@ -24,12 +25,12 @@ var TabGroup = React.createClass({
 		}else{
 			e.cancelBubble = true;
 		}
-	},
-	render:function(){
+	}
+	render(){
 		var tabIndex = this.state.tabIndex;
 		var tabs = this.props.tabs;
 		var component = tabs[tabIndex].component;
-		var handleClick = this.handleClick;
+		var handleClick = this.handleClick.bind(this);
 		return (<div className="tab-group">
 				<ul className="tab-nav">
 					{
@@ -45,6 +46,6 @@ var TabGroup = React.createClass({
 				</div>
 			</div>)
 	}
-})
+}
 
 module.exports = TabGroup;

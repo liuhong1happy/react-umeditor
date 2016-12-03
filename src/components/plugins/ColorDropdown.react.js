@@ -2,29 +2,30 @@ var React = require('react');
 var Dropdown = require('../base/Dropdown.react');
 var {ColorTypes} = require('../../constants/EditorConstants');
 var EditorDOM = require('../../utils/EditorDOM');
-var ColorDropdown = React.createClass({
-	getInitialState:function(){
-		return {
+class ColorDropdown extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
 			handle:function(){}
 		}
-	},
-	open:function(position,handle){
+	}
+	open(position,handle){
 		this.setState({
 			handle:handle
 		})
 		this.refs.root.open(position);
-	},
-	close:function(){
+	}
+	close(){
 		if(this.refs.root)
 			this.refs.root.close();
-	},
-	toggle:function(position,handle){
+	}
+	toggle(position,handle){
 		this.setState({
 			handle:handle
 		})
 		this.refs.root.toggle(position);
-	},
-	handleSelectColor:function(e){
+	}
+	handleSelectColor(e){
 		e = e || event;
 		var target = e.target || e.srcElement;
 		var color = target.getAttribute('data-color');
@@ -33,9 +34,9 @@ var ColorDropdown = React.createClass({
 		}
 		this.close();
 		EditorDOM.stopPropagation(e);
-	},
-	render:function(){
-		var handleSelectColor = this.handleSelectColor;
+	}
+	render(){
+		var handleSelectColor = this.handleSelectColor.bind(this);
 		if(this.props.hidden){
 			return (<div></div>)
 		}else{
@@ -76,6 +77,6 @@ var ColorDropdown = React.createClass({
 			</Dropdown>)
 		}
 	}
-})
+}
 		
 module.exports = ColorDropdown;

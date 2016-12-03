@@ -17,11 +17,32 @@ javascript
 var React = require('react');
 var Editor = require('react-umeditor');
 
-var App = React.createClass({
-	render:function(){
-		return (<Editor ref="editor"/>)
+class App extends React.Component {
+	construnctor(props){
+		super(props);
+		this.state = {
+			content: ""
+		}
 	}
-})
+	handleChange(content){
+		this.setState({
+			content: content
+		})
+	}
+	getIcons(){
+		var icons = [
+			"source | undo redo | bold italic underline strikethrough fontborder emphasis | ",
+			"paragraph fontfamily fontsize | superscript subscript | ",
+			"forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ",
+			"cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | ",
+			"horizontal date time  | image emotion spechars | inserttable"
+		]
+		return icons;
+	}
+	render(){
+		return (<Editor ref="editor" value={this.state.content} onChange={this.handleChange} plugins={{"image": { "uploader": { "name":"file", "url": "/api/upload" } } }}/>)
+	}
+}
 ```
 	
 html
@@ -33,20 +54,19 @@ html
 	<meta charset="UTF-8">
 	<title>Editor Demo</title>
 	
-	<!-- mathquill & umeditor stylesheet -->
+	<!-- mathquill & umeditor stylesheet & if you have the formula icon -->
 	<link rel="stylesheet" href="../../dist/third-part/mathquill/mathquill.css"/>
-	<link rel="stylesheet" href="../../dist/react-umeditor.css" type="text/css" />
+	
 	<link rel="stylesheet" href="app.css" type="text/css" />
 </head>
 <body>
 	<div id="react-container"></div>
 	
-	<!-- jquery & mathquill javascript -->
+	<!-- jquery & mathquill javascript & if you have the formula icon -->
 	<script src="../../dist/third-part/jquery.min.js"></script>
 	<script src="../../dist/third-part/mathquill/mathquill.js"></script>
 	
 	<!-- your react script -->
-	<script src="common.js"></script>
 	<script src="bundle.js"></script>
 	<script src="app.js"></script>
 </body>
@@ -66,6 +86,7 @@ You can `this.refs.editor.xxx()`! The `xxx` maybe is as follows:
 
 You can set the `props`!The `props` maybe is as follows:
 * onFocus: the focus event
+* onChange: the text change event `{ content: string }`
 * defaultValue: default value of editor
 * value: value of editor
 * icons: icons of toolbar
@@ -83,6 +104,16 @@ You can set the `props`!The `props` maybe is as follows:
                     * SK: SecretKey of qiniu
                 * key: resource key of file
                 * genKey: when not key,gen resource key of file
+
+## Icons
+
+Support icons, As fllow:
+
+	source undo redo bold italic underline strikethrough fontborder emphasis 
+	paragraph fontfamily fontsize superscript subscript 
+	forecolor backcolor removeformat | insertorderedlist insertunorderedlist  selectall 
+	cleardoc  indent outdent justifyleft justifycenter justifyright  touppercase tolowercase 
+	horizontal date time  image emotion spechars inserttable
 
 ## Snapshot
 

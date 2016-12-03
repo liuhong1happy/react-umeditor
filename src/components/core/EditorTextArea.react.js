@@ -1,32 +1,37 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-var EditorTextArea = React.createClass({
-	getInitialState:function(){
-		return {
+class EditorTextArea  extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
 			content:""
 		}
-	},
-	getContent:function(){
+	}
+	getContent(){
 		var target = ReactDOM.findDOMNode(this.refs.root);
 		return target.value;
-	},
-	setContent:function(content){
+	}
+	setContent(content){
 		this.setState({
 			content:content
 		})
-	},
-	getName:function(){
-		return "textarea";
-	},
-	handleChange:function(){
-		var target = ReactDOM.findDOMNode(this.refs.root);
-		this.setState({
-			content:target.value
-		})
-	},
-	render:function(){
-		return (<textarea ref="root" className="editor-textarea" value={this.state.content} onChange={this.handleChange}></textarea>)
 	}
-})
+	getName(){
+		return "textarea";
+	}
+	handleChange(){
+		var content = this.getContent();
+		this.setState({
+			content: content
+		})
+		if(this.props.onChange){
+			this.props.onChange(content);
+		}
+	}
+	render(){
+		return (<textarea ref="root" className="editor-textarea" value={this.state.content} onChange={this.handleChange.bind(this)} ></textarea>)
+	}
+}
+				
 module.exports = EditorTextArea;

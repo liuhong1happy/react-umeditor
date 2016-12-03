@@ -5,8 +5,8 @@ var TabGroup = require('../base/TabGroup.react');
 var Dropdown = require('../base/Dropdown.react');
 var {FormulaTypes} = require('../../constants/EditorConstants');
 
-var FormulaIcons = React.createClass({
-	handleClick:function(e){
+class FormulaIcons extends React.Component{
+	handleClick(e){
 		e = e || event;
 		var target = e.target || e.srcElement;
 		var latex = target.getAttribute("data-latex");
@@ -14,10 +14,10 @@ var FormulaIcons = React.createClass({
 		if(this.props.onSelectFormula){
 			this.props.onSelectFormula(e,latex,id);
 		}
-	},
-	render:function(){
+	}
+	render(){
 		var icons = this.props.icons;
-		var handleClick = this.handleClick;
+		var handleClick = this.handleClick.bind(this);
 		return (<ul className={"formulas-icons "+this.props.name} >
 			{
 				icons.map(function(ele,pos){
@@ -26,31 +26,32 @@ var FormulaIcons = React.createClass({
 			}
 		</ul>)
 	}
-})
+}
 
-var FormulaDropdown = React.createClass({
-	getInitialState:function(){
-		return {
+class FormulaDropdown extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
 			handle:function(){}
 		}
-	},
-	open:function(position,handle){
+	}
+	open(position,handle){
 		this.setState({
 			handle:handle
 		})
 		this.refs.root.open(position);
-	},
-	close:function(){
+	}
+	close(){
 		if(this.refs.root)
 			this.refs.root.close();
-	},
-	toggle:function(position,handle){
+	}
+	toggle(position,handle){
 		this.setState({
 			handle:handle
 		})
 		this.refs.root.toggle(position);
-	},
-	handleSelectFormula:function(e,latex,id){
+	}
+	handleSelectFormula(e,latex,id){
 		e = e || event;
 		if(this.state.handle){
 			this.state.handle(e,latex,id);
@@ -62,12 +63,12 @@ var FormulaDropdown = React.createClass({
 			e.cancelBubble = true;
 		}
 		this.close();
-	},
-	render:function(){
+	}
+	render(){
 		var tabs = [
-			{title:"常用公式",component:(<FormulaIcons icons={FormulaTypes.commonFormulas} name="common-formulas" onSelectFormula={this.handleSelectFormula}/>)},
-			{title:"符号",component:(<FormulaIcons icons={FormulaTypes.symbolFormulas} name="symbol-formulas" onSelectFormula={this.handleSelectFormula}/>)},
-			{title:"字母",component:(<FormulaIcons icons={FormulaTypes.arabicFormulas} name="arabic-formulas" onSelectFormula={this.handleSelectFormula}/>)}
+			{title:"常用公式",component:(<FormulaIcons icons={FormulaTypes.commonFormulas} name="common-formulas" onSelectFormula={this.handleSelectFormula.bind(this)}/>)},
+			{title:"符号",component:(<FormulaIcons icons={FormulaTypes.symbolFormulas} name="symbol-formulas" onSelectFormula={this.handleSelectFormula.bind(this)}/>)},
+			{title:"字母",component:(<FormulaIcons icons={FormulaTypes.arabicFormulas} name="arabic-formulas" onSelectFormula={this.handleSelectFormula.bind(this)}/>)}
 		]
 		if(this.props.hidden){
 			return (<div></div>)
@@ -77,6 +78,6 @@ var FormulaDropdown = React.createClass({
 			</Dropdown>)
 		}
 	}
-})
+}
 		
 module.exports = FormulaDropdown;

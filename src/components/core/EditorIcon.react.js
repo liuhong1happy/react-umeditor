@@ -9,14 +9,14 @@ var ReactDOM = require('react-dom');
 * @showHtml: 是否当前是显示html属性
 * @color: 前景色和背景色
 **/
-var EditorIcon = React.createClass({
-	componentDidMount:function(){
+class EditorIcon extends React.Component{
+	componentDidMount(){
 		this.updateStyle();
-	},
-	componentDidUpdate:function(){
+	}
+	componentDidUpdate(){
 		this.updateStyle();
-	},
-	updateStyle:function(){
+	}
+	updateStyle(){
 		var root = ReactDOM.findDOMNode(this.refs.root);
 		var icon = this.props.icon;
 		switch(this.props.icon){
@@ -30,8 +30,8 @@ var EditorIcon = React.createClass({
 					root.appendChild(style);
 				break;
 		}
-	},
-	handleClick:function(e){
+	}
+	handleClick(e){
 		e = e || event;
 		var target = e.target || e.srcElement;
 		while(target.className.indexOf("editor-icon")==-1){
@@ -43,20 +43,20 @@ var EditorIcon = React.createClass({
 		if(this.props.onClick){
 			this.props.onClick(e,{...props})
 		}
-	},
-	render:function(){
+	}
+	render(){
 		var {icon,active,disabled,showHtml,onClick,...props} = this.props;
 		var _disabled = showHtml && (icon!="source" && icon!="separator");
 		var _className = "editor-icon icon-" + icon + (active ? " active" : "") + (disabled || _disabled ? " disabled" : "");
 		if(icon=="fontsize" || icon=="fontfamily" || icon == "paragraph"){
-			return (<span ref="root" className={_className} onClick={this.handleClick} {...props}> 
+			return (<span ref="root" className={_className} onClick={this.handleClick.bind(this)} {...props}> 
 				<span className="icon-label">{props.name}</span>
 				<span className="icon-caret"></span>
 				</span>)
 		}else{
-				return (<span ref="root" className={_className} onClick={this.handleClick} {...props}></span>)
+				return (<span ref="root" className={_className} onClick={this.handleClick.bind(this)} {...props}></span>)
 		}
 	}
-})
+}
 
 module.exports = EditorIcon;

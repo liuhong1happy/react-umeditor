@@ -1,40 +1,41 @@
 var React = require('react');
 
-var Dropdown = React.createClass({
-	getInitialState:function(){
-		return {
+class Dropdown extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
 			show:false,
 			position:{
 				x:0,
 				y:0
 			}
 		}
-	},
-	componentDidMount:function(){
-		window.addEventListener("click",this.close);
-	},
-	componentWillUnmount:function(){
-		window.removeEventListener("click",this.close);
-	},
-	open:function(position){
+	}
+	componentDidMount(){
+		window.addEventListener("click",this.close.bind(this));
+	}
+	componentWillUnmount(){
+		window.removeEventListener("click",this.close.bind(this));
+	}
+	open(position){
 		this.setState({
 			show:true,
 			position:position
 		})
-	},
-	close:function(){
+	}
+	close(){
 		if(!this.state.show) return;
 		this.setState({
 			show:false
 		})
-	},
-	toggle:function(position){
+	}
+	toggle(position){
 		this.setState({
 			show:!this.state.show,
 			position:position
 		})
-	},
-	render:function(){
+	}
+	render(){
 		var {className,style,...props} = this.props;
 		style = style || {};
 		if(!this.state.show){
@@ -52,6 +53,6 @@ var Dropdown = React.createClass({
 			{this.props.children}
 		</div>)
 	}
-})
+}
 		
 module.exports = Dropdown;

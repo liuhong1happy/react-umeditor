@@ -1,28 +1,29 @@
 var React = require('react');
 var ComboBox = require('../base/ComboBox.react');
 
-var ParagraphDropdown = React.createClass({
-	getInitialState:function(){
-		return {
+class ParagraphDropdown extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
 			handle:function(){}
 		}
-	},
-	open:function(position,handle){
+	}
+	open(position,handle){
 		this.setState({
 			handle:handle
 		})
 		this.refs.root.open(position);
-	},
-	close:function(){
+	}
+	close(){
 		if(this.refs.root) this.refs.root.close();
-	},
-	toggle:function(position,handle){
+	}
+	toggle(position,handle){
 		this.setState({
 			handle:handle
 		})
 		this.refs.root.toggle(position);
-	},
-	handleSelect:function(e){
+	}
+	handleSelect(e){
 		e = e || event;
 		var target = e.target || e.srcElement;
 		var value = target.getAttribute('data-value');
@@ -35,9 +36,9 @@ var ParagraphDropdown = React.createClass({
 			e.cancelBubble = true;
 		}
 		this.close();
-	},
-	render:function(){
-		var handleSelect = this.handleSelect;
+	}
+	render(){
+		var handleSelect = this.handleSelect.bind(this);
 		var paragraph = this.props.paragraph?this.props.paragraph:[];
 		var props = this.props;
 		if(this.props.hidden){
@@ -56,6 +57,6 @@ var ParagraphDropdown = React.createClass({
 			</ComboBox>)
 		}
 	}
-})
+}
 		
 module.exports = ParagraphDropdown;

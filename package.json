@@ -1,69 +1,63 @@
 {
   "name": "react-umeditor",
-  "version": "0.8.0",
+  "version": "1.0.0-rc1",
   "description": "React Editor like UMEditor",
   "main": "lib/editor.js",
-  "private": false,
+  "files": [
+    "lib",
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"no tests yet\" && exit 0",
-    "build": "gulp clean && NODE_ENV=development gulp build && cp -R images/. dist/images && cp -R third-part/. dist/third-part",
-    "build-win": "gulp clean && set NODE_ENV=development && gulp build && xcopy images dist\\images\\ /s /y && xcopy  third-part dist\\third-part\\ /s /y",
-    "examples": "gulp dev:server",
-    "publish:site": "gulp publish:examples",
-    "start": "gulp dev",
-    "release": "gulp release",
-    "watch": "gulp watch:lib"
-  },
-  "author": [
-    {
-      "name": "Holly Liu",
-      "email": "liuhong1.happy@163.com"
-    },
-    {
-      "name": "Lei Haohao",
-      "email": "113864965@qq.com"
-    }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/liuhong1happy/react-umeditor.git"
-  },
-  "license": "MIT",
-  "keywords": [
-    "react",
-    "react-editor",
-    "react-component"
-  ],
-  "dependencies": {
-    "classnames": "^2.2.1",
-    "events": "^1.1.1",
-    "hmacsha1": "^1.0.0",
-    "object-assign": "^4.1.0"
-  },
-  "peerDependencies": {
-    "react": ">=0.14.3",
-    "react-dom": ">=0.14.3"
+    "test": "test",
+    "clean": "rm -rf ./lib",
+    "build": "npm run clean & NODE_ENV=production babel ./src --out-dir ./lib && cp -R images/. dist/images && cp -R third-part/. dist/third-part",
+    "example": "webpack-dev-server --devtool eval --progress --hot --host 0.0.0.0 --config webpack.example.config.js",
+    "docs": "webpack --devtool cheap-module-source-map --progress --color --profile --config webpack.docs.config.js --watch"
   },
   "devDependencies": {
-    "envify": "^3.4.1",
-    "gulp": "^3.9.0",
-    "react": ">=0.14.3",
-    "react-dom": ">=0.14.3",
-    "react-component-gulp-tasks": "^0.7.7",
-    "reactify": "^1.1.1"
+    "babel": "^6.0.0",
+    "babel-cli": "^6.0.0",
+    "babel-core": "^6.0.0",
+    "babel-loader": "^6.2.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babel-preset-react-hmre": "^1.1.1",
+    "babel-preset-stage-0": "^6.3.13",
+    "console-polyfill": "^0.2.2",
+    "copy-webpack-plugin": "^3.0.1",
+    "css-loader": "^0.25.0",
+    "es5-shim": "^4.4.1",
+    "file-loader": "^0.9.0",
+    "html-webpack-plugin": "^2.22.0",
+    "jquery": "^3.1.1",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
+    "open-browser-webpack-plugin": "0.0.2",
+    "path": "^0.12.7",
+    "react": "^0.14.8",
+    "react-dom": "^0.14.8",
+    "react-transform-catch-errors": "^1.0.2",
+    "react-transform-hmr": "^1.0.4",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.0"
   },
-  "browserify": {
-    "transform": [
-      [
-        "reactify",
-        {
-          "es6": true
-        }
-      ],
-      "envify"
-    ]
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuhong1happy/react-umeditor.git"
   },
-  "browserify-shim": {
-    "react": "global:React"
+  "keywords": [
+    "react",
+    "react-umeditor"
+  ],
+  "author": "Holly Liu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/liuhong1happy/react-umeditor/issues"
+  },
+  "homepage": "https://github.com/liuhong1happy/react-umeditor#readme",
+  "dependencies": {
+    "hmacsha1": "^1.0.0"
   }
 }

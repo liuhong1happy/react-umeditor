@@ -5,8 +5,8 @@ var TabGroup = require('../base/TabGroup.react');
 var Dialog = require('../base/Dialog.react');
 var {EmotionImages} = require('../../constants/EditorConstants');
 
-var EmotionPanel = React.createClass({
-	handleClick:function(e){
+class EmotionPanel extends React.Component{
+	handleClick(e){
 		e = e || event;
 		var target = e.target || e.srcElement;
 		var url = target.getAttribute("data-url");
@@ -18,10 +18,10 @@ var EmotionPanel = React.createClass({
 			img.title = title;
 			this.props.onSelectImage(e,img);
 		}
-	},
-	render:function(){
+	}
+	render(){
 		var images = this.props.images;
-		var handleClick = this.handleClick;
+		var handleClick = this.handleClick.bind(this);
 		return (<ul className={"emotion-images "+this.props.name} >
 			{
 				images.map(function(ele,pos){
@@ -32,31 +32,32 @@ var EmotionPanel = React.createClass({
 			}
 		</ul>)
 	}
-})
+}
 
-var EmotionDialog = React.createClass({
-	getInitialState:function(){
-		return {
+class EmotionDialog extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
 			handle:function(){}
 		}
-	},
-	open:function(handle){
+	}
+	open(handle){
 		this.setState({
 			handle:handle
 		})
 		this.refs.root.open();
-	},
-	close:function(){
+	}
+	close(){
 		if(this.refs.root)
 			this.refs.root.close();
-	},
-	toggle:function(handle){
+	}
+	toggle(handle){
 		this.setState({
 			handle:handle
 		})
 		this.refs.root.toggle();
-	},
-	handleSelectImage:function(e,img){
+	}
+	handleSelectImage(e,img){
 		e = e || event;
 		if(this.state.handle){
 			this.state.handle(e,img);
@@ -68,8 +69,8 @@ var EmotionDialog = React.createClass({
 			e.cancelBubble = true;
 		}
 		this.close();
-	},
-	getEmotionTabs:function(){
+	}
+	getEmotionTabs(){
 		var {EmotionTabs,BaseUrl,SmileyInfor} = EmotionImages;
 		var tabs = [];
 		for(var key in EmotionTabs){
@@ -89,8 +90,8 @@ var EmotionDialog = React.createClass({
 			tabs.push(tab);
 		}
 		return tabs;
-	},
-	render:function(){
+	}
+	render(){
 		var tabs = [];
 		var EmotionTabs = this.getEmotionTabs();
 		
@@ -98,18 +99,18 @@ var EmotionDialog = React.createClass({
 			tabs.push({
 				title:EmotionTabs[i].title,
 				images:EmotionTabs[i].images,
-				component:(<EmotionPanel images={EmotionTabs[i].images} name="common-images" onSelectImage={this.handleSelectImage} />)
+				component:(<EmotionPanel images={EmotionTabs[i].images} name="common-images" onSelectImage={this.handleSelectImage.bind(this)} />)
 			})
 		}
 		var buttons = [];
 		if(this.props.hidden){
 			return (<div></div>)
 		}else{
-			return (<Dialog ref="root" className="emotion-dropdwon" width={700} height={508} title="表情" buttons={buttons} onClose={this.close}>
+			return (<Dialog ref="root" className="emotion-dropdwon" width={700} height={508} title="表情" buttons={buttons} onClose={this.close.bind(this)}>
 					<TabGroup tabs={tabs} />
 			</Dialog>)
 		}
 	}
-})
+}
 		
 module.exports = EmotionDialog;

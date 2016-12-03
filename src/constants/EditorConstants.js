@@ -286,7 +286,6 @@ var SpecialChars = [
     { name:"yyyb", title:"英语音标", chars:toArray("i:,i,e,æ,ʌ,ə:,ə,u:,u,ɔ:,ɔ,a:,ei,ai,ɔi,əu,au,iə,εə,uə,p,t,k,b,d,g,f,s,ʃ,θ,h,v,z,ʒ,ð,tʃ,tr,ts,dʒ,dr,dz,m,n,ŋ,l,r,w,j,")},
     { name:"zyzf", title:"其它", chars:toArray("ㄅ,ㄆ,ㄇ,ㄈ,ㄉ,ㄊ,ㄋ,ㄌ,ㄍ,ㄎ,ㄏ,ㄐ,ㄑ,ㄒ,ㄓ,ㄔ,ㄕ,ㄖ,ㄗ,ㄘ,ㄙ,ㄚ,ㄛ,ㄜ,ㄝ,ㄞ,ㄟ,ㄠ,ㄡ,ㄢ,ㄣ,ㄤ,ㄥ,ㄦ,ㄧ,ㄨ")}
 ];
-
 var EmotionImages = {
 	DemoUrl:"http://img.baidu.com/hi/tsj/t_0001.gif",
 	BaseUrl:"http://img.baidu.com/hi/",
@@ -309,8 +308,6 @@ var EmotionImages = {
 		tab6:{ name:"有啊", prefix:"y_00", path:"youa/"},
 	}
 }
-
-
 
 module.exports = {
 	EditorIconTypes:EditorIconTypes,

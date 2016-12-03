@@ -1,30 +1,31 @@
 var React = require('react');
 var Dropdown = require('../base/Dropdown.react');
 
-var TablePickerDropdown = React.createClass({
-    getInitialState:function(){
-        return {
+class TablePickerDropdown extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
             row:0,
             column:0,
             handle:function(){}
-        }
-    },
-	open:function(position,handle){
+		}
+	}
+	open(position,handle){
 		this.setState({
 			handle:handle
 		})
 		this.refs.root.open(position);
-	},
-	close:function(){
+	}
+	close(){
 		if(this.refs.root) this.refs.root.close();
-	},
-	toggle:function(position,handle){
+	}
+	toggle(position,handle){
 		this.setState({
 			handle:handle
 		})
 		this.refs.root.toggle(position);
-	},
-    handleMouseEvent:function(e){
+	}
+    handleMouseEvent(e){
         e = e || event;
 		var target = e.target || e.srcElement;
 		var parentPostion = target.getBoundingClientRect();
@@ -39,14 +40,14 @@ var TablePickerDropdown = React.createClass({
             row:row,
             column:column
         })
-    },
-    handleMouseOut:function(e){
+    }
+    handleMouseOut(e){
         this.setState({
             row:0,
             column:0
         })
-    },
-    handleClick:function(e){
+    }
+    handleClick(e){
         // insert table
         var Table = document.createElement("table");
 		Table.className = "editor-table";
@@ -60,8 +61,8 @@ var TablePickerDropdown = React.createClass({
         }
         this.state.handle(e,Table);
         this.refs.root.close();
-    },
-    render:function(){
+    }
+    render(){
         var row = this.state.row;
         var column = this.state.column;
 		if(this.props.hidden){
@@ -69,13 +70,13 @@ var TablePickerDropdown = React.createClass({
 		}else{
 			return (<Dropdown ref="root" className="tablepicker-dropdown">
 						<div className="infoarea"> <span>{column+"列 x "+row+"行"}</span></div>
-						<div className="pickarea" onMouseOver={this.handleMouseEvent}  onMouseMove={this.handleMouseEvent}
-								onMouseOut={this.handleMouseOut} onClick={this.handleClick}>
+						<div className="pickarea" onMouseOver={this.handleMouseEvent.bind(this)}  onMouseMove={this.handleMouseEvent.bind(this)}
+								onMouseOut={this.handleMouseOut.bind(this)} onClick={this.handleClick.bind(this)}>
 								<div className="overlay" style={{width:row*22,height:column*22}}></div>
 						</div>
 					</Dropdown>)
 		}
     }
-})
+}
 
 module.exports = TablePickerDropdown;

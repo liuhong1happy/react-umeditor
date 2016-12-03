@@ -1,26 +1,27 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var Editor = require('react-umeditor');
+var Editor = require('../lib/editor');
 
-var App = React.createClass({
-	getInitialState: function(){
-		return {
+class App extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
 			form_data: {
 				text: "123",
 				editor: "<p>1234567890</p>"
 			}
 		}
-	},
-	getIcons:function(){
+	}
+	getIcons(){
 		return [
 				"source | undo redo | bold italic underline strikethrough fontborder emphasis | ",
 				"paragraph fontfamily fontsize | superscript subscript | ",
 				"forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ",
 				"cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | ",
-				"horizontal date time  | image formula spechars | inserttable"
+				"horizontal date time  | image spechars | inserttable"
 			]
-	},
-	getQiniuUploader:function(){
+	}
+	getQiniuUploader(){
 		return {
 			url:'http://upload.qiniu.com',
 			type:'qiniu',
@@ -38,8 +39,8 @@ var App = React.createClass({
                 }
 			}
 		}
-	},
-	handleFormChange: function(e){
+	}
+	handleFormChange(e){
 		e = e || event;
 		var target = e.target || e.srcElement;
 		var value = target.value;
@@ -50,12 +51,20 @@ var App = React.createClass({
 		this.setState({
 			form_data: form_data
 		})
-	},
-	handleSubmitForm: function(){
+	}
+	handleSubmitForm(){
 		var form_data = this.state.form_data;
 		alert(form_data.editor);
-	},
-	render:function(){
+	}
+	handleChange(content){
+		console.log(content);
+		var form_data = this.state.form_data;
+		form_data.editor = content;
+		this.setState({
+			form_data: form_data
+		})
+	}
+	render(){
 		var icons = this.getIcons();
 		var uploader = this.getQiniuUploader();
 		var plugins = {
@@ -72,21 +81,20 @@ var App = React.createClass({
 			})
 		}
 		var form_data = this.state.form_data;
-//		return (<div>{
-//			editors.map(function(ele,pos){
-//				return (<Editor key={pos} icons={ele.icons} plugins={ele.plugins} />)
-//			})
-//		}</div>);
-        
-return (<Editor  plugins={plugins} value={form_data.editor}/>)
-		
-		
-//		return (<div>
-//				<Editor ref="editor" icons={icons} plugins={plugins} value={form_data.editor}/>
-//				<input type="text" value={form_data.text} onChange={this.handleFormChange}/>
-//				<input type="submit" value="提交" onClick={this.handleSubmitForm} />
-//			   </div>)
+		//		return (<div>{
+		//			editors.map(function(ele,pos){
+		//				return (<Editor key={pos} icons={ele.icons} plugins={ele.plugins} />)
+		//			})
+		//		}</div>);
+
+		// return (<Editor  plugins={plugins} value={form_data.editor} onChange={this.handleChange.bind(this)}/>)
+
+		return (<div>
+				<Editor ref="editor" icons={icons} plugins={plugins} value={form_data.editor} onChange={this.handleChange.bind(this)}/>
+				<input type="text" value={form_data.text} onChange={this.handleFormChange.bind(this)}/>
+				<input type="submit" value="提交" onClick={this.handleSubmitForm.bind(this)} />
+		   </div>)
+	}
 }
-})
 	
 ReactDOM.render(<App />, document.getElementById('react-container'));

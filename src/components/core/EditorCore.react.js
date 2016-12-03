@@ -28,12 +28,11 @@ var EditorToolbar = require('../core/EditorToolbar.react');
 var EditorTextArea = require('../core/EditorTextArea.react');
 var EditorContentEditableDiv = require('../core/EditorContentEditableDiv.react');
 
-// 需要外部引用MathQuill
-var MQ = MathQuill ? MathQuill.getInterface(2) : null;
-
 // key down context
 var saveSceneTimer = null;
 var keycont = 0;
+
+var MQ = null;
 
 /**
 * 对外接口方法
@@ -47,10 +46,10 @@ var keycont = 0;
 * @icons: 工具条上需要显示的图标
 **/
 
-var EditorCore = React.createClass({
-    // init & update
-	getInitialState:function(){
-		return {
+class EditorCore extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
 			editorState:{
 				icon: "source",
 				showHtml:false,
@@ -64,21 +63,20 @@ var EditorCore = React.createClass({
 					"outdent": { active:true,icon:"outdent"}
 				}
 			},
-			defaultValue:this.props.defaultValue?this.props.defaultValue:"<p>This is an Editor</p>",
-			value:this.props.value,
+			value: this.props.value || this.props.defaultValue
 		}
-	},
-	componentDidMount:function(){
+	}
+	componentDidMount(){
 		EditorHistory.clear();
-		this.setContent(this.state.value || this.state.defaultValue);
+		this.setContent(this.state.value);
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var isCollapsed = true;
-    	editarea.addEventListener('keydown', this.handleKeyDown);
-    	editarea.addEventListener('keyup', this.handleKeyUp);
+    	editarea.addEventListener('keydown', this.handleKeyDown.bind(this));
+    	editarea.addEventListener('keyup', this.handleKeyUp.bind(this));
 		var onEditorMount = this.props.onEditorMount;
 		setTimeout(onEditorMount,10);
-	},
-	componentDidUpdate:function(){
+	}
+	componentDidUpdate(){
 		var editorState = this.state.editorState;
 		switch(editorState.icon){
 			case "source":
@@ -88,14 +86,14 @@ var EditorCore = React.createClass({
 				if(editorState.content)  this.setContent(editorState.content)
 				break;
 		}
-	},
-	componentWillUnmont:function(){
+	}
+	componentWillUnmont(){
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
-    	editarea.removeEventListener('keydown', this.handleKeyDown);
-    	editarea.removeEventListener('keyup', this.handleKeyUp);
-	},
+    	editarea.removeEventListener('keydown', this.handleKeyDown.bind(this));
+    	editarea.removeEventListener('keyup', this.handleKeyUp.bind(this));
+	}
     // event handler
-	handleKeyDown:function(evt){
+	handleKeyDown(evt){
 		evt = evt || event;
 		var target = evt.target || evt.srcElement;
 		if(target.className && target.className.indexOf('editor-contenteditable-div')!=-1){
@@ -123,8 +121,8 @@ var EditorCore = React.createClass({
 			}
 		}
 		EditorDOM.stopPropagation(evt);
-	},
-	handleKeyUp:function(evt){
+	}
+	handleKeyUp(evt){
 		evt = evt || event;
 		var target = evt.target || evt.srcElement;
 		if(target.className && target.className.indexOf('editor-contenteditable-div')!=-1){
@@ -134,17 +132,17 @@ var EditorCore = React.createClass({
 			}
 		}
 		EditorDOM.stopPropagation(evt);
-	},
-	handleFocus:function(e){
+	}
+	handleFocus(e){
 		if(this.props.onFocus){
 			this.props.onFocus(e,this.findDOMNode('root'));
 		}
 		EditorDOM.stopPropagation(e);
-	},
-	handleClick:function(e){
+	}
+	handleClick(e){
 		EditorDOM.stopPropagation(e);
-	},
-	exchangeRangeState:function(editorState){
+	}
+	exchangeRangeState(editorState){
 		var rangeState = EditorSelection.getRangeState();
 		for(var icon in rangeState){
 			if(!editorState.icons[icon]) 
@@ -165,16 +163,26 @@ var EditorCore = React.createClass({
 			}
 		}
 		return editorState;
-	},
-	handleRangeChange:function(e){
+	}
+	handleRangeChange(e){
 		e = e || event;
 		if(e && e.type=="blur") return;
 		var target = e?e.target || e.srcElement:null;
 		var selection = EditorSelection.getSelection();
+		if(this.props.onChange){
+			var content = this.getContent();
+			var value = this.state.value;
+			if(value != content){
+				this.props.onChange(content);
+				this.setState({
+					value: content
+				})
+			}
+		}
 		if(selection && selection.rangeCount>0){
+			if(!EditorSelection.validateSelection(selection)) return;
 			var editorState = this.state.editorState;
 			editorState = this.exchangeRangeState(editorState);
-			// editorState.icon = false;
 			this.setState({
 				editorState:editorState
 			})
@@ -191,14 +199,14 @@ var EditorCore = React.createClass({
 					break;
 			}
 		}
-	},
-    handleToolbarIconClick:function(e,state){
+	}
+    handleToolbarIconClick(e,state){
 		e = e || event;
 		var target = e.target || e.srcElement;
 		var root = ReactDOM.findDOMNode(this.refs.root);
 		var offsetPosition = EditorDOM.getOffsetRootParentPosition(target,root);
 		
-		var handleRangeChange = this.handleRangeChange;
+		var handleRangeChange = this.handleRangeChange.bind(this);
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		if(this.refs.editarea.getEditorRange){
 			editarea = this.refs.editarea.getEditorRange();
@@ -647,24 +655,21 @@ var EditorCore = React.createClass({
 		editorState.icons[state.icon] = state;
 		editorState.icon = state.icon;
 		EditorSelection.createRange();
+		
 		// range state
-		editorState = this.exchangeRangeState(editorState);
-		this.setState({
-			editorState:editorState
-		})
+		handleRangeChange();
 		EditorDOM.stopPropagation(e);
-	},
-	closeAllOpenDialog: function(icon){
+	}
+	closeAllOpenDialog(icon){
 		var refsDialog = ["image","color","formula","table","special","emotion","fontsize","fontfamily","paragraph"];
         var icons = ["forecolor","backcolor","image","emotion","spechars","inserttable","formula","paragraph","fontsize","fontfamily"]
         if(icons.indexOf(icon)==-1) return;
 		for(var i=0;i<refsDialog.length;i++){
 			this.refs[refsDialog[i]].close();
-			console.log("closeDialog",refsDialog[i]);
 		}
-	},
+	}
     // utils
-	addFormula:function(id,latex){
+	addFormula(id,latex){
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var htmlElement = document.getElementById(id);
 		
@@ -672,6 +677,9 @@ var EditorCore = React.createClass({
 		  handlers: { edit: function(){ } },
 		  restrictMismatchedBrackets: true
 		};
+		
+		if(!MQ) MQ = MathQuill ? MathQuill.getInterface(2) : null;
+		
 		if(htmlElement==null && MQ==null) return;
 		var mathField = MQ.MathField(htmlElement, config);
 		mathField.latex(latex); 
@@ -701,12 +709,12 @@ var EditorCore = React.createClass({
 		$(editarea).mousemove(function(e){
 			EditorDOM.stopPropagation(e);
 		})
-	},
-	autoSave:function(){
+	}
+	autoSave(){
 		EditorHistory.execCommand('autosave',false,null);
-	},
+	}
     // public functions
-	findDOMNode:function(refName){
+	findDOMNode(refName){
 		// 对外公布方法
 		var keys = [ "root","editarea","toolbar","color"];
 		if(keys.indexOf(refName)==-1) 
@@ -715,9 +723,9 @@ var EditorCore = React.createClass({
 			ref:this.refs[refName],
 			dom:ReactDOM.findDOMNode(this.refs[refName])
 	   }
-	},
-	setContent:function(content){
-		var content = content || this.state.defaultValue || "";
+	}
+	setContent(content){
+		var content = content || "";
 		// 后续添加校验方法
 		this.refs.editarea.setContent(content);
 		// mathquill supports
@@ -736,30 +744,33 @@ var EditorCore = React.createClass({
 				}
 			},200);
 		}
-	},
-	getContent:function(){
-		return this.refs.editarea.getContent();
-	},
-	focusEditor:function(){
+	}
+	getContent(){
+		if(this.refs.editarea)
+			return this.refs.editarea.getContent();
+		else
+			return "";
+	}
+	focusEditor(){
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		editarea.focus();
-	},
+	}
     // render functions  
-	genEditArea:function(){
+	genEditArea(){
 		var showHtml = this.state.editorState.showHtml;
 		if(showHtml){
-			return (<EditorTextArea ref="editarea" />)
+			return (<EditorTextArea ref="editarea" onChange={this.props.onChange.bind(this)} />)
 		}else{
-			return (<EditorContentEditableDiv ref="editarea" onRangeChange={this.handleRangeChange}/>)		
+			return (<EditorContentEditableDiv ref="editarea" onRangeChange={this.handleRangeChange.bind(this)} />)		
 		}
-	},
-	render:function(){
+	}
+	render(){
 			var editArea = this.genEditArea();
 			var {index,fontSize,paragraph,fontFamily,icons,plugins,onBlur,className,id,onFocus,onClick,onEditorMount,...props} = this.props;
 			var editorState = this.state.editorState;
 			var _icons = icons.join(" ").replace(/\|/gm,"separator").split(" ");
-			return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onClick={this.handleClick} onBlur={this.handleRangeChange}  onFocus={this.handleFocus} {...props}>
-					<EditorToolbar ref="toolbar" editorState={editorState} onIconClick={this.handleToolbarIconClick} icons={this.props.icons} paragraph={this.props.paragraph}  fontsize={this.props.fontSize}  fontfamily={this.props.fontFamily}>
+			return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onClick={this.handleClick.bind(this)} onBlur={this.handleRangeChange.bind(this)}  onFocus={this.handleFocus.bind(this)} {...props}>
+					<EditorToolbar ref="toolbar" editorState={editorState} onIconClick={this.handleToolbarIconClick.bind(this)} icons={this.props.icons} paragraph={this.props.paragraph}  fontsize={this.props.fontSize}  fontfamily={this.props.fontFamily}>
 						<ImageDialog hidden={_icons.indexOf("image")==-1} ref="image" uploader={this.props.plugins.image.uploader}/>
 						<ColorDropdown hidden={_icons.indexOf("forecolor")==-1 &&_icons.indexOf("forecolor")}   ref="color" />
 						<FormulaDropdown hidden={ _icons.indexOf("formula")==-1} ref="formula"/>
@@ -773,6 +784,6 @@ var EditorCore = React.createClass({
 					{editArea}
 				</div>)
 	}
-})
+}
 
 module.exports = EditorCore;

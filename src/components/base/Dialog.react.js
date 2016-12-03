@@ -8,44 +8,45 @@ var React = require('react');
 * @title: 对话框标题
 * @className: 对话框类名
 **/
-var Dialog = React.createClass({
-	getInitialState:function(){
-		return {
-			show:false
+class Dialog extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
+			show: false
 		}
-	},
-	componentDidMount:function(){
-		window.addEventListener("click",this.close);
-	},
-	componentWillUnmount:function(){
-		window.removeEventListener("click",this.close);
-	},
-	open:function(){
+	}
+	componentDidMount(){
+		window.addEventListener("click",this.close.bind(this));
+	}
+	componentWillUnmount(){
+		window.removeEventListener("click",this.close.bind(this));
+	}
+	open(){
 		this.setState({
 			show:true
 		})
-	},
-	close:function(){
+	}
+	close(){
 		if(!this.state.show) return;
 		this.setState({
 			show:false
 		})
-	},
-	toggle:function(){
+	}
+	toggle(){
 		this.setState({
 			show:!this.state.show
 		})
-	},
-	handleMouseDown:function(e){
+	}
+	handleMouseDown(e){
 		e = e || event;
 		if(e.stopPropagation){
 			e.stopPropagation()
 		}else{
 			e.cancelBubble = true;
 		}
-	},
-	render:function(){
-		var {...props,className,buttons,title,style,width,height} = this.props;
+	}
+	render(){
+		var {className,buttons,title,style,width,height,onClose,children,...others} = this.props;
 		var style = style?style:{};
 		 if(width){
 			style.width = width;
@@ -56,16 +57,16 @@ var Dialog = React.createClass({
 		}
 		style.display = this.state.show ? "" : "none";
 		var _className = "dialog"+(className?" "+className:"");
-		return (<div className="dialog-container"   ref="root" onMouseDown={this.handleMouseDown}>
+		return (<div className="dialog-container"   ref="root" onMouseDown={this.handleMouseDown.bind(this)}>
 				<div className={_className} ref="dialog" style={style}>
 					<div className="dialog-header" ref="header">
-						<a className="dialog-close" onClick={this.props.onClose}></a>
+						<a className="dialog-close" onClick={onClose}></a>
 			 			<h3 className="dialog-title">
 			 				{title}
 			 			</h3>
 			 		</div>
 			 		<div className="dialog-body" ref="body">
-			 				{this.props.children}
+			 				{children}
 			 		</div>
 			 		<div className="dialog-footer" ref="footer">
 			 			{
@@ -78,6 +79,6 @@ var Dialog = React.createClass({
 				<div className="dialog-backdrop" ref="backdrop" style={{"display":this.state.show?"":"none"}}></div>
 				</div>)
 	}
-})
+}
 			 
 module.exports = Dialog;
