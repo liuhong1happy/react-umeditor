@@ -1,4 +1,4 @@
-require('../less/editor.less')
+require('../dist/less/editor.less')
 var React = require('react');
 var ReactDOM = require('react-dom');
 var EditorCore = require('./components/core/EditorCore.react');
