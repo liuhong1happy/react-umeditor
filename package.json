@@ -11,8 +11,7 @@
     "test": "test",
     "clean": "rm -rf ./lib",
     "build": "npm run clean & NODE_ENV=production babel ./src --out-dir ./lib && cp -R images/. dist/images && cp -R less/. dist/less && cp -R third-part/. dist/third-part",
-    "example": "webpack-dev-server --devtool eval --progress --hot --host 0.0.0.0 --config webpack.example.config.js",
-    "docs": "webpack --devtool cheap-module-source-map --progress --color --profile --config webpack.docs.config.js --watch"
+    "example": "webpack-dev-server --devtool eval --progress --hot --host 0.0.0.0 --config webpack.example.config.js"
   },
   "devDependencies": {
     "babel": "^6.0.0",
