@@ -11,8 +11,8 @@
     "test": "mocha test/{,**/}{,**/}*.js  --compilers js:babel-register --com --require ./test/setup.js",
     "clean": "rm -rf ./lib",
     "build": "npm run clean & NODE_ENV=production babel ./src --out-dir ./lib && cp -R images/. dist/images && cp -R less/. dist/less && cp -R third-part/. dist/third-part",
-    "build-win": "npm run clean & set NODE_ENV=production babel ./src --out-dir ./lib && cp -R images/. dist/images && cp -R less/. dist/less && cp -R third-part/. dist/third-part",
-	"example": "webpack-dev-server --devtool eval --progress --hot --host 0.0.0.0 --config webpack.example.config.js"
+    "build-win": "del lib /Q & set NODE_ENV=production babel ./src --out-dir ./lib && xcopy less dist\\less\\ /s /y && xcopy images dist\\images\\ /s /y && xcopy  third-part dist\\third-part\\ /s /y",
+    "example": "webpack-dev-server --devtool eval --progress --hot --host 0.0.0.0 --config webpack.example.config.js"
   },
   "devDependencies": {
     "babel": "^6.0.0",
