@@ -28,8 +28,8 @@ class TabGroup extends React.Component{
 	}
 	render(){
 		var tabIndex = this.state.tabIndex;
-		var tabs = this.props.tabs;
-		var component = tabs[tabIndex].component;
+		var tabs = this.props.tabs || [];
+		var component = tabs[tabIndex] ? tabs[tabIndex].component : "";
 		var handleClick = this.handleClick.bind(this);
 		return (<div className="tab-group">
 				<ul className="tab-nav">
