@@ -150,7 +150,6 @@ Support icons, As fllow:
 	// run example server
 	npm run example
 	
-open the local site  `http://localhost:8080/example/dist/index.html`
 
 ## Todo
 
