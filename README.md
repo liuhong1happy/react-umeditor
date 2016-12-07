@@ -148,7 +148,7 @@ Support icons, As fllow:
 	// build
 	npm run build
 	// run example server
-	node server.js
+	npm run example
 	
 open the local site  `http://localhost:8080/example/dist/index.html`
 

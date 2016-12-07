@@ -10,7 +10,7 @@ var TMP_PATH = path.resolve(__dirname,'./example/index.html');
 module.exports = {
   entry: {
     app: APP_PATH, 
-    vendor: ['es5-shim','es5-shim/es5-sham','console-polyfill','react','react-dom','raphael'] 
+    vendor: ['react','react-dom'] 
   },
   output: {
     path: BUILD_PATH,
