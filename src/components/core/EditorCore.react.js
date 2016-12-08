@@ -772,7 +772,7 @@ class EditorCore extends React.Component{
 	genEditArea(){
 		var showHtml = this.state.editorState.showHtml;
 		if(showHtml){
-			return (<EditorTextArea ref="editarea" onChange={this.props.onChange.bind(this)} />)
+			return (<EditorTextArea ref="editarea" onChange={this.props.onChange} />)
 		}else{
 			return (<EditorContentEditableDiv ref="editarea" onRangeChange={this.handleRangeChange.bind(this)} />)		
 		}
