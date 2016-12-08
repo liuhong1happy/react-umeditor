@@ -10,10 +10,11 @@
   "scripts": {
     "test": "mocha test/{,**/}{,**/}*.js  --compilers js:babel-register --com --require ./test/setup.js",
     "clean": "rm -rf ./lib",
+	"clean-win": "del lib /Q",
     "copy": "cp -R images/. dist/images && cp -R less/. dist/less && cp -R third-part/. dist/third-part",
-    "build": "npm run copy && npm run clean & NODE_ENV=production babel ./src --out-dir ./lib ",
-    "win-copy": "xcopy less dist\\less\\ /s /y && xcopy images dist\\images\\ /s /y && xcopy  third-part dist\\third-part\\ /s /y",
-    "build-win": " npm run win-copy && del lib /Q & set NODE_ENV=production babel ./src --out-dir ./lib && echo '' > ./lib/editor.js &&  babel ./src/editor.js --out-file ./lib/editor.js",
+    "build": "npm run copy & NODE_ENV=production babel ./src --out-dir ./lib ",
+    "copy-win": "xcopy less dist\\less\\ /s /y && xcopy images dist\\images\\ /s /y && xcopy  third-part dist\\third-part\\ /s /y",
+    "build-win": " npm run copy-win &&  set NODE_ENV=production babel ./src --out-dir ./lib && echo '' > ./lib/editor.js &&  babel ./src/editor.js --out-file ./lib/editor.js",
     "example": "webpack-dev-server --devtool eval --progress --hot --host 0.0.0.0 --config webpack.example.config.js"
   },
   "devDependencies": {

@@ -5,8 +5,8 @@ var TabGroup = require('../base/TabGroup.react');
 var Dialog = require('../base/Dialog.react');
 var {SpecialChars} = require('../../constants/EditorConstants');
 
-var SCChars = React.createClass({
-	handleClick:function(e){
+class SCChars extends React.Component{
+	handleClick(e){
 		e = e || event;
 		var target = e.target || e.srcElement;
 		var char = target.getAttribute("data-char");
@@ -14,10 +14,10 @@ var SCChars = React.createClass({
 		if(this.props.onSelectChar){
 			this.props.onSelectChar(e,char);
 		}
-	},
-	render:function(){
+	}
+	render(){
 		var chars = this.props.chars;
-		var handleClick = this.handleClick;
+		var handleClick = this.handleClick.bind(this);
 		return (<ul className={"special-chars "+this.props.name} >
 			{
 				chars.map(function(ele,pos){
@@ -26,7 +26,7 @@ var SCChars = React.createClass({
 			}
 		</ul>)
 	}
-})
+}
 
 class SpecialCharsDialog extends React.Component{
 	constructor(props){

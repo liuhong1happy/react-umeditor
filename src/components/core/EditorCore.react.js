@@ -179,15 +179,23 @@ class EditorCore extends React.Component{
 				})
 			}
 		}
+		var editorState = this.state.editorState;
 		if(selection && selection.rangeCount>0){
-			if(!EditorSelection.validateSelection(selection)) return;
-			var editorState = this.state.editorState;
-			editorState = this.exchangeRangeState(editorState);
-			this.setState({
-				editorState:editorState
-			})
-			if(this.refs.editarea && this.refs.editarea.clearResizeTarget){
-				this.refs.editarea.clearResizeTarget();
+			if(editorState.icon=="source"){
+				editorState = this.exchangeRangeState(editorState);
+				this.setState({
+					editorState:editorState
+				})
+			}
+			else if(!EditorSelection.validateSelection(selection)) return;
+			else{
+				editorState = this.exchangeRangeState(editorState);
+				this.setState({
+					editorState:editorState
+				})
+				if(this.refs.editarea && this.refs.editarea.clearResizeTarget){
+					this.refs.editarea.clearResizeTarget();
+				}
 			}
 		}else if(target){
 			var tagName = target.tagName.toUpperCase();
@@ -198,6 +206,11 @@ class EditorCore extends React.Component{
 					}
 					break;
 			}
+		}else if(editorState.icon=="source"){
+				editorState = this.exchangeRangeState(editorState);
+				this.setState({
+					editorState:editorState
+				})
 		}
 	}
     handleToolbarIconClick(e,state){
