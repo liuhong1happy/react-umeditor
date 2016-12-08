@@ -69,7 +69,7 @@ class ImageUpload extends React.Component{
 								//图片上传完毕，重置文件索引 fileIndex
 								fileIndex = 0;
 								if(!obj.dropEffect){
-									console.log('done')
+									// console.log('done')
 									// clear value
 									obj.value = "";
 								}
@@ -125,23 +125,23 @@ class ImageUpload extends React.Component{
 		this.setState({
 			dragEnter:false
 		})
-		console.log(e.type);
+		// console.log(e.type);
 	}
 	handleDragOver(e){
 		e.preventDefault();
-		console.log(e.type);
+		// console.log(e.type);
 	}
 	handleDragEnter(e){
 		this.setState({
 			dragEnter:true
 		})
-		console.log(e.type);
+		// console.log(e.type);
 	}
 	handleDragLeave(e){
 		this.setState({
 			dragEnter:false
 		})
-		console.log(e.type);
+		// console.log(e.type);
 	}
 	render(){
 			var images = this.state.images;

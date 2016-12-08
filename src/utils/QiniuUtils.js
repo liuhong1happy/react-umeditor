@@ -113,18 +113,18 @@ var QiniuUtils = {
     genToken:function(accessKey, secretKey, putPolicy) {
         //SETP 2
         var put_policy = JSON.stringify(putPolicy);
-        console.log("put_policy = ", put_policy);
+        // console.log("put_policy = ", put_policy);
         //SETP 3
         var encoded = Base.base64encode(Base.utf16to8(put_policy));
-        console.log("encoded = ", encoded);
+        // console.log("encoded = ", encoded);
         //SETP 4
          var encoded_signed = HmacSHA1(secretKey, encoded);
 //        var hash = CryptoJS.HmacSHA1(encoded, secretKey);
 //        var encoded_signed = hash.toString(CryptoJS.enc.Base64);
-        console.log("encoded_signed = ", encoded_signed);
+        // console.log("encoded_signed = ", encoded_signed);
         //SETP 5
         var upload_token = accessKey + ":" + Base.safe64(encoded_signed) + ":" + encoded;
-         console.log("upload_token = ", upload_token);
+         // console.log("upload_token = ", upload_token);
         return upload_token;
     },
 	genUploadToken:function(Key,App){

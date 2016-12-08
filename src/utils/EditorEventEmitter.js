@@ -32,7 +32,7 @@ var EditorEventEmitter = assign({}, EventEmitter.prototype, {
 			  this.emit(type);
 			  var mountTime = new Date();
 			  this.startTime = this.startTime || new Date();
-			  console.log( "emitNextListener:" + type + " " + (mountTime.valueOf() - this.startTime.valueOf())+"ms" );
+			  // console.log( "emitNextListener:" + type + " " + (mountTime.valueOf() - this.startTime.valueOf())+"ms" );
 		  }
 	  }
 })
