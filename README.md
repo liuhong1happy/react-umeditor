@@ -91,7 +91,7 @@ html
 	
 ## Example
 
-	- [react-umeditor-example](https://github.com/liuhong1happy/react-umeditor-example)
+- [react-umeditor-example](https://github.com/liuhong1happy/react-umeditor-example)
 
 ## Ref Functions
 
