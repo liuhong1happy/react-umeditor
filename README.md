@@ -18,7 +18,7 @@ var React = require('react');
 var Editor = require('react-umeditor');
 
 class App extends React.Component {
-	construnctor(props){
+	constructor(props){
 		super(props);
 		this.state = {
 			content: ""
@@ -89,6 +89,10 @@ html
 </html>
 ```
 	
+## Example
+
+	- [react-umeditor-example](https://github.com/liuhong1happy/react-umeditor-example)
+
 ## Ref Functions
 
 You can `this.refs.editor.xxx()`! The `xxx` maybe is as follows:
