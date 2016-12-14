@@ -167,6 +167,8 @@ class EditorCore extends React.Component{
 	handleRangeChange(e){
 		e = e || event;
 		if(e && e.type=="blur") return;
+		// 已经被卸载了。
+		if(this._calledComponentWillUnmount) return;
 		var target = e?e.target || e.srcElement:null;
 		var selection = EditorSelection.getSelection();
 		if(this.props.onChange){
