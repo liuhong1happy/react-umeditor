@@ -57,7 +57,7 @@ class App extends React.Component{
 		alert(form_data.editor);
 	}
 	handleChange(content){
-		// console.log(content);
+		console.log(content);
 		var form_data = this.state.form_data;
 		form_data.editor = content;
 		this.setState({
@@ -87,7 +87,10 @@ class App extends React.Component{
 		//			})
 		//		}</div>);
 
-		return (<Editor icons={icons}  plugins={plugins} value={form_data.editor} defaultValue="<p>React Umeditor</p>" onChange={this.handleChange.bind(this)}/>)
+		return (<div>
+			<div>1232342833usfushdfjkhsdlfh</div>
+			<Editor icons={icons}  plugins={plugins} value={form_data.editor} defaultValue="<p>React Umeditor</p>" onChange={this.handleChange.bind(this)}/>
+		</div>)
 //		return (<div>
 //				<Editor ref="editor" icons={icons} plugins={plugins} value={form_data.editor} onChange={this.handleChange.bind(this)}/>
 //				<input type="text" value={form_data.text} onChange={this.handleFormChange.bind(this)}/>

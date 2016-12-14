@@ -175,6 +175,18 @@ var EditorSelection = {
 		if(parentNode.offsetParent && parentNode.offsetParent.className=="editor-toolbar") return false;
 		return true;
 	},
+	validateRange: function(parentNode,range){
+		var rangeParentNode = range.startContainer.parentNode;
+		if(rangeParentNode == parentNode){
+			return true;
+		}else{
+			var findClass = 'find-range-node-'+Math.random().toFixed(10).replace('.','-');
+			rangeParentNode.classList.add(findClass);
+			var item = parentNode.querySelector('.'+findClass);
+			rangeParentNode.classList.remove(findClass);
+			return !!item;
+		}
+	},
 	createRange:function(){
 		if(this.storedRange) return;
 		this.selection = this.getSelection();

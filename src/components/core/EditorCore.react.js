@@ -529,36 +529,50 @@ class EditorCore extends React.Component{
 				break;
 			case "horizontal":
                 var strTime = "<hr/><p></br></p>";
-				if(EditorSelection.range.pasteHTML){
-					EditorSelection.range.pasteHTML(strTime);
+				if(EditorSelection.range && EditorSelection.validateRange(root, EditorSelection.range)){
+					if(EditorSelection.range.pasteHTML){
+						EditorSelection.range.pasteHTML(strTime);
+					}else{
+						var hr = EditorDOM.createHR();
+						var p = EditorDOM.createNodeByTag('p','<br/>');
+						EditorSelection.range.deleteContents();
+						EditorSelection.insertNode(p);
+						EditorSelection.insertNode(hr);
+					}
 				}else{
-					var hr = EditorDOM.createHR();
-					var p = EditorDOM.createNodeByTag('p','<br/>');
-					EditorSelection.range.deleteContents();
-					EditorSelection.insertNode(p);
-					EditorSelection.insertNode(hr);
+					editarea.innerHTML += '<p>'+strTime+'</p>';
 				}
+				
 				// EditorHistory.execCommand('inserthtml',false,"<hr/><p><br/></p>");
 				break;
 			case "date":
 				var strDate = new Date().Format("yyyy-MM-dd");
-				if(EditorSelection.range.pasteHTML){
-					EditorSelection.range.pasteHTML(strDate);
+				if(EditorSelection.range && EditorSelection.validateRange(root, EditorSelection.range)){
+					if(EditorSelection.range.pasteHTML){
+						EditorSelection.range.pasteHTML(strDate);
+					}else{
+						var textNode = EditorDOM.createTextNode(strDate);
+						EditorSelection.range.deleteContents();
+						EditorSelection.insertNode(textNode);
+					}
 				}else{
-					var textNode = EditorDOM.createTextNode(strDate);
-					EditorSelection.range.deleteContents();
-					EditorSelection.insertNode(textNode);
+					editarea.innerHTML += '<p>'+strDate+'</p>';
 				}
 				// EditorHistory.execCommand('inserthtml',false, strDate);
 				break;
 			case "time":
-				var strTime = new Date().Format('hh:mm:ss')
-				if(EditorSelection.range.pasteHTML){
-					EditorSelection.range.pasteHTML(strTime);
-				}else{
-					var textNode = EditorDOM.createTextNode(strTime);
-					EditorSelection.range.deleteContents();
-					EditorSelection.insertNode(textNode);
+				var strTime = new Date().Format('hh:mm:ss');
+				if(EditorSelection.range && EditorSelection.validateRange(root, EditorSelection.range)){
+					if(EditorSelection.range.pasteHTML){
+						EditorSelection.range.pasteHTML(strTime);
+					}else{
+						var textNode = EditorDOM.createTextNode(strTime);
+						EditorSelection.range.deleteContents();
+						EditorSelection.insertNode(textNode);
+					}
+				}
+				else{
+					editarea.innerHTML += '<p>'+strTime+'</p>';
 				}
 				// EditorHistory.execCommand('inserthtml',false,strTime);
 				break;
@@ -569,7 +583,7 @@ class EditorCore extends React.Component{
 					EditorSelection.restoreRange();
 					
 					if(html && html.length>0){
-						if(EditorSelection.range){
+						if(EditorSelection.range && EditorSelection.validateRange(root, EditorSelection.range)){
 							if(EditorSelection.range.pasteHTML){
 								EditorSelection.range.pasteHTML('<p>'+html+'</p>');
 							}else{
@@ -595,7 +609,7 @@ class EditorCore extends React.Component{
 					
 					if(latex && latex.length>0){
 						var html = '<span>&nbsp;<span class="mathquill-embedded-latex" id="'+id+'"></span>&nbsp;</span>';
-						if(EditorSelection.range){
+						if(EditorSelection.range && EditorSelection.validateRange(root, EditorSelection.range) ){
 							if(EditorSelection.range.pasteHTML){
 								EditorSelection.range.pasteHTML(html);
 							}else{
@@ -621,11 +635,15 @@ class EditorCore extends React.Component{
 				this.refs.table.toggle(offsetPosition,function(e,table){
 					editarea.focus();
 					EditorSelection.restoreRange();
-					if(EditorSelection.range.pasteHTML){
-						EditorSelection.range.pasteHTML(table.outerHTML);
+					if(EditorSelection.range && EditorSelection.validateRange(root, EditorSelection.range)){
+						if(EditorSelection.range.pasteHTML){
+							EditorSelection.range.pasteHTML(table.outerHTML);
+						}else{
+							EditorSelection.range.deleteContents();
+							EditorSelection.insertNode(table);
+						}
 					}else{
-						EditorSelection.range.deleteContents();
-						EditorSelection.insertNode(table);
+						editarea.innerHTML += table.outerHTML;
 					}
 					// EditorHistory.execCommand('inserthtml',false,html);
 					handleRangeChange();
@@ -636,13 +654,16 @@ class EditorCore extends React.Component{
 				this.refs.special.toggle(function(e,char){
 					editarea.focus();
 					EditorSelection.restoreRange();
-					
-					if(EditorSelection.range.pasteHTML){
-						EditorSelection.range.pasteHTML(char);
+					if(EditorSelection.range && EditorSelection.validateRange(root, EditorSelection.range)){
+						if(EditorSelection.range.pasteHTML){
+							EditorSelection.range.pasteHTML(char);
+						}else{
+							var textNode = EditorDOM.createTextNode(char);
+							EditorSelection.range.deleteContents();
+							EditorSelection.insertNode(textNode);
+						}
 					}else{
-						var textNode = EditorDOM.createTextNode(char);
-						EditorSelection.range.deleteContents();
-						EditorSelection.insertNode(textNode);
+						editarea.innerHTML += char;
 					}
 					// EditorHistory.execCommand('inserthtml',false,char);
 					handleRangeChange();
@@ -653,12 +674,15 @@ class EditorCore extends React.Component{
 				this.refs.emotion.toggle(function(e,img){
 					editarea.focus();
 					EditorSelection.restoreRange();
-					
-					if(EditorSelection.range.pasteHTML){
-						EditorSelection.range.pasteHTML(img.outerHTML);
+					if(EditorSelection.range && EditorSelection.validateRange(root, EditorSelection.range)){
+						if(EditorSelection.range.pasteHTML){
+							EditorSelection.range.pasteHTML(img.outerHTML);
+						}else{
+							EditorSelection.range.deleteContents();
+							EditorSelection.insertNode(img);
+						}
 					}else{
-						EditorSelection.range.deleteContents();
-						EditorSelection.insertNode(img);
+						editarea.innerHTML += img.outerHTML;
 					}
 					
 					// EditorHistory.execCommand('inserthtml',false,html);
@@ -781,7 +805,7 @@ class EditorCore extends React.Component{
 	}
 	render(){
 			var editArea = this.genEditArea();
-			var {index,fontSize,paragraph,fontFamily,icons,plugins,onBlur,className,id,onFocus,onClick,onEditorMount,...props} = this.props;
+			var {index,fontSize,paragraph,fontFamily,icons,plugins,onBlur,className,id,onFocus,onClick,onChange,onEditorMount,...props} = this.props;
 			var editorState = this.state.editorState;
 			var _icons = icons.join(" ").replace(/\|/gm,"separator").split(" ");
 			return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onClick={this.handleClick.bind(this)} onBlur={this.handleRangeChange.bind(this)}  onFocus={this.handleFocus.bind(this)} {...props}>
