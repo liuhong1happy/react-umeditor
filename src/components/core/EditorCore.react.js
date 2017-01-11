@@ -199,7 +199,7 @@ class EditorCore extends React.Component{
 					this.refs.editarea.clearResizeTarget();
 				}
 			}
-		}else if(target){
+		}else if(target && EditorDOM.isEditorDom(target,ReactDOM.findDOMNode(this.refs.root))){
 			var tagName = target.tagName.toUpperCase();
 			switch(tagName){
 				case "IMG":
@@ -228,10 +228,10 @@ class EditorCore extends React.Component{
 		}
 		var editorState = this.state.editorState;
 		EditorSelection.cloneRange();
-        EditorSelection.storeRange();
+    EditorSelection.storeRange();
 		//关闭所有Dialog、Box、Dropdown
 		this.closeAllOpenDialog(state.icon);
-        EditorSelection.restoreRange();
+    EditorSelection.restoreRange();
 		switch(state.icon){
 			case "source":
 				editorState.showHtml = !editorState.showHtml;
@@ -245,7 +245,7 @@ class EditorCore extends React.Component{
 				EditorHistory.redo();
 				break;
 			case "removeformat":
-                EditorHistory.execCommand(state.icon,false,null);
+        EditorHistory.execCommand(state.icon,false,null);
 				EditorSelection.storeRange();
 				var spanNodes = EditorSelection.getSpanNodes();
 				for(var i=0;i<spanNodes.length;i++){
@@ -528,7 +528,7 @@ class EditorCore extends React.Component{
 				editorState.content = "<p><br/></p>"
 				break;
 			case "horizontal":
-                var strTime = "<hr/><p></br></p>";
+        var strTime = "<hr/><p></br></p>";
 				if(EditorSelection.range && EditorSelection.validateRange(root, EditorSelection.range)){
 					if(EditorSelection.range.pasteHTML){
 						EditorSelection.range.pasteHTML(strTime);
@@ -540,7 +540,7 @@ class EditorCore extends React.Component{
 						EditorSelection.insertNode(hr);
 					}
 				}else{
-					editarea.innerHTML += '<p>'+strTime+'</p>';
+					editarea.innerHTML += strTime;
 				}
 				
 				// EditorHistory.execCommand('inserthtml',false,"<hr/><p><br/></p>");

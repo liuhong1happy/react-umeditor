@@ -41,6 +41,13 @@ var EditorDOM = {
 		}
 		return position;
 	},
+	isEditorDom: function(target, root) {
+		var parentNode = target.parentNode;
+		while(parentNode && parentNode!=root){
+			 parentNode = parentNode.parentNode;
+		}
+		return parentNode == root;
+	},
 	createTextNode: function(text){
 		return document.createTextNode(text);
 	},
