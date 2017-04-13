@@ -14,12 +14,12 @@ class EditorContentEditableDiv extends React.Component{
 	componentDidMount(e){
 		this.handleWindowMouseDown = this.handleWindowMouseDown.bind(this)
 		this.handleMouseUp = this.handleMouseUp.bind(this)
-		window.addEventListener("mousedown",this.handleWindowMouseDown.bind(this));
-		window.addEventListener("mouseup",this.handleMouseUp.bind(this));
+		window.addEventListener("mousedown",this.handleWindowMouseDown);
+		window.addEventListener("mouseup",this.handleMouseUp);
 	}
 	componentWillUnmount(e){
-		window.removeEventListener("mousedown",this.handleWindowMouseDown.bind(this));
-		window.removeEventListener("mouseup",this.handleMouseUp.bind(this));
+		window.removeEventListener("mousedown",this.handleWindowMouseDown);
+		window.removeEventListener("mouseup",this.handleMouseUp);
 	}
 	componentWillUpdate(e){
 		// EditorSelection.cloneRange();
