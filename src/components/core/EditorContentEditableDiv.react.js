@@ -12,12 +12,14 @@ class EditorContentEditableDiv extends React.Component{
 		}
 	}
 	componentDidMount(e){
-		window.addEventListener("mousedown",this.handleWindowMouseDown.bind(this));
-		window.addEventListener("mouseup",this.handleMouseUp.bind(this));
+		this.handleWindowMouseDown = this.handleWindowMouseDown.bind(this)
+		this.handleMouseUp = this.handleMouseUp.bind(this)
+		window.addEventListener("mousedown",this.handleWindowMouseDown);
+		window.addEventListener("mouseup",this.handleMouseUp);
 	}
 	componentWillUnmount(e){
-		window.removeEventListener("mousedown",this.handleWindowMouseDown.bind(this));
-		window.removeEventListener("mouseup",this.handleMouseUp.bind(this));
+		window.removeEventListener("mousedown",this.handleWindowMouseDown);
+		window.removeEventListener("mouseup",this.handleMouseUp);
 	}
 	componentWillUpdate(e){
 		// EditorSelection.cloneRange();
@@ -30,7 +32,7 @@ class EditorContentEditableDiv extends React.Component{
 		// loaded状态变化时，务必重新刷新
 		var currentValue = nextProps.value;
 		var editorValue = this.getContent();
-		
+
 		if(currentValue == editorValue){
 			return false;
 		}
@@ -40,7 +42,7 @@ class EditorContentEditableDiv extends React.Component{
 		var target = ReactDOM.findDOMNode(this.refs.edit);
 		return target.innerHTML;
 	}
-	setContent(content){ 
+	setContent(content){
 		if(this.getContent() == content) return;
 		this.setState({
 			content:content
@@ -67,7 +69,7 @@ class EditorContentEditableDiv extends React.Component{
 	}
 	handleMouseUp(e){
 		EditorSelection.createRange();
-		if(this.props.onRangeChange) 
+		if(this.props.onRangeChange)
 			this.props.onRangeChange(e);
 		EditorDOM.stopPropagation(e);
 	}
