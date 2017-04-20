@@ -280,6 +280,9 @@ class ImageDialog extends React.Component{
 			this.refs.modal.close();
 			if(this.state.handle){
 				this.state.handle();
+				this.setState({
+					handle:null
+				})
 			}
 			this.refs.image.clearImages();
 		}

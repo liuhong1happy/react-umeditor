@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var { 
+var {
 	EditorIconTypes
 } = require('../../constants/EditorConstants');
 
@@ -145,7 +145,7 @@ class EditorCore extends React.Component{
 	exchangeRangeState(editorState){
 		var rangeState = EditorSelection.getRangeState();
 		for(var icon in rangeState){
-			if(!editorState.icons[icon]) 
+			if(!editorState.icons[icon])
 				editorState.icons[icon] = rangeState[icon];
 			else {
 				switch(icon){
@@ -216,11 +216,12 @@ class EditorCore extends React.Component{
 		}
 	}
     handleToolbarIconClick(e,state){
+    console.log('click')
 		e = e || event;
 		var target = e.target || e.srcElement;
 		var root = ReactDOM.findDOMNode(this.refs.root);
 		var offsetPosition = EditorDOM.getOffsetRootParentPosition(target,root);
-		
+
 		var handleRangeChange = this.handleRangeChange.bind(this);
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		if(this.refs.editarea.getEditorRange){
@@ -231,7 +232,7 @@ class EditorCore extends React.Component{
     EditorSelection.storeRange();
 		//关闭所有Dialog、Box、Dropdown
 		this.closeAllOpenDialog(state.icon);
-    EditorSelection.restoreRange();
+    EditorSelection.restoreRange('2');
 		switch(state.icon){
 			case "source":
 				editorState.showHtml = !editorState.showHtml;
@@ -298,8 +299,8 @@ class EditorCore extends React.Component{
 					var node = textNodes[i].childNode;
 					var start = textNodes[i].startOffset;
 					var end = textNodes[i].endOffset;
-					node.nodeValue = node.nodeValue.substring(0,start) + 
-							( state.icon=="touppercase"?node.nodeValue.substring(start,end).toUpperCase():node.nodeValue.substring(start,end).toLowerCase() ) + 
+					node.nodeValue = node.nodeValue.substring(0,start) +
+							( state.icon=="touppercase"?node.nodeValue.substring(start,end).toUpperCase():node.nodeValue.substring(start,end).toLowerCase() ) +
 							node.nodeValue.substring(end,node.length);
 				}
 				EditorHistory.execCommand(state.icon,false,null);
@@ -353,7 +354,7 @@ class EditorCore extends React.Component{
 				for(var i=0;i<spanNodes.length-1;i++){
 					var spanNode = spanNodes[i];
 					var parentNode = spanNodes[i].parentNode;
-					
+
 					if(EditorDOM.isNullOfTextNode(spanNode.nextSibling)){
 						// 移除空元素
 						parentNode.removeChild(spanNode.nextSibling);
@@ -418,7 +419,7 @@ class EditorCore extends React.Component{
 				for(var i=0;i<spanNodes.length-1;i++){
 					var spanNode = spanNodes[i];
 					var parentNode = spanNodes[i].parentNode;
-					
+
 					if(EditorDOM.isNullOfTextNode(spanNode.nextSibling)){
 						// 移除空元素
 						parentNode.removeChild(spanNode.nextSibling);
@@ -449,7 +450,7 @@ class EditorCore extends React.Component{
 			case "backcolor":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
-				
+
 				this.refs.color.toggle(offsetPosition,function(e,color){
 					editarea.focus();
 					EditorSelection.restoreRange();
@@ -460,7 +461,7 @@ class EditorCore extends React.Component{
 			case "fontsize":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
-				
+
 				this.refs.fontsize.toggle(offsetPosition,function(e,fontsize){
 					editarea.focus();
 					EditorSelection.restoreRange();
@@ -471,7 +472,7 @@ class EditorCore extends React.Component{
 			case "fontfamily":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
-				
+
 				this.refs.fontfamily.toggle(offsetPosition,function(e,fontfamily){
 					editarea.focus();
 					EditorSelection.restoreRange();
@@ -482,7 +483,7 @@ class EditorCore extends React.Component{
 			case "paragraph":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
-				
+
 				this.refs.paragraph.toggle(offsetPosition,function(e,paragraph){
 					editarea.focus();
 					EditorSelection.restoreRange();
@@ -542,7 +543,7 @@ class EditorCore extends React.Component{
 				}else{
 					editarea.innerHTML += strTime;
 				}
-				
+
 				// EditorHistory.execCommand('inserthtml',false,"<hr/><p><br/></p>");
 				break;
 			case "date":
@@ -580,8 +581,8 @@ class EditorCore extends React.Component{
 				EditorSelection.storeRange();
 				this.refs.image.toggle(function(e,html){
 					editarea.focus();
-					EditorSelection.restoreRange();
-					
+					EditorSelection.restoreRange('4');
+
 					if(html && html.length>0){
 						if(EditorSelection.range && EditorSelection.validateRange(root, EditorSelection.range)){
 							if(EditorSelection.range.pasteHTML){
@@ -606,7 +607,7 @@ class EditorCore extends React.Component{
 				this.refs.formula.toggle(offsetPosition,function(e,latex,id){
 					editarea.focus();
 					EditorSelection.restoreRange();
-					
+
 					if(latex && latex.length>0){
 						var html = '<span>&nbsp;<span class="mathquill-embedded-latex" id="'+id+'"></span>&nbsp;</span>';
 						if(EditorSelection.range && EditorSelection.validateRange(root, EditorSelection.range) ){
@@ -684,7 +685,7 @@ class EditorCore extends React.Component{
 					}else{
 						editarea.innerHTML += img.outerHTML;
 					}
-					
+
 					// EditorHistory.execCommand('inserthtml',false,html);
 					handleRangeChange();
 				});
@@ -694,7 +695,7 @@ class EditorCore extends React.Component{
 		editorState.icons[state.icon] = state;
 		editorState.icon = state.icon;
 		EditorSelection.createRange();
-		
+
 		// range state
 		handleRangeChange();
 		EditorDOM.stopPropagation(e);
@@ -711,17 +712,17 @@ class EditorCore extends React.Component{
 	addFormula(id,latex){
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var htmlElement = document.getElementById(id);
-		
+
 		var config = {
 		  handlers: { edit: function(){ } },
 		  restrictMismatchedBrackets: true
 		};
-		
+
 		if(!MQ) MQ = MathQuill ? MathQuill.getInterface(2) : null;
-		
+
 		if(htmlElement==null && MQ==null) return;
 		var mathField = MQ.MathField(htmlElement, config);
-		mathField.latex(latex); 
+		mathField.latex(latex);
 		var $htmlElement = $(htmlElement);
 		$htmlElement.keydown(function(e){
 			mathField.focus();
@@ -756,7 +757,7 @@ class EditorCore extends React.Component{
 	findDOMNode(refName){
 		// 对外公布方法
 		var keys = [ "root","editarea","toolbar","color"];
-		if(keys.indexOf(refName)==-1) 
+		if(keys.indexOf(refName)==-1)
 			return {ref:null,dom:null};
 		return {
 			ref:this.refs[refName],
@@ -794,13 +795,13 @@ class EditorCore extends React.Component{
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		editarea.focus();
 	}
-    // render functions  
+    // render functions
 	genEditArea(){
 		var showHtml = this.state.editorState.showHtml;
 		if(showHtml){
 			return (<EditorTextArea ref="editarea" onChange={this.props.onChange} />)
 		}else{
-			return (<EditorContentEditableDiv ref="editarea" onRangeChange={this.handleRangeChange.bind(this)} />)		
+			return (<EditorContentEditableDiv ref="editarea" onRangeChange={this.handleRangeChange.bind(this)} />)
 		}
 	}
 	render(){
