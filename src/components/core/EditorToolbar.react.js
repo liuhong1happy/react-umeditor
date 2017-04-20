@@ -1,7 +1,7 @@
 var React = require('react');
 var EditorIcon = require('./EditorIcon.react');
 var EditorDOM = require('../../utils/EditorDOM');
-var { 
+var {
 	EditorIconTypes
 } = require('../../constants/EditorConstants');
 var EditorHistory = require('../../utils/EditorHistory');
@@ -29,7 +29,6 @@ class EditorToolbar extends React.Component{
 		if(editorState.icons["fontsize"]) editorState.icons["fontsize"].name = this.getNameByValue(this.props.fontsize,editorState.icons["fontsize"].value);
 		if(editorState.icons["paragraph"]) editorState.icons["paragraph"].name = this.getNameByValue(this.props.paragraph,editorState.icons["paragraph"].value);
 		if(editorState.icons["fontfamily"]) editorState.icons["fontfamily"].name = this.getNameByValue(this.props.fontfamily,editorState.icons["fontfamily"].value);
-		
 		var icons = this.props.icons;
 		var _icons = icons.join(" ").replace(/\|/gm,"separator").split(" ");
 		_icons = _icons.filter(function(ico){ return ico!=""});
@@ -56,7 +55,7 @@ class EditorToolbar extends React.Component{
 						var props = icon;
 						return(<EditorIcon key={pos} {...props} />)
 					})
-					
+
 				}{this.props.children}</div>)
 	}
 }
@@ -67,5 +66,5 @@ EditorToolbar.propTypes = {
 EditorToolbar.defaultProps = {
 	icons:[]
 }
-	
+
 module.exports = EditorToolbar;

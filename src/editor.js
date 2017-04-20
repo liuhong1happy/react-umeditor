@@ -55,7 +55,7 @@ class Editor extends React.Component{
 		// loaded状态变化时，务必重新刷新
 		var currentValue = nextProps.value;
 		var editorValue = this.getContent();
-		
+
 		if(this.state.loaded != nextState.loaded){
 			return true;
 		}else if(currentValue == editorValue){
@@ -95,7 +95,7 @@ Editor.propTypes = {
 	"value": React.PropTypes.string,
 	"defaultValue": React.PropTypes.string
 }
-Editor.defaultProps = { 
+Editor.defaultProps = {
 	"plugins":{
 		"image":{
 			"uploader":{

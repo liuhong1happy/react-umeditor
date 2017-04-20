@@ -134,10 +134,14 @@ var EditorIconTypes = {
 		title:"数学公式",
 		disabled:false
 	},
-    "inserttable":{
+  "inserttable":{
 		title:"插入表格",
 		disabled:false
-    },
+  },
+  "deletetable":{
+  	title:"删除表格",
+		disabled:false
+  },
 	"touppercase":{
 		title:"转换大写",
 		disabled:false

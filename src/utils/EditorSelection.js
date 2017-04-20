@@ -26,7 +26,7 @@ var EditorSelection = {
 			this.selection.addRange(this.range.cloneRange());
 			this.range = this.range.cloneRange();
 		}
-		
+
 	},
 	getTextNodes:function(){
 		if(!this.range) return [];
@@ -76,7 +76,7 @@ var EditorSelection = {
 					break;
 				}
                 var newChildNodes = childNode.childNodes.toArray()
-                
+
 				childNodes = newChildNodes.concat(childNodes);
 				childNode = childNodes.shift();
 			}
@@ -91,7 +91,7 @@ var EditorSelection = {
 		var startNode = this.range.startContainer;
 		var endNode = this.range.endContainer;
 		var spanNodes = [];
-        
+
         if(EditorDOM.isSpanNode(parent)){
             spanNodes.push(parent)
         }
@@ -115,19 +115,19 @@ var EditorSelection = {
 					break;
 				}
                 var newChildNodes = childNode.childNodes.toArray()
-                
+
 				childNodes = newChildNodes.concat(childNodes);
 				childNode = childNodes.shift();
 			}
 		}
-		
+
 		var resultNodes = [];
 		for(var i=0;i<spanNodes.length;i++){
 			if(resultNodes.indexOf(spanNodes[i]) == -1){
 				resultNodes.push(spanNodes[i]);
 			}
 		}
-		
+
 		return resultNodes;
 	},
 	getParagraphs:function(){
@@ -203,7 +203,7 @@ var EditorSelection = {
 		this.selection.removeAllRanges();
 	},
 	getRangeState:function(){
-		var rangeState = {}; 
+		var rangeState = {};
 		// init icons state
 		var canActiveIcons = "bold italic underline strikethrough fontborder superscript subscript justifycenter justifyleft justifyright";
 		var icons = canActiveIcons.split(" ");
@@ -269,7 +269,7 @@ var EditorSelection = {
 				parentElement = parentElement.parentNode;
 			}
 		}
-		
+
 		if(!rangeState["forecolor"]) rangeState["forecolor"] = {color: 'transparent', icon:"forecolor"}
 		if(!rangeState["backcolor"]) rangeState["backcolor"] = {color: 'transparent', icon:"backcolor"}
 		if(!rangeState["fontsize"] || !rangeState["fontsize"].value) rangeState["fontsize"] = {value: "3", icon:"fontsize"}
@@ -290,7 +290,7 @@ var EditorSelection = {
 		this.cloneRange();
 	},
 	insertNode: function(node){
-		
+
 		if(this.range){
 			EditorSelection.range.insertNode(node);
 			var lastNode = node.lastChild || node;
