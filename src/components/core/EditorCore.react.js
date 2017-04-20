@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var { 
+var {
 	EditorIconTypes
 } = require('../../constants/EditorConstants');
 
@@ -22,6 +22,7 @@ var ParagraphComboBox = require('../plugins/ParagraphComboBox.react');
 var EmotionDialog =  require('../plugins/EmotionDialog.react');
 var SpecialCharsDialog = require('../plugins/SpecialCharsDialog.react');
 var ImageDialog = require('../plugins/ImageDialog.react');
+var LinkDialog = require('../plugins/LinkDialog.react');
 
 // base components
 var EditorToolbar = require('../core/EditorToolbar.react');
@@ -145,7 +146,7 @@ class EditorCore extends React.Component{
 	exchangeRangeState(editorState){
 		var rangeState = EditorSelection.getRangeState();
 		for(var icon in rangeState){
-			if(!editorState.icons[icon]) 
+			if(!editorState.icons[icon])
 				editorState.icons[icon] = rangeState[icon];
 			else {
 				switch(icon){
@@ -220,7 +221,7 @@ class EditorCore extends React.Component{
 		var target = e.target || e.srcElement;
 		var root = ReactDOM.findDOMNode(this.refs.root);
 		var offsetPosition = EditorDOM.getOffsetRootParentPosition(target,root);
-		
+
 		var handleRangeChange = this.handleRangeChange.bind(this);
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		if(this.refs.editarea.getEditorRange){
@@ -298,8 +299,8 @@ class EditorCore extends React.Component{
 					var node = textNodes[i].childNode;
 					var start = textNodes[i].startOffset;
 					var end = textNodes[i].endOffset;
-					node.nodeValue = node.nodeValue.substring(0,start) + 
-							( state.icon=="touppercase"?node.nodeValue.substring(start,end).toUpperCase():node.nodeValue.substring(start,end).toLowerCase() ) + 
+					node.nodeValue = node.nodeValue.substring(0,start) +
+							( state.icon=="touppercase"?node.nodeValue.substring(start,end).toUpperCase():node.nodeValue.substring(start,end).toLowerCase() ) +
 							node.nodeValue.substring(end,node.length);
 				}
 				EditorHistory.execCommand(state.icon,false,null);
@@ -353,7 +354,7 @@ class EditorCore extends React.Component{
 				for(var i=0;i<spanNodes.length-1;i++){
 					var spanNode = spanNodes[i];
 					var parentNode = spanNodes[i].parentNode;
-					
+
 					if(EditorDOM.isNullOfTextNode(spanNode.nextSibling)){
 						// 移除空元素
 						parentNode.removeChild(spanNode.nextSibling);
@@ -418,7 +419,7 @@ class EditorCore extends React.Component{
 				for(var i=0;i<spanNodes.length-1;i++){
 					var spanNode = spanNodes[i];
 					var parentNode = spanNodes[i].parentNode;
-					
+
 					if(EditorDOM.isNullOfTextNode(spanNode.nextSibling)){
 						// 移除空元素
 						parentNode.removeChild(spanNode.nextSibling);
@@ -449,7 +450,7 @@ class EditorCore extends React.Component{
 			case "backcolor":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
-				
+
 				this.refs.color.toggle(offsetPosition,function(e,color){
 					editarea.focus();
 					EditorSelection.restoreRange();
@@ -460,7 +461,7 @@ class EditorCore extends React.Component{
 			case "fontsize":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
-				
+
 				this.refs.fontsize.toggle(offsetPosition,function(e,fontsize){
 					editarea.focus();
 					EditorSelection.restoreRange();
@@ -471,7 +472,7 @@ class EditorCore extends React.Component{
 			case "fontfamily":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
-				
+
 				this.refs.fontfamily.toggle(offsetPosition,function(e,fontfamily){
 					editarea.focus();
 					EditorSelection.restoreRange();
@@ -482,7 +483,7 @@ class EditorCore extends React.Component{
 			case "paragraph":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
-				
+
 				this.refs.paragraph.toggle(offsetPosition,function(e,paragraph){
 					editarea.focus();
 					EditorSelection.restoreRange();
@@ -542,7 +543,7 @@ class EditorCore extends React.Component{
 				}else{
 					editarea.innerHTML += strTime;
 				}
-				
+
 				// EditorHistory.execCommand('inserthtml',false,"<hr/><p><br/></p>");
 				break;
 			case "date":
@@ -581,7 +582,7 @@ class EditorCore extends React.Component{
 				this.refs.image.toggle(function(e,html){
 					editarea.focus();
 					EditorSelection.restoreRange();
-					
+
 					if(html && html.length>0){
 						if(EditorSelection.range && EditorSelection.validateRange(root, EditorSelection.range)){
 							if(EditorSelection.range.pasteHTML){
@@ -598,6 +599,28 @@ class EditorCore extends React.Component{
 					}
 				})
 				break;
+			case "link":
+				EditorSelection.storeRange();
+				this.refs.link.toggle(function(e,html){
+					editarea.focus();
+					EditorSelection.restoreRange();
+
+					if(html && html.length>0){
+						if(EditorSelection.range && EditorSelection.validateRange(root, EditorSelection.range)){
+							if(EditorSelection.range.pasteHTML){
+								EditorSelection.range.pasteHTML(html);
+							}else{
+								var span = EditorDOM.createNodeByTag('span',html);
+								EditorSelection.range.deleteContents();
+								EditorSelection.insertNode(span);
+							}
+							// EditorHistory.execCommand('inserthtml',false,html);
+						}else{
+							editarea.innerHTML += '<span>'+html+'</span>';
+						}
+					}
+				})
+				break;
 			case "formula":
 				EditorSelection.storeRange();
 				offsetPosition.y += offsetPosition.h+5;
@@ -606,7 +629,7 @@ class EditorCore extends React.Component{
 				this.refs.formula.toggle(offsetPosition,function(e,latex,id){
 					editarea.focus();
 					EditorSelection.restoreRange();
-					
+
 					if(latex && latex.length>0){
 						var html = '<span>&nbsp;<span class="mathquill-embedded-latex" id="'+id+'"></span>&nbsp;</span>';
 						if(EditorSelection.range && EditorSelection.validateRange(root, EditorSelection.range) ){
@@ -684,7 +707,7 @@ class EditorCore extends React.Component{
 					}else{
 						editarea.innerHTML += img.outerHTML;
 					}
-					
+
 					// EditorHistory.execCommand('inserthtml',false,html);
 					handleRangeChange();
 				});
@@ -694,13 +717,13 @@ class EditorCore extends React.Component{
 		editorState.icons[state.icon] = state;
 		editorState.icon = state.icon;
 		EditorSelection.createRange();
-		
+
 		// range state
 		handleRangeChange();
 		EditorDOM.stopPropagation(e);
 	}
 	closeAllOpenDialog(icon){
-		var refsDialog = ["image","color","formula","table","special","emotion","fontsize","fontfamily","paragraph"];
+		var refsDialog = ["link", "image","color","formula","table","special","emotion","fontsize","fontfamily","paragraph"];
         var icons = ["forecolor","backcolor","image","emotion","spechars","inserttable","formula","paragraph","fontsize","fontfamily"]
         if(icons.indexOf(icon)==-1) return;
 		for(var i=0;i<refsDialog.length;i++){
@@ -711,17 +734,17 @@ class EditorCore extends React.Component{
 	addFormula(id,latex){
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		var htmlElement = document.getElementById(id);
-		
+
 		var config = {
 		  handlers: { edit: function(){ } },
 		  restrictMismatchedBrackets: true
 		};
-		
+
 		if(!MQ) MQ = MathQuill ? MathQuill.getInterface(2) : null;
-		
+
 		if(htmlElement==null && MQ==null) return;
 		var mathField = MQ.MathField(htmlElement, config);
-		mathField.latex(latex); 
+		mathField.latex(latex);
 		var $htmlElement = $(htmlElement);
 		$htmlElement.keydown(function(e){
 			mathField.focus();
@@ -756,7 +779,7 @@ class EditorCore extends React.Component{
 	findDOMNode(refName){
 		// 对外公布方法
 		var keys = [ "root","editarea","toolbar","color"];
-		if(keys.indexOf(refName)==-1) 
+		if(keys.indexOf(refName)==-1)
 			return {ref:null,dom:null};
 		return {
 			ref:this.refs[refName],
@@ -794,13 +817,13 @@ class EditorCore extends React.Component{
 		var editarea = ReactDOM.findDOMNode(this.refs.editarea);
 		editarea.focus();
 	}
-    // render functions  
+    // render functions
 	genEditArea(){
 		var showHtml = this.state.editorState.showHtml;
 		if(showHtml){
 			return (<EditorTextArea ref="editarea" onChange={this.props.onChange} />)
 		}else{
-			return (<EditorContentEditableDiv ref="editarea" onRangeChange={this.handleRangeChange.bind(this)} />)		
+			return (<EditorContentEditableDiv ref="editarea" onRangeChange={this.handleRangeChange.bind(this)} />)
 		}
 	}
 	render(){
@@ -811,6 +834,7 @@ class EditorCore extends React.Component{
 			return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onClick={this.handleClick.bind(this)} onBlur={this.handleRangeChange.bind(this)}  onFocus={this.handleFocus.bind(this)} {...props}>
 					<EditorToolbar ref="toolbar" editorState={editorState} onIconClick={this.handleToolbarIconClick.bind(this)} icons={this.props.icons} paragraph={this.props.paragraph}  fontsize={this.props.fontSize}  fontfamily={this.props.fontFamily}>
 						<ImageDialog hidden={_icons.indexOf("image")==-1} ref="image" uploader={this.props.plugins.image.uploader}/>
+						<LinkDialog hidden={_icons.indexOf("link")==-1} ref="link"/>
 						<ColorDropdown hidden={_icons.indexOf("forecolor")==-1 &&_icons.indexOf("forecolor")}   ref="color" />
 						<FormulaDropdown hidden={ _icons.indexOf("formula")==-1} ref="formula"/>
 						<TablePickerDropdown hidden={_icons.indexOf("inserttable")==-1} ref="table" />

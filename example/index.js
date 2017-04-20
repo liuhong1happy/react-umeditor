@@ -16,7 +16,7 @@ class App extends React.Component{
 		return [
 				"source | undo redo | bold italic underline strikethrough fontborder emphasis | ",
 				"paragraph fontfamily fontsize | superscript subscript | ",
-				"forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ",
+				"forecolor backcolor link | removeformat | insertorderedlist insertunorderedlist | selectall | ",
 				"cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | ",
 				"horizontal date time  | image spechars | inserttable"
 			]
@@ -98,5 +98,5 @@ class App extends React.Component{
 //		   </div>)
 	}
 }
-	
+
 ReactDOM.render(<App />, document.getElementById('react-container'));
