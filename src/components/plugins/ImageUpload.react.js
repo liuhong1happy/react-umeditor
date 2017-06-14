@@ -86,6 +86,7 @@ export default class ImageUpload extends Component{
 			if(_self.props.onChange){
 				_self.props.onChange(0,images);
 			}
+    }
   }
 
 	handleUploadFile(obj){
