@@ -10,11 +10,9 @@ export default class ImageUpload extends Component{
 		}
 	}
 
-  argumentUpload = (file, files, fileIndex) => {
+  argumentUpload = (file, files, fileIndex, obj) => {
 		let _self = this;
-		let images = this.state.images;
 		let request = this.props.request;
-		let mask = ReactDOM.findDOMNode(this.refs.mask);
 		let uploader = this.props.customUploader? this.props.customUploader: Uploader;
 
 		uploader.uploadFile({
@@ -23,74 +21,79 @@ export default class ImageUpload extends Component{
 			url:_self.props.url,
 			type:_self.props.type,
 			qiniu:_self.props.qiniu,
-			onLoad:function(e){
-				mask.style.display = "block";
-				mask.innerHTML = `${fileIndex + 1}/${files.length} Uploading...`;
-			},
+			onLoad:function(){ this.beforeUploading() },
 			onSuccess:function(res){
-				// console.log(`2文件总数：${files.length}`);
-				mask.style.display = "block";
-				mask.innerHTML = "Load Success";
 				if(res && res.status=="success"){
-					images.push({
-						src: res.data[request || "image_src"]
-					})
-					_self.setState({
-						images:images
-					})
-					if(_self.props.onChange){
-						_self.props.onChange(0,images);
-					}
+          this.updateImage(res.data[request || 'image_src'])
 					// console.log(`3文件总数：${files.length}`);
 				}
 				setTimeout(function(){
 					if(fileIndex + 1 < files.length){
 						//判断是否还有图片没有上传
 						fileIndex += 1;
-						single(files[fileIndex]);
+						this.argumentUpload(files[fileIndex], files, fileIndex, obj);
 					}else{
-						//去除遮罩层
-						mask.style.display = "none";
 						//图片上传完毕，重置文件索引 fileIndex
 						fileIndex = 0;
 						if(!obj.dropEffect){
-							// console.log('done')
-							// clear value
 							obj.value = "";
+              this.afterUploading();
 						}
 					}
 				},200)
 			},
-			onError:function(e){
-				mask.style.display = "block";
-				mask.innerHTML = "Load Error";
-				setTimeout(function(){
-					mask.style.display = "none";
-				},200)
-			}
+			onError:function(){ this.errorUploading() }
 		});
   }
 
-  callbackUploader = (file) => {
-		let _self = this;
-		let images = this.state.images;
-		let request = this.props.request;
+  beforeUploading = () => {
 		let mask = ReactDOM.findDOMNode(this.refs.mask);
-    this.props.uploadImageCallback(file).then(res => {
-      mask.style.display = "block";
-      mask.innerHTML = "Load Success";
-      if(res && res.status=="success"){
-        images.push({
-          src: res.data["image_src"]
-        })
-        _self.setState({
-          images:images
-        })
-        if(_self.props.onChange){
-          _self.props.onChange(0,images);
+		mask.style.display = "block";
+		mask.innerHTML = `${fileIndex + 1}/${files.length} Uploading...`;
+  }
+
+  afterUploading = () => {
+		//去除遮罩层
+		let mask = ReactDOM.findDOMNode(this.refs.mask);
+		mask.style.display = "none";
+		mask.innerHTML = "Load Success";
+  }
+
+  errorUploading = () => {
+		let mask = ReactDOM.findDOMNode(this.refs.mask);
+		mask.style.display = "block";
+		mask.innerHTML = "Load Error";
+		setTimeout(function(){
+			mask.style.display = "none";
+		},200)
+  }
+
+  callbackUploader = (file) => {
+    this.beforeUploading();
+    this.props.uploadImageCallback(file)
+      .then(res => {
+        this.afterUploading();
+        if(res && res.status=="success"){
+          this.updateImage(res.data['image_src'])
         }
-      }
+      })
+      .catch(error => {
+        console.log('error', error)
+        this.errorUploading()
+      })
+  }
+
+  updateImage = (image) => {
+		let images = this.state.images;
+    images.push({
+      src: image
     })
+    this.setState({
+      images:images
+    })
+    if(this.props.onChange){
+      this.props.onChange(0,images);
+    }
   }
 
 	handleUploadFile(obj){
@@ -102,7 +105,7 @@ export default class ImageUpload extends Component{
     if (this.props.uploadImageCallback) {
       return this.callbackUploader(file)
     }
-    this.argumentUploder(file, obj.files, 0)
+    this.argumentUploder(file, obj.files, 0, obj)
 	}
 	handleChange(e){
 		e = e || event;
