@@ -39,7 +39,7 @@ class ComboBox extends Component{
 		let { className, style, ...others } = this.props;
 		style = style || {};
 		if(!this.state.show){
-			 style["display"] = "none";
+      style["display"] = "none";
 		}else{
 			style["display"] = "";
 		}

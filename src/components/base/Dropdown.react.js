@@ -36,23 +36,25 @@ class Dropdown extends React.Component{
 		})
 	}
 	render(){
-		var {className,style,...props} = this.props;
+		let { className, style, ...props } = this.props;
 		style = style || {};
 		if(!this.state.show){
-			 style["display"] = "none";
+      style["display"] = "none";
 		}else{
-			style["display"] = "";	 
+			style["display"] = "";
 		}
 		if(this.state.position){
 			style["left"] = this.state.position.x;
 			style["top"] = this.state.position.y;
 		}
-			 
-		return (<div style={style} className={"dropdown"+(className?" "+className:"")} {...props}>
-			<div className="dropdown-caret"></div>		
-			{this.props.children}
-		</div>)
+		return (
+      <div style={style} className={"dropdown"+(className?" "+className:"")} {...props}>
+        <div className="dropdown-caret">
+          {this.props.children}
+        </div>
+      </div>
+    )
 	}
 }
-		
+
 module.exports = Dropdown;
