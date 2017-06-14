@@ -12,10 +12,11 @@ class EditorContentEditableDiv extends React.Component{
 		}
 	}
 	componentDidMount(){
-		this.handleWindowMouseDown = this.handleWindowMouseDown.bind(this)
-		this.handleMouseUp = this.handleMouseUp.bind(this)
+    window.addEventListener('keydown', this.props.handleKeyDown)
+    window.addEventListener('keyup', this.props.handleKeyUp)
 		window.addEventListener("mousedown",this.handleWindowMouseDown);
 		window.addEventListener("mouseup",this.handleMouseUp);
+    setTimeout(this.props.onEditorMount, 50);
 	}
 
 	shouldComponentUpdate(nextProps, nextState){
@@ -40,6 +41,9 @@ class EditorContentEditableDiv extends React.Component{
 	componentWillUnmount(){
 		window.removeEventListener("mousedown",this.handleWindowMouseDown);
 		window.removeEventListener("mouseup",this.handleMouseUp);
+
+    window.removeEventListener("keydown", this.props.handleKeyDown)
+    window.removeEventListener("keyup", this.props.handleKeyUp)
 	}
 
 	getContent(){
@@ -60,7 +64,7 @@ class EditorContentEditableDiv extends React.Component{
 		return "div";
 	}
 
-	handleWindowMouseDown(e){
+	handleWindowMouseDown = (e) => {
 		e = e || event;
 		let target = e.target || e.srcElement;
 		let tagName = target.tagName.toUpperCase();
@@ -71,15 +75,16 @@ class EditorContentEditableDiv extends React.Component{
 		EditorSelection.clearRange();
 	}
 
-	handleMouseDown(e){
+	handleMouseDown = (e) => {
 		EditorSelection.clearRange();
 		EditorDOM.stopPropagation(e);
 	}
 
-	handleMouseUp(e){
+	handleMouseUp = (e) => {
 		EditorSelection.createRange();
-		if(this.props.onRangeChange)
+		if(this.props.onRangeChange) {
 			this.props.onRangeChange(e);
+    }
 		EditorDOM.stopPropagation(e);
 	}
 
@@ -101,8 +106,8 @@ class EditorContentEditableDiv extends React.Component{
 				<EditorResize ref="resize" />
 				<div className="editable-range"
           ref="edit"
-				onMouseUp={this.handleMouseUp.bind(this)}
-          onMouseDown={this.handleMouseDown.bind(this)}
+				onMouseUp={this.handleMouseUp}
+          onMouseDown={this.handleMouseDown}
 				contentEditable={true}
           dangerouslySetInnerHTML={{__html:this.state.content}}/>
 			</div>)

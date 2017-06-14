@@ -49,9 +49,8 @@ class Dropdown extends React.Component{
 		}
 		return (
       <div style={style} className={"dropdown"+(className?" "+className:"")} {...props}>
-        <div className="dropdown-caret">
+        <div className="dropdown-caret"/>
           {this.props.children}
-        </div>
       </div>
     )
 	}

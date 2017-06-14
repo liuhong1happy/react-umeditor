@@ -50,6 +50,7 @@ export default class Editor extends Component {
   }
   componentDidUpdate() {
     if (this.state.loaded && this.state.reload) {
+      console.log('reload?', this.state)
       this.refs.editor.setContent(this.props.value || this.props.defaultValue);
     }
   }
