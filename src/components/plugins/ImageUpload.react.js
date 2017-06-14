@@ -76,7 +76,8 @@ export default class ImageUpload extends Component{
 		let images = this.state.images;
 		let request = this.props.request;
 		let mask = ReactDOM.findDOMNode(this.refs.mask);
-    this.props.uploadImageCallback(file).then((res) => {
+    this.props.uploadImageCallback(file).then(res => {
+      console.log('heerererere');
       mask.style.display = "block";
       mask.innerHTML = "Load Success";
       if(res && res.status=="success"){
