@@ -805,9 +805,24 @@ export default class EditorCore extends React.Component{
 	}
 	render(){
 			var editArea = this.genEditArea();
-			var {index,fontSize,paragraph,fontFamily,icons,plugins,onBlur,className,id,onFocus,onClick,onChange,onEditorMount,...props} = this.props;
+		var {
+      index,
+      fontSize,
+      paragraph,
+      fontFamily,
+      icons,
+      plugins,
+      onBlur,
+      className,
+      id,
+      onFocus,
+      onClick,
+      onChange,
+      onEditorMount,
+      uploadImageCallback,
+      ...props} = this.props;
 			var editorState = this.state.editorState;
-			var _icons = icons.join(" ").replace(/\|/gm,"separator").split(" ");
+		var _icons = icons.join(" ").replace(/\|/gm,"separator").split(" ");
 		return (
       <div
         ref="root"
@@ -828,8 +843,8 @@ export default class EditorCore extends React.Component{
 					<ImageDialog
             hidden={_icons.indexOf("image")==-1}
             ref="image"
-            uploader={this.props.plugins.image.uploader}
-            uploadImageCallback={this.props.uploadImageCallback}
+            uploader={plugins.image.uploader}
+            uploadImageCallback={uploadImageCallback}
           />
 					<ColorDropdown
             hidden={_icons.indexOf("forecolor")==-1 &&_icons.indexOf("forecolor")}
