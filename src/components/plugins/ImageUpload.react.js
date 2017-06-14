@@ -77,12 +77,11 @@ export default class ImageUpload extends Component{
 		let request = this.props.request;
 		let mask = ReactDOM.findDOMNode(this.refs.mask);
     this.props.uploadImageCallback(file).then(res => {
-      console.log('heerererere');
       mask.style.display = "block";
       mask.innerHTML = "Load Success";
       if(res && res.status=="success"){
         images.push({
-          src: res.data[request || "image_src"]
+          src: res.data["image_src"]
         })
         _self.setState({
           images:images
@@ -184,10 +183,12 @@ export default class ImageUpload extends Component{
 									onDragStart={this.handleDragEnter.bind(this)}>
 							{
 								images.map(function(ele,pos){
-									return (<div className="image-item">
-														<div className="image-close" data-index={pos} onClick={handleRemoveImage}></div>
-														<img src={ele.src} className="image-pic" height="75" width="120" />
-										</div>)
+									return (
+                    <div key={pos} className="image-item">
+                      <div className="image-close" data-index={pos} onClick={handleRemoveImage} />
+                      <img src={ele.src} className="image-pic" height="75" width="120" />
+										</div>
+                  )
 							   })
 							}
 							<div className="image-upload2" style={ hasImages?showStyle:hideStyle }>
