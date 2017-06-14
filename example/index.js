@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var Editor = require('../lib/editor');
+// var Editor = require('../src/editor');
+import Editor from '../src/editor';
 
 class App extends React.Component{
 	constructor(props){
@@ -64,39 +65,36 @@ class App extends React.Component{
 			form_data: form_data
 		})
 	}
-	render(){
-		var icons = this.getIcons();
-		var uploader = this.getQiniuUploader();
-		var plugins = {
-			image:{
-				uploader:uploader
-			}
-		}
-		var count = 100;
-		var editors = [];
-		for(var i=0;i<count;i++){
-			editors.push({
-				icons:icons,
-				plugins:plugins
-			})
-		}
-		var form_data = this.state.form_data;
-		//		return (<div>{
-		//			editors.map(function(ele,pos){
-		//				return (<Editor key={pos} icons={ele.icons} plugins={ele.plugins} />)
-		//			})
-		//		}</div>);
 
-		return (<div>
-			<div>1232342833usfushdfjkhsdlfh</div>
-			<Editor icons={icons}  plugins={plugins} value={form_data.editor} defaultValue="<p>React Umeditor</p>" onChange={this.handleChange.bind(this)}/>
-		</div>)
-//		return (<div>
-//				<Editor ref="editor" icons={icons} plugins={plugins} value={form_data.editor} onChange={this.handleChange.bind(this)}/>
-//				<input type="text" value={form_data.text} onChange={this.handleFormChange.bind(this)}/>
-//				<input type="submit" value="提交" onClick={this.handleSubmitForm.bind(this)} />
-//		   </div>)
+    uploadImageCallback = (file) => {
+        console.log('fileeee', file);
+    }
+	render(){
+		  var icons = this.getIcons();
+		  var uploader = this.getQiniuUploader();
+		  var plugins = {
+			    image:{
+				      uploader:uploader
+			    }
+		  }
+		  var count = 100;
+		  var editors = [];
+		  for(var i=0;i<count;i++){
+			    editors.push({
+				      icons:icons,
+				      plugins:plugins
+			    })
+		  }
+		  var form_data = this.state.form_data;
+		  return (<div>
+			        <Editor icons={icons}
+              plugins={plugins}
+              value={form_data.editor}
+              defaultValue="<p>React Umeditor</p>"
+              uploadImageCallback={this.uploadImageCallback}
+              onChange={this.handleChange.bind(this)}/>
+		          </div>)
 	}
 }
-	
+
 ReactDOM.render(<App />, document.getElementById('react-container'));

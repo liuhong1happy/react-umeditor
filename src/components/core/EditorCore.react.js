@@ -21,7 +21,7 @@ var ParagraphComboBox = require('../plugins/ParagraphComboBox.react');
 // dialog
 var EmotionDialog =  require('../plugins/EmotionDialog.react');
 var SpecialCharsDialog = require('../plugins/SpecialCharsDialog.react');
-var ImageDialog = require('../plugins/ImageDialog.react');
+import ImageDialog from '../plugins/ImageDialog.react';
 
 // base components
 var EditorToolbar = require('../core/EditorToolbar.react');
@@ -46,7 +46,7 @@ var MQ = null;
 * @icons: 工具条上需要显示的图标
 **/
 
-class EditorCore extends React.Component{
+export default class EditorCore extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -808,21 +808,69 @@ class EditorCore extends React.Component{
 			var {index,fontSize,paragraph,fontFamily,icons,plugins,onBlur,className,id,onFocus,onClick,onChange,onEditorMount,...props} = this.props;
 			var editorState = this.state.editorState;
 			var _icons = icons.join(" ").replace(/\|/gm,"separator").split(" ");
-			return (<div ref="root" id={id} className={"editor-container editor-default" +(className?" "+className:"")} onClick={this.handleClick.bind(this)} onBlur={this.handleRangeChange.bind(this)}  onFocus={this.handleFocus.bind(this)} {...props}>
-					<EditorToolbar ref="toolbar" editorState={editorState} onIconClick={this.handleToolbarIconClick.bind(this)} icons={this.props.icons} paragraph={this.props.paragraph}  fontsize={this.props.fontSize}  fontfamily={this.props.fontFamily}>
-						<ImageDialog hidden={_icons.indexOf("image")==-1} ref="image" uploader={this.props.plugins.image.uploader}/>
-						<ColorDropdown hidden={_icons.indexOf("forecolor")==-1 &&_icons.indexOf("forecolor")}   ref="color" />
-						<FormulaDropdown hidden={ _icons.indexOf("formula")==-1} ref="formula"/>
-						<TablePickerDropdown hidden={_icons.indexOf("inserttable")==-1} ref="table" />
-						<SpecialCharsDialog hidden={ _icons.indexOf("spechars")==-1} ref="special" />
-						<EmotionDialog hidden={ _icons.indexOf("emotion")==-1} ref="emotion" />
-						<FontSizeComboBox hidden={ _icons.indexOf("fontsize") ==-1} ref="fontsize" fontsize={this.props.fontSize} value={editorState.icons["fontsize"]?editorState.icons["fontsize"].value: fontSize[0].value}/>
-						<FontFamilyComboBox hidden={ _icons.indexOf("fontfamily") ==-1 } ref="fontfamily" fontfamily={this.props.fontFamily} value={editorState.icons["fontfamily"]?editorState.icons["fontfamily"].value: fontFamily[0].value}/>
-						<ParagraphComboBox hidden={_icons.indexOf("paragraph") ==-1 } ref="paragraph" paragraph={this.props.paragraph} value={editorState.icons["paragraph"]?editorState.icons["paragraph"].value: paragraph[0].value}/>
+		return (
+      <div
+        ref="root"
+        id={id}
+        className={"editor-container editor-default" +(className?" "+className:"")}
+        onClick={this.handleClick.bind(this)}
+        onBlur={this.handleRangeChange.bind(this)}
+        onFocus={this.handleFocus.bind(this)}
+        {...props}>
+				<EditorToolbar
+          ref="toolbar"
+          editorState={editorState}
+          onIconClick={this.handleToolbarIconClick.bind(this)}
+          icons={this.props.icons}
+          paragraph={this.props.paragraph}
+          fontsize={this.props.fontSize}
+          fontfamily={this.props.fontFamily}>
+					<ImageDialog
+            hidden={_icons.indexOf("image")==-1}
+            ref="image"
+            uploader={this.props.plugins.image.uploader}
+            uploadImageCallback={this.props.uploadImageCallback}
+          />
+					<ColorDropdown
+            hidden={_icons.indexOf("forecolor")==-1 &&_icons.indexOf("forecolor")}
+            ref="color"
+          />
+					<FormulaDropdown
+            hidden={ _icons.indexOf("formula")==-1}
+            ref="formula"
+          />
+					<TablePickerDropdown
+            hidden={_icons.indexOf("inserttable")==-1}
+            ref="table"
+          />
+					<SpecialCharsDialog
+            hidden={ _icons.indexOf("spechars")==-1}
+            ref="special"
+          />
+					<EmotionDialog
+            hidden={ _icons.indexOf("emotion")==-1}
+            ref="emotion"
+          />
+					<FontSizeComboBox
+            hidden={ _icons.indexOf("fontsize") ==-1}
+            ref="fontsize"
+            fontsize={this.props.fontSize}
+            value={editorState.icons["fontsize"]?editorState.icons["fontsize"].value: fontSize[0].value}
+          />
+					<FontFamilyComboBox
+            hidden={ _icons.indexOf("fontfamily") ==-1 }
+            ref="fontfamily"
+            fontfamily={this.props.fontFamily}
+            value={editorState.icons["fontfamily"]?editorState.icons["fontfamily"].value: fontFamily[0].value}
+          />
+					<ParagraphComboBox
+            hidden={_icons.indexOf("paragraph") ==-1 }
+            ref="paragraph"
+            paragraph={this.props.paragraph}
+            value={editorState.icons["paragraph"]?editorState.icons["paragraph"].value: paragraph[0].value}
+          />
 					</EditorToolbar>
 					{editArea}
 				</div>)
 	}
 }
-
-module.exports = EditorCore;
