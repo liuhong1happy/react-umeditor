@@ -10,7 +10,7 @@ export default class ImageUpload extends Component{
 		}
 	}
 
-  argumentUpload = (file) => {
+  argumentUpload = (file, files, fileIndex) => {
 		let _self = this;
 		let images = this.state.images;
 		let request = this.props.request;
@@ -72,21 +72,25 @@ export default class ImageUpload extends Component{
   }
 
   callbackUploader = (file) => {
-    res = this.props.uploadImageCallback(file)
-
-		mask.style.display = "block";
-		mask.innerHTML = "Load Success";
-		if(res && res.status=="success"){
-			images.push({
-				src: res.data[request || "image_src"]
-			})
-			_self.setState({
-				images:images
-			})
-			if(_self.props.onChange){
-				_self.props.onChange(0,images);
-			}
-    }
+		let _self = this;
+		let images = this.state.images;
+		let request = this.props.request;
+		let mask = ReactDOM.findDOMNode(this.refs.mask);
+    this.props.uploadImageCallback(file).then((res) => {
+      mask.style.display = "block";
+      mask.innerHTML = "Load Success";
+      if(res && res.status=="success"){
+        images.push({
+          src: res.data[request || "image_src"]
+        })
+        _self.setState({
+          images:images
+        })
+        if(_self.props.onChange){
+          _self.props.onChange(0,images);
+        }
+      }
+    })
   }
 
 	handleUploadFile(obj){
@@ -98,7 +102,7 @@ export default class ImageUpload extends Component{
     if (this.props.uploadImageCallback) {
       return this.props.uploadImageCallback(file)
     }
-    this.argumentUploder(file)
+    this.argumentUploder(file, obj.files, 0)
 	}
 	handleChange(e){
 		e = e || event;
