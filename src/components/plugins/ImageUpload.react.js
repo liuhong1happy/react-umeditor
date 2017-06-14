@@ -103,7 +103,7 @@ export default class ImageUpload extends Component{
 		 */
     let file = obj.files[0]
     if (this.props.uploadImageCallback) {
-      return this.callbackUploader(file)
+      return this.callbackUploader(file, obj.files, 0)
     }
     this.argumentUploder(file, obj.files, 0, obj)
 	}
