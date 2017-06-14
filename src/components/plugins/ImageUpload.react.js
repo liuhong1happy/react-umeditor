@@ -21,7 +21,7 @@ export default class ImageUpload extends Component{
 			url:_self.props.url,
 			type:_self.props.type,
 			qiniu:_self.props.qiniu,
-			onLoad:function(){ this.beforeUploading() },
+			onLoad:function(){ this.beforeUploading(files, fileIndex) },
 			onSuccess:function(res){
 				if(res && res.status=="success"){
           this.updateImage(res.data[request || 'image_src'])
@@ -46,7 +46,7 @@ export default class ImageUpload extends Component{
 		});
   }
 
-  beforeUploading = () => {
+  beforeUploading = (files, fileIndex) => {
 		let mask = ReactDOM.findDOMNode(this.refs.mask);
 		mask.style.display = "block";
 		mask.innerHTML = `${fileIndex + 1}/${files.length} Uploading...`;
@@ -68,8 +68,8 @@ export default class ImageUpload extends Component{
 		},200)
   }
 
-  callbackUploader = (file) => {
-    this.beforeUploading();
+  callbackUploader = (file, files, fileIndex) => {
+    this.beforeUploading(files, fileIndex);
     this.props.uploadImageCallback(file)
       .then(res => {
         this.afterUploading();
