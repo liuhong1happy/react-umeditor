@@ -46,8 +46,8 @@ class Dialog extends React.Component{
 		}
 	}
 	render(){
-		var {className,buttons,title,style,width,height,onClose,children,...others} = this.props;
-		var style = style?style:{};
+		let { className, buttons, title, style, width, height, onClose, children, ...others} = this.props;
+		let style = style ? style : {};
 		 if(width){
 			style.width = width;
 			style.marginLeft = -width /2;
@@ -56,7 +56,7 @@ class Dialog extends React.Component{
 			style.height = height;
 		}
 		style.display = this.state.show ? "" : "none";
-		var _className = "dialog"+(className?" "+className:"");
+		let _className = "dialog"+(className?" "+className:"");
 		return (<div className="dialog-container"   ref="root" onMouseDown={this.handleMouseDown.bind(this)}>
 				<div className={_className} ref="dialog" style={style}>
 					<div className="dialog-header" ref="header">
@@ -80,5 +80,5 @@ class Dialog extends React.Component{
 				</div>)
 	}
 }
-			 
+
 module.exports = Dialog;
