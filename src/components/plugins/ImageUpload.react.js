@@ -71,6 +71,23 @@ export default class ImageUpload extends Component{
 		});
   }
 
+  callbackUploader = (file) => {
+    res = this.props.uploadImageCallback(file)
+
+		mask.style.display = "block";
+		mask.innerHTML = "Load Success";
+		if(res && res.status=="success"){
+			images.push({
+				src: res.data[request || "image_src"]
+			})
+			_self.setState({
+				images:images
+			})
+			if(_self.props.onChange){
+				_self.props.onChange(0,images);
+			}
+  }
+
 	handleUploadFile(obj){
 		/**
 		 * 点击 obj = e.target
