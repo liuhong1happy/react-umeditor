@@ -66,9 +66,10 @@ class App extends React.Component{
 		})
 	}
 
-    uploadImageCallback = (file) => {
-        console.log('fileeee', file);
-    }
+	uploadImageCallback = (file) => {
+	  	image_url = file.upload
+	  	return Promise.resolve({data: {image_src: image_url}, status: 'success'})
+	}
 	render(){
 		  var icons = this.getIcons();
 		  var uploader = this.getQiniuUploader();
