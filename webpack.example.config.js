@@ -8,6 +8,7 @@ var BUILD_PATH = path.resolve(__dirname, './example/build');
 var TMP_PATH = path.resolve(__dirname,'./example/index.html');
 
 module.exports = {
+    debug: true,
   entry: {
     app: APP_PATH, 
     vendor: ['react','react-dom'] 
@@ -21,9 +22,6 @@ module.exports = {
     new webpack.optimize.UglifyJsPlugin({ 
         minimize: true,
         compress:{
-            warnings: false,
-            drop_debugger: true,
-            drop_console: true
         }
     }), 
     new HtmlWebpackPlugin({
@@ -35,7 +33,7 @@ module.exports = {
     }),
     new OpenBrowserPlugin({
       url: 'http://localhost:8080'
-      //browser: 'chromium-browser' // mac调试时需要注释该行
+      // browser: 'chromium-browser' // mac调试时需要注释该行
     })
   ],
   module: {

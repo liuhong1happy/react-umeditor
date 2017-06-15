@@ -17,14 +17,14 @@ class EditorIcon extends React.Component{
 		this.updateStyle();
 	}
 	updateStyle(){
-		var root = ReactDOM.findDOMNode(this.refs.root);
-		var icon = this.props.icon;
+		let root = ReactDOM.findDOMNode(this.refs.root);
+		let icon = this.props.icon;
 		switch(this.props.icon){
 			case "forecolor":
 			case "backcolor":
-				var color = this.props.color?this.props.color:"transparent";
+				let color = this.props.color?this.props.color:"transparent";
 				root.id = icon+"_"+new Date().valueOf();
-				var style = root.childElementCount>0? root.children[0]: document.createElement('style');
+				let style = root.childElementCount>0? root.children[0]: document.createElement('style');
 				style.innerHTML = ".icon-"+icon+"#"+root.id+":before{content:'';border-bottom:3px solid "+color+";}";
 				if(root.childElementCount==0) 
 					root.appendChild(style);
@@ -33,25 +33,25 @@ class EditorIcon extends React.Component{
 	}
 	handleClick(e){
 		e = e || event;
-		var target = e.target || e.srcElement;
+		let target = e.target || e.srcElement;
 		while(target.className.indexOf("editor-icon")==-1){
 			target = target.parentElement;
 		}
 		e.target = target;
 		
-		var {onClick,...props} = this.props;
+		let {onClick,...props} = this.props;
 		if(this.props.onClick){
 			this.props.onClick(e,{...props})
 		}
 	}
 	render(){
-		var {icon,active,disabled,showHtml,onClick,...props} = this.props;
-		var _disabled = showHtml && (icon!="source" && icon!="separator");
-		var _className = "editor-icon icon-" + icon + (active ? " active" : "") + (disabled || _disabled ? " disabled" : "");
+		let {icon,active,disabled,showHtml,onClick,...props} = this.props;
+		let _disabled = showHtml && (icon!="source" && icon!="separator");
+		let _className = "editor-icon icon-" + icon + (active ? " active" : "") + (disabled || _disabled ? " disabled" : "");
 		if(icon=="fontsize" || icon=="fontfamily" || icon == "paragraph"){
 			return (<span ref="root" className={_className} onClick={this.handleClick.bind(this)} {...props}> 
 				<span className="icon-label">{props.name}</span>
-				<span className="icon-caret"></span>
+				<span className="icon-caret"/>
 				</span>)
 		}else{
 				return (<span ref="root" className={_className} onClick={this.handleClick.bind(this)} {...props}></span>)

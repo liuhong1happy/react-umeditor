@@ -1,6 +1,6 @@
-var React = require('react');
+import React, { Component } from 'react';
 
-class ComboBox extends React.Component{
+class ComboBox extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -31,27 +31,30 @@ class ComboBox extends React.Component{
 	}
 	toggle(position){
 		this.setState({
-			show:!this.state.show,
-			position:position
+			show: !this.state.show,
+			position: position
 		})
 	}
 	render(){
-		var {className,style,...others} = this.props;
+		let { className, style, ...others } = this.props;
 		style = style || {};
 		if(!this.state.show){
-			 style["display"] = "none";
+      style["display"] = "none";
 		}else{
-			style["display"] = "";	 
+			style["display"] = "";
 		}
 		if(this.state.position){
 			style["left"] = this.state.position.x;
 			style["top"] = this.state.position.y;
 		}
-			 
-		return (<div style={style} className={"combobox"+(className?" "+className:"")} {...others}>
-			{this.props.children}
+
+		return (
+      <div
+        style={style}
+        className={"combobox" + (className ? " " + className : "")}
+        {...others}>
+			{ this.props.children }
 		</div>)
 	}
 }
-		
 module.exports = ComboBox;
