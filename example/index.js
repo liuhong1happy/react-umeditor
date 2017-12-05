@@ -67,8 +67,8 @@ class App extends React.Component{
 	}
 
 	uploadImageCallback = (file) => {
-	  	image_url = file.upload
-	  	return Promise.resolve({data: {image_src: image_url}, status: 'success'})
+		var image_url = file.upload
+		return Promise.resolve({data: {image_src: image_url}, status: image_url ? 'success' : 'error'})
 	}
 	render(){
 		  var icons = this.getIcons();
@@ -92,7 +92,7 @@ class App extends React.Component{
               plugins={plugins}
               value={form_data.editor}
               defaultValue="<p>React Umeditor</p>"
-              uploadImageCallback={this.uploadImageCallback}
+              // uploadImageCallback={this.uploadImageCallback}
               onChange={this.handleChange.bind(this)}/>
 		          </div>)
 	}

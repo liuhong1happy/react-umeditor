@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+var Uploader = require('../../utils/FileUpload');
 
 export default class ImageUpload extends Component{
 	constructor(props){
@@ -21,28 +22,28 @@ export default class ImageUpload extends Component{
 			url:_self.props.url,
 			type:_self.props.type,
 			qiniu:_self.props.qiniu,
-			onLoad:function(){ this.beforeUploading(files, fileIndex) },
+			onLoad:function(){ _self.beforeUploading(files, fileIndex) },
 			onSuccess:function(res){
 				if(res && res.status=="success"){
-          this.updateImage(res.data[request || 'image_src'])
+          _self.updateImage(res.data[request || 'image_src'])
 					// console.log(`3文件总数：${files.length}`);
 				}
 				setTimeout(function(){
 					if(fileIndex + 1 < files.length){
 						//判断是否还有图片没有上传
 						fileIndex += 1;
-						this.argumentUpload(files[fileIndex], files, fileIndex, obj);
+						_self.argumentUpload(files[fileIndex], files, fileIndex, obj);
 					}else{
 						//图片上传完毕，重置文件索引 fileIndex
 						fileIndex = 0;
 						if(!obj.dropEffect){
 							obj.value = "";
-              this.afterUploading();
+              _self.afterUploading();
 						}
 					}
 				},200)
 			},
-			onError:function(){ this.errorUploading() }
+			onError:function(){ _self.errorUploading() }
 		});
   }
 
@@ -105,7 +106,7 @@ export default class ImageUpload extends Component{
     if (this.props.uploadImageCallback) {
       return this.callbackUploader(file, obj.files, 0)
     }
-    this.argumentUploder(file, obj.files, 0, obj)
+    this.argumentUpload(file, obj.files, 0, obj)
 	}
 	handleChange(e){
 		e = e || event;
