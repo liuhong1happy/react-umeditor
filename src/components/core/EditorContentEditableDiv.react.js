@@ -12,11 +12,11 @@ class EditorContentEditableDiv extends React.Component{
 		}
 	}
 	componentDidMount(){
-    window.addEventListener('keydown', this.props.handleKeyDown)
-    window.addEventListener('keyup', this.props.handleKeyUp)
+		window.addEventListener('keydown', this.props.handleKeyDown)
+		window.addEventListener('keyup', this.props.handleKeyUp)
 		window.addEventListener("mousedown",this.handleWindowMouseDown);
 		window.addEventListener("mouseup",this.handleMouseUp);
-    setTimeout(this.props.onEditorMount, 50);
+    	setTimeout(this.props.onEditorMount, 50);
 	}
 
 	shouldComponentUpdate(nextProps, nextState){
@@ -41,9 +41,8 @@ class EditorContentEditableDiv extends React.Component{
 	componentWillUnmount(){
 		window.removeEventListener("mousedown",this.handleWindowMouseDown);
 		window.removeEventListener("mouseup",this.handleMouseUp);
-
-    window.removeEventListener("keydown", this.props.handleKeyDown)
-    window.removeEventListener("keyup", this.props.handleKeyUp)
+		window.removeEventListener("keydown", this.props.handleKeyDown)
+		window.removeEventListener("keyup", this.props.handleKeyUp)
 	}
 
 	getContent(){
@@ -84,7 +83,7 @@ class EditorContentEditableDiv extends React.Component{
 		EditorSelection.createRange();
 		if(this.props.onRangeChange) {
 			this.props.onRangeChange(e);
-    }
+    	}
 		EditorDOM.stopPropagation(e);
 	}
 
@@ -105,11 +104,11 @@ class EditorContentEditableDiv extends React.Component{
 			<div className="editor-contenteditable-div">
 				<EditorResize ref="resize" />
 				<div className="editable-range"
-          ref="edit"
+          		ref="edit"
 				onMouseUp={this.handleMouseUp}
-          onMouseDown={this.handleMouseDown}
+          		onMouseDown={this.handleMouseDown}
 				contentEditable={true}
-          dangerouslySetInnerHTML={{__html:this.state.content}}/>
+          		dangerouslySetInnerHTML={{__html:this.state.content}}/>
 			</div>)
 	}
 }

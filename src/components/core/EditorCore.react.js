@@ -190,6 +190,18 @@ export default class EditorCore extends React.Component {
     }
     return editorState;
   }
+  handleChange(content) {
+    let value = this.state.value;
+    var editorState = this.state.editorState;
+    editorState.content = content;
+    if (value != content) {
+      this.props.onChange(content);
+      this.setState({
+        value: content,
+        editorState: editorState
+      })
+    }
+  }
   handleRangeChange(e) {
     e = e || event;
     if (e && e.type == "blur") return;
@@ -199,7 +211,6 @@ export default class EditorCore extends React.Component {
     let selection = EditorSelection.getSelection();
     if (this.props.onChange) {
       let content = this.getContent();
-      console.log('changeeeee', content)
       let value = this.state.value;
       if (value != content) {
         this.props.onChange(content);
@@ -938,11 +949,11 @@ export default class EditorCore extends React.Component {
     editarea.focus();
   }
   // render functions  
-  genEditArea() {
+  renderEditArea() {
     let showHtml = this.state.editorState.showHtml;
     if (showHtml) {
       return (
-        <EditorTextArea ref="editarea" onChange={this.props.onChange} />)
+        <EditorTextArea ref="editarea" onChange={this.handleChange.bind(this)} />)
     } else {
       return (
         <EditorContentEditableDiv
@@ -955,7 +966,7 @@ export default class EditorCore extends React.Component {
     }
   }
   render() {
-    let editArea = this.genEditArea();
+    let editArea = this.renderEditArea();
     let {
       index,
       fontSize,
