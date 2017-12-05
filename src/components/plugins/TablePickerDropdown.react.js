@@ -29,8 +29,8 @@ class TablePickerDropdown extends React.Component{
         e = e || event;
 		var target = e.target || e.srcElement;
 		var parentPostion = target.getBoundingClientRect();
-        var row =Math.ceil((e.clientX - parentPostion.left) / 22);
-        var column =Math.ceil((e.clientY - parentPostion.top) / 22);
+        var column =Math.ceil((e.clientX - parentPostion.left) / 22);
+        var row =Math.ceil((e.clientY - parentPostion.top) / 22);
         if(row<0) row = 0;
         if(column<0) column = 0;
         
@@ -69,10 +69,10 @@ class TablePickerDropdown extends React.Component{
 			return (<div></div>)
 		}else{
 			return (<Dropdown ref="root" className="tablepicker-dropdown">
-						<div className="infoarea"> <span>{column+"列 x "+row+"行"}</span></div>
+						<div className="infoarea"> <span>{row+"行 x "+column+"列"}</span></div>
 						<div className="pickarea" onMouseOver={this.handleMouseEvent.bind(this)}  onMouseMove={this.handleMouseEvent.bind(this)}
 								onMouseOut={this.handleMouseOut.bind(this)} onClick={this.handleClick.bind(this)}>
-								<div className="overlay" style={{width:row*22,height:column*22}}></div>
+								<div className="overlay" style={{width: column*22,height: row*22}}></div>
 						</div>
 					</Dropdown>)
 		}
