@@ -960,7 +960,7 @@ export default class EditorCore extends React.Component {
           ref="editarea"
           handleKeyDown={this.handleKeyDown}
           handleKeyUp={this.handleKeyUp}
-          onEditMount={this.props.onEditMount}
+          onEditorMount={this.props.onEditorMount}
           onRangeChange={this.handleRangeChange.bind(this)} />
       )
     }
@@ -985,9 +985,7 @@ export default class EditorCore extends React.Component {
       ...props
     } = this.props;
     let editorState = this.state.editorState;
-    let _icons = icons.join(" ")
-      .replace(/\|/gm, "separator")
-      .split(" ");
+    let _icons = icons.join(" ").replace(/\|/gm, "separator").split(" ");
     return (
       <div
         ref="root"

@@ -40,13 +40,11 @@ export default class Editor extends Component {
   }
   componentDidMount() {
     this.index = EditorEventEmitter.editorSum;
-    EditorEventEmitter.addStartListener("start-" + this.index, this.handleChange
-      .bind(this));
+    EditorEventEmitter.addStartListener("start-" + this.index, this.handleChange.bind(this));
   }
   componentWillUnmount() {
     var index = this.index;
-    EditorEventEmitter.removeStartListener("start-" + index, this.handleChange
-      .bind(this));
+    EditorEventEmitter.removeStartListener("start-" + index, this.handleChange.bind(this));
   }
   componentDidUpdate() {
     if (this.state.loaded && this.state.reload) {
