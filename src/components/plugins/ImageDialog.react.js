@@ -1,4 +1,5 @@
 var React = require('react');
+var PropTypes = require('prop-types');
 var ReactDOM = require('react-dom');
 
 var Dialog = require('../base/Dialog.react');
@@ -119,8 +120,8 @@ export default class ImageDialog extends React.Component {
 }
 
 ImageDialog.propTypes = {
-  uploader: React.PropTypes.object,
-  customUploader: React.PropTypes.object
+  uploader: PropTypes.object,
+  customUploader: PropTypes.object
 }
 ImageDialog.defaultProps = {
   uploader: {

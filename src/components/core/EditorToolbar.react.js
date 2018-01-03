@@ -1,4 +1,5 @@
 var React = require('react');
+var PropTypes = require('prop-types')
 var EditorIcon = require('./EditorIcon.react');
 var EditorDOM = require('../../utils/EditorDOM');
 var { 
@@ -62,7 +63,7 @@ class EditorToolbar extends React.Component{
 }
 
 EditorToolbar.propTypes = {
-	icons:React.PropTypes.array
+	icons: PropTypes.array
 }
 EditorToolbar.defaultProps = {
 	icons:[]

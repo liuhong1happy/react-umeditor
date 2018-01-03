@@ -1,7 +1,7 @@
 import React, {
-  Component,
-  PropTypes
+  Component
 } from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import EditorCore from './components/core/EditorCore.react';
 var EditorEventEmitter = require('./utils/EditorEventEmitter');
