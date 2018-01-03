@@ -1,6 +1,6 @@
 {
   "name": "react-umeditor",
-  "version": "1.0.0-rc10",
+  "version": "1.0.0-rc11",
   "description": "React Editor like UMEditor",
   "main": "lib/editor.js",
   "files": [
@@ -48,6 +48,7 @@
     "mocha": "^3.2.0",
     "open-browser-webpack-plugin": "0.0.2",
     "path": "^0.12.7",
+    "prop-types": "^15.6.0",
     "react": "^0.14.8",
     "react-addons-test-utils": "^0.14.8",
     "react-dom": "^0.14.8",
