@@ -104,11 +104,19 @@ class EditorContentEditableDiv extends React.Component{
 			<div className="editor-contenteditable-div">
 				<EditorResize ref="resize" />
 				<div className="editable-range"
-          		ref="edit"
-				onMouseUp={this.handleMouseUp}
-          		onMouseDown={this.handleMouseDown}
-				contentEditable={true}
-          		dangerouslySetInnerHTML={{__html:this.state.content}}/>
+					ref="edit"
+					onMouseUp={this.handleMouseUp}
+					onMouseDown={this.handleMouseDown}
+					onInput={(e)=>{
+						EditorSelection.selection = EditorSelection.getSelection();
+						if(EditorSelection.selection && EditorSelection.selection.rangeCount>0) {
+							EditorSelection.range = EditorSelection.selection.getRangeAt(0).cloneRange();
+						}else{
+							EditorSelection.range = null;
+						}
+					}}
+					contentEditable={true}
+					dangerouslySetInnerHTML={{__html:this.state.content}}/>
 			</div>)
 	}
 }
