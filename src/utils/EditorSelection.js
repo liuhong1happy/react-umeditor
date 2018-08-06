@@ -1,4 +1,4 @@
-var EditorDOM = require('./EditorDOM');
+import EditorDOM from './EditorDOM';
 
 NodeList.prototype.toArray = function(){
 	var nodes = [];
@@ -304,4 +304,4 @@ var EditorSelection = {
 		}
 	}
 }
-module.exports = EditorSelection;
+export default EditorSelection;

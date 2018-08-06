@@ -1,10 +1,10 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var EditorSelection = require('../../utils/EditorSelection');
-var EditorDOM = require('../../utils/EditorDOM');
-var EditorResize = require('../../utils/EditorResize.react');
+import React from 'react'
+import ReactDOM from 'react-dom'
+import EditorSelection from '../../utils/EditorSelection'
+import EditorDOM from '../../utils/EditorDOM'
+import EditorResize from '../../utils/EditorResize.react'
 
-class EditorContentEditableDiv extends React.Component{
+export default class EditorContentEditableDiv extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {

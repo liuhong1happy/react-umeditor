@@ -1,20 +1,21 @@
-var React = require('react');
-var PropTypes = require('prop-types')
-var EditorIcon = require('./EditorIcon.react');
-var EditorDOM = require('../../utils/EditorDOM');
-var { 
-	EditorIconTypes
-} = require('../../constants/EditorConstants');
-var EditorHistory = require('../../utils/EditorHistory');
+import React from 'react'
+import PropTypes from 'prop-types'
 
-class EditorToolbar extends React.Component{
+import EditorIcon from './EditorIcon.react'
+import EditorDOM from '../../utils/EditorDOM'
+import { 
+	EditorIconTypes
+} from '../../constants/EditorConstants'
+import EditorHistory from '../../utils/EditorHistory'
+
+export default class EditorToolbar extends React.Component{
 	handleIconClick(e,state){
 		if(this.props.onIconClick){
 			this.props.onIconClick(e,state)
 		}
 	}
 	getNameByValue(arr,value){
-		var filterArr = arr.filter(function(ele,pos){
+		var filterArr = arr.filter(function(ele){
 			return ele.value == value;
 		})
 		if(filterArr.length>0){
@@ -68,5 +69,3 @@ EditorToolbar.propTypes = {
 EditorToolbar.defaultProps = {
 	icons:[]
 }
-	
-module.exports = EditorToolbar;

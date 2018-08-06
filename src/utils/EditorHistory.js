@@ -1,4 +1,4 @@
-var EditorSelection = require('./EditorSelection');
+import EditorSelection from './EditorSelection';
 var EditorHistory = {
 	curCommand:null,
 	commandStack:[],
@@ -58,5 +58,6 @@ var EditorHistory = {
 		this.commandStack = [];
 		this.commandIndex = -1;
 	}
-}		
-module.exports = EditorHistory;
+}	
+	
+export default EditorHistory;

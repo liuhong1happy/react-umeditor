@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-var Uploader = require('../../utils/FileUpload');
+import Uploader from '../../utils/FileUpload';
 
 export default class ImageUpload extends Component{
 	constructor(props){
@@ -19,15 +19,14 @@ export default class ImageUpload extends Component{
 		uploader.uploadFile({
 			file:file,
 			filename:_self.props.name,
+			data: _self.props.data,
 			url:_self.props.url,
-			type:_self.props.type,
-			qiniu:_self.props.qiniu,
+			filter:_self.props.filter,
 			onLoad:function(){ _self.beforeUploading(files, fileIndex) },
 			onSuccess:function(res){
-				if(res && res.status=="success"){
-          _self.updateImage(res.data[request || 'image_src'])
-					// console.log(`3文件总数：${files.length}`);
-				}
+				const url = _self.props.filter(res);
+				_self.updateImage(url);
+
 				setTimeout(function(){
 					if(fileIndex + 1 < files.length){
 						//判断是否还有图片没有上传
@@ -54,7 +53,7 @@ export default class ImageUpload extends Component{
   }
 
   afterUploading = () => {
-		//去除遮罩层
+		// 去除遮罩层
 		let mask = ReactDOM.findDOMNode(this.refs.mask);
 		mask.style.display = "none";
 		mask.innerHTML = "Load Success";
@@ -67,23 +66,8 @@ export default class ImageUpload extends Component{
 		setTimeout(function(){
 			mask.style.display = "none";
 		},200)
-  }
-
-  callbackUploader = (file, files, fileIndex) => {
-    this.beforeUploading(files, fileIndex);
-    this.props.uploadImageCallback(file)
-      .then(res => {
-        this.afterUploading();
-        if(res && res.status=="success"){
-          this.updateImage(res.data['image_src'])
-        }
-      })
-      .catch(error => {
-        console.log('error', error)
-        this.errorUploading()
-      })
-  }
-
+	}
+	
   updateImage = (image) => {
 		let images = this.state.images;
     images.push({
@@ -98,14 +82,7 @@ export default class ImageUpload extends Component{
   }
 
 	handleUploadFile(obj){
-		/**
-		 * 点击 obj = e.target
-		 * 拖拽 obj = e.dataTransfer
-		 */
     let file = obj.files[0]
-    if (this.props.uploadImageCallback) {
-      return this.callbackUploader(file, obj.files, 0)
-    }
     this.argumentUpload(file, obj.files, 0, obj)
 	}
 	handleChange(e){

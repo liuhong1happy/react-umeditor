@@ -1,32 +1,29 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var {
-  EditorIconTypes
-} = require('../../constants/EditorConstants');
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 
 // utlils
-var EditorHistory = require('../../utils/EditorHistory');
-var EditorSelection = require('../../utils/EditorSelection');
-var EditorDOM = require('../../utils/EditorDOM');
-var EditorTimer = require('../../utils/EditorTimer');
+import EditorHistory from '../../utils/EditorHistory'
+import EditorSelection from '../../utils/EditorSelection'
+import EditorDOM from '../../utils/EditorDOM'
+import EditorTimer from '../../utils/EditorTimer'
 
 // dialog & dropdown
-var ColorDropdown = require('../plugins/ColorDropdown.react');
-var FormulaDropdown = require('../plugins/FormulaDropdown.react');
-var TablePickerDropdown = require('../plugins/TablePickerDropdown.react');
+import ColorDropdown from '../plugins/ColorDropdown'
+import FormulaDropdown from '../plugins/FormulaDropdown'
+import TablePickerDropdown from '../plugins/TablePickerDropdown'
 // combobox
-var FontSizeComboBox = require('../plugins/FontSizeComboBox.react');
-var FontFamilyComboBox = require('../plugins/FontFamilyComboBox.react');
-var ParagraphComboBox = require('../plugins/ParagraphComboBox.react');
+import FontSizeComboBox from '../plugins/FontSizeComboBox'
+import FontFamilyComboBox from '../plugins/FontFamilyComboBox'
+import ParagraphComboBox from '../plugins/ParagraphComboBox'
 // dialog
-var EmotionDialog = require('../plugins/EmotionDialog.react');
-var SpecialCharsDialog = require('../plugins/SpecialCharsDialog.react');
-import ImageDialog from '../plugins/ImageDialog.react';
+import EmotionDialog from '../plugins/EmotionDialog'
+import SpecialCharsDialog from '../plugins/SpecialCharsDialog'
+import ImageDialog from '../plugins/ImageDialog';
 
 // base components
-var EditorToolbar = require('../core/EditorToolbar.react');
-var EditorTextArea = require('../core/EditorTextArea.react');
-var EditorContentEditableDiv = require('../core/EditorContentEditableDiv.react');
+import EditorToolbar from '../core/EditorToolbar'
+import EditorTextArea from '../core/EditorTextArea'
+import EditorContentEditableDiv from '../core/EditorContentEditableDiv'
 
 // key down context
 var saveSceneTimer = null;
@@ -46,7 +43,7 @@ var MQ = null;
  * @icons: 工具条上需要显示的图标
  **/
 
-export default class EditorCore extends React.Component {
+export default class EditorCore extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -116,7 +113,7 @@ export default class EditorCore extends React.Component {
   handleKeyDown = (evt) => {
     evt = evt || event;
     let target = evt.target || evt.srcElement;
-    let { lastKeyCode, maxInputCount } = this.state
+    let { maxInputCount } = this.state
     if (target.className && target.className.indexOf('editor-contenteditable-div') != -1) {
       let keyCode = evt.keyCode || evt.which;
       console.log('kkkk', keyCode)
@@ -149,7 +146,6 @@ export default class EditorCore extends React.Component {
     let target = evt.target || evt.srcElement;
     if (target.className && target.className.indexOf(
         'editor-contenteditable-div') != -1) {
-      let keyCode = evt.keyCode || evt.which;
       if (!evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
         // some handle
       }
@@ -461,10 +457,10 @@ export default class EditorCore extends React.Component {
     EditorHistory.execCommand(state.icon, false, null);
   }
 
-  editorForeColor = (state, offsetPosition, editarea) => {
+  editorForeColor = (offsetPosition, editarea) => {
     EditorSelection.storeRange();
     offsetPosition.y += offsetPosition.h + 5;
-    this.refs.color.toggle(offsetPosition, (e, color) => {
+    this.refs.color.toggle(offsetPosition, (color) => {
       editarea.focus();
       EditorSelection.restoreRange();
       EditorHistory.execCommand('forecolor', false, color);
@@ -472,11 +468,11 @@ export default class EditorCore extends React.Component {
     });
   }
 
-  editorBackColor = (state, offsetPosition, editarea) => {
+  editorBackColor = (offsetPosition, editarea) => {
     EditorSelection.storeRange();
     offsetPosition.y += offsetPosition.h + 5;
 
-    this.refs.color.toggle(offsetPosition, (e, color) => {
+    this.refs.color.toggle(offsetPosition, (color) => {
       editarea.focus();
       EditorSelection.restoreRange();
       EditorHistory.execCommand('backcolor', false, color);
@@ -484,11 +480,11 @@ export default class EditorCore extends React.Component {
     });
   }
 
-  editorFontSize = (state, offsetPosition, editarea) => {
+  editorFontSize = (offsetPosition, editarea) => {
     EditorSelection.storeRange();
     offsetPosition.y += offsetPosition.h + 5;
 
-    this.refs.fontsize.toggle(offsetPosition, (e, fontsize) => {
+    this.refs.fontsize.toggle(offsetPosition, (fontsize) => {
       editarea.focus();
       EditorSelection.restoreRange();
       EditorHistory.execCommand('fontsize', false, fontsize);
@@ -496,11 +492,11 @@ export default class EditorCore extends React.Component {
     });
   }
 
-  editorFontFamily = (state, offsetPosition, editarea) => {
+  editorFontFamily = (offsetPosition, editarea) => {
     EditorSelection.storeRange();
     offsetPosition.y += offsetPosition.h + 5;
 
-    this.refs.fontfamily.toggle(offsetPosition, (e, fontfamily) => {
+    this.refs.fontfamily.toggle(offsetPosition, (fontfamily) => {
       editarea.focus();
       EditorSelection.restoreRange();
       EditorHistory.execCommand('fontname', false, fontfamily);
@@ -508,11 +504,11 @@ export default class EditorCore extends React.Component {
     });
   }
 
-  editorParagraph = (state, offsetPosition, editarea) =>  {
+  editorParagraph = (offsetPosition, editarea) =>  {
     EditorSelection.storeRange();
     offsetPosition.y += offsetPosition.h + 5;
 
-    this.refs.paragraph.toggle(offsetPosition, (e, paragraph) => {
+    this.refs.paragraph.toggle(offsetPosition, (paragraph) => {
       editarea.focus();
       EditorSelection.restoreRange();
       let paragraphs = EditorSelection.getParagraphs();
@@ -610,7 +606,7 @@ export default class EditorCore extends React.Component {
 
   editorImage = (editarea, root) => {
     EditorSelection.storeRange();
-    this.refs.image.toggle((e, html) => {
+    this.refs.image.toggle((html) => {
       editarea.focus();
       EditorSelection.restoreRange();
       if (html && html.length > 0) {
@@ -634,7 +630,7 @@ export default class EditorCore extends React.Component {
     EditorSelection.storeRange();
     offsetPosition.y += offsetPosition.h + 5;
     offsetPosition.x -= offsetPosition.w / 2;
-    this.refs.formula.toggle(offsetPosition, (e, latex, id) => {
+    this.refs.formula.toggle(offsetPosition, (latex, id) => {
       editarea.focus();
       EditorSelection.restoreRange();
 
@@ -669,7 +665,7 @@ export default class EditorCore extends React.Component {
     EditorSelection.storeRange();
     offsetPosition.y += offsetPosition.h + 5;
     offsetPosition.x -= offsetPosition.w / 2;
-    this.refs.table.toggle(offsetPosition, (e, table) => {
+    this.refs.table.toggle(offsetPosition, (table) => {
       editarea.focus();
       EditorSelection.restoreRange();
       if (EditorSelection.range && EditorSelection.validateRange(
@@ -691,7 +687,7 @@ export default class EditorCore extends React.Component {
   editorSpechars = (editarea, root) => {
 
     EditorSelection.storeRange();
-    this.refs.special.toggle((e, char) => {
+    this.refs.special.toggle((char) => {
       editarea.focus();
       EditorSelection.restoreRange();
       if (EditorSelection.range && EditorSelection.validateRange(
@@ -713,7 +709,7 @@ export default class EditorCore extends React.Component {
 
   editorEmotion = (editarea, root) => {
     EditorSelection.storeRange();
-    this.refs.emotion.toggle((e, img) => {
+    this.refs.emotion.toggle((img) => {
       editarea.focus();
       EditorSelection.restoreRange();
       if (EditorSelection.range && EditorSelection.validateRange(
@@ -1007,7 +1003,7 @@ export default class EditorCore extends React.Component {
             hidden={_icons.indexOf("image")==-1}
             ref="image"
             uploader={plugins.image.uploader}
-            uploadImageCallback={uploadImageCallback}
+            customUploader={plugins.image.customUploader}
           />
 					<ColorDropdown
             hidden={_icons.indexOf("forecolor")==-1 &&_icons.indexOf("forecolor")}

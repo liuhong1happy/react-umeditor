@@ -1,11 +1,10 @@
-var React = require('react');
-var ReactDOM =  require('react-dom');
+import React, { Component } from 'react'
 
-var TabGroup = require('../base/TabGroup.react');
-var Dropdown = require('../base/Dropdown.react');
-var {FormulaTypes} = require('../../constants/EditorConstants');
+import TabGroup from '../base/TabGroup'
+import Dropdown from '../base/Dropdown'
+import { FormulaTypes } from '../../constants/EditorConstants'
 
-class FormulaIcons extends React.Component{
+export class FormulaIcons extends Component{
 	handleClick(e){
 		e = e || event;
 		var target = e.target || e.srcElement;
@@ -28,7 +27,7 @@ class FormulaIcons extends React.Component{
 	}
 }
 
-class FormulaDropdown extends React.Component{
+export default class FormulaDropdown extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {

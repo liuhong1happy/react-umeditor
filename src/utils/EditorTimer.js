@@ -110,4 +110,4 @@ var EditorTimer = {
 
 EditorTimer.animate();
 
-module.exports = EditorTimer;
+export default EditorTimer;

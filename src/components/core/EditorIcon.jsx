@@ -1,5 +1,6 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
+
 /**
 * @icon: 图标名称 string
 * @disabled: 是否禁用 bool
@@ -9,7 +10,7 @@ var ReactDOM = require('react-dom');
 * @showHtml: 是否当前是显示html属性
 * @color: 前景色和背景色
 **/
-class EditorIcon extends React.Component{
+export default class EditorIcon extends Component{
 	componentDidMount(){
 		this.updateStyle();
 	}
@@ -58,5 +59,3 @@ class EditorIcon extends React.Component{
 		}
 	}
 }
-
-module.exports = EditorIcon;

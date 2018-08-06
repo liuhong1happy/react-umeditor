@@ -1,5 +1,3 @@
-var QiniuUtils =  require('./QiniuUtils');
-
 var getError = function(options,xhr){
     var  msg = 'cannot post '+options.url+":"+xhr.status;
     var err = new Error(msg);
@@ -42,12 +40,6 @@ var Uploader = {
                 formData.append(i,options.data[i]);
             }
         }
-		if(options.type=="qiniu"){
-            var key = options.qiniu.key || options.qiniu.genKey(options);
-			formData.append("token",options.qiniu.upload_token ? options.qiniu.upload_token : QiniuUtils.Utils.genUploadToken(key,options.qiniu.app));
-			if(options.qiniu.key) formData.append("key",options.qiniu.key);
-			options.filename = "file";
-		}
 		formData.append(options.filename,options.file);
 		
         xhr.onerror = function(e){
@@ -60,27 +52,16 @@ var Uploader = {
                 return options.onError(getError(options,xhr),getBody(xhr));
             }
             options.onEnd(e);
-            if(options.type=="qiniu"){
-                var res = getBody(xhr);
-                var body = {
-                    status: "success",
-                    data: {
-                        image_src: options.qiniu.domain +"/"+ res.key
-                    }
-                };
-                options.onSuccess(body);
-            }else{
-                options.onSuccess(getBody(xhr));
-            }
+            options.onSuccess(getBody(xhr));
         }
     
         xhr.open('post',options.url,true);
-        xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         xhr.send(formData);
     }
 }
 
-module.exports ={
+module.exports = {
     uploadFile:function(options){
           options.url = options.url || "/upload";
           options.filename = options.filename || "file";

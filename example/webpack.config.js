@@ -3,12 +3,11 @@ var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var OpenBrowserPlugin = require('open-browser-webpack-plugin');
 
-var APP_PATH = path.resolve(__dirname,'./example/index.js');
-var BUILD_PATH = path.resolve(__dirname, './example/build');
-var TMP_PATH = path.resolve(__dirname,'./example/index.html');
+var APP_PATH = path.resolve(__dirname,'./index.js');
+var BUILD_PATH = path.resolve(__dirname, './build');
+var TMP_PATH = path.resolve(__dirname,'./index.html');
 
 module.exports = {
-    debug: true,
   entry: {
     app: APP_PATH, 
     vendor: ['react','react-dom'] 
@@ -39,15 +38,15 @@ module.exports = {
   module: {
     loaders: [{
       test: /\.js$/,
-      loaders: [ 'babel-loader?presets[]=es2015,presets[]=react,presets[]=stage-0' ], // ie8调试时，去掉,presets[]=react-hmre
+      loaders: [ 'babel-loader?presets[]=env,presets[]=react' ], // ie8调试时，去掉,presets[]=react-hmre
       exclude: /node_modules/
     },{
         test: /\.less$/,
         loaders: ['style','css','less']
     },{
-		test: /\.(png|jpg|gif)$/,
-		loader: 'url-loader?limit=10000&name=build/[name].[ext]'
-	}
+        test: /\.(png|jpg|gif)$/,
+        loader: 'url-loader?limit=10000&name=build/[name].[ext]'
+      }
     ]
   }
 };

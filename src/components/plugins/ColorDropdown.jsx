@@ -1,8 +1,9 @@
-var React = require('react');
-var Dropdown = require('../base/Dropdown.react');
-var {ColorTypes} = require('../../constants/EditorConstants');
-var EditorDOM = require('../../utils/EditorDOM');
-class ColorDropdown extends React.Component{
+import React from 'react'
+import Dropdown from '../base/Dropdown'
+import { ColorTypes } from '../../constants/EditorConstants'
+import EditorDOM from '../../utils/EditorDOM'
+
+export default class ColorDropdown extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -78,5 +79,3 @@ class ColorDropdown extends React.Component{
 		}
 	}
 }
-		
-module.exports = ColorDropdown;

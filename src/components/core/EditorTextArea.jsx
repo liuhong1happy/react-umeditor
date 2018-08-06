@@ -1,7 +1,7 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 
-class EditorTextArea  extends React.Component{
+export default class EditorTextArea  extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -33,5 +33,3 @@ class EditorTextArea  extends React.Component{
 		return (<textarea ref="root" className="editor-textarea" value={this.state.content} onChange={this.handleChange.bind(this)} ></textarea>)
 	}
 }
-				
-module.exports = EditorTextArea;

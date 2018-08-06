@@ -65,4 +65,5 @@ var EditorDOM = {
 		return node;
 	}
 }
-module.exports = EditorDOM;
+
+export default EditorDOM;

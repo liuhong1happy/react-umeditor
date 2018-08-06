@@ -1,9 +1,8 @@
-var React = require('react');
-var ReactDOM =  require('react-dom');
+import React from 'react';
+import TabGroup from '../base/TabGroup';
+import Dialog from '../base/Dialog';
 
-var TabGroup = require('../base/TabGroup.react');
-var Dialog = require('../base/Dialog.react');
-var {SpecialChars} = require('../../constants/EditorConstants');
+import { SpecialChars } from '../../constants/EditorConstants';
 
 class SCChars extends React.Component{
 	handleClick(e){
@@ -28,7 +27,7 @@ class SCChars extends React.Component{
 	}
 }
 
-class SpecialCharsDialog extends React.Component{
+export default class SpecialCharsDialog extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -77,7 +76,7 @@ class SpecialCharsDialog extends React.Component{
 			return (<div></div>)
 		}else{
 			return (<Dialog ref="root" className="special-chars-dialog" width={700} height={508} title="特殊字符" buttons={buttons} onClose={this.close.bind(this)}>
-					<TabGroup tabs={tabs} />
+				<TabGroup tabs={tabs} />
 			</Dialog>)
 		}
 	}

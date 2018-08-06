@@ -1,15 +1,13 @@
-var React = require('react');
-var PropTypes = require('prop-types');
-var ReactDOM = require('react-dom');
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
-var Dialog = require('../base/Dialog.react');
-var TabGroup = require('../base/TabGroup.react');
-var Uploader = require('../../utils/FileUpload');
+import Dialog from '../base/Dialog.react'
+import TabGroup from '../base/TabGroup.react'
 
 import ImageUpload from './ImageUpload.react';
 import ImageSearch from './ImageSearch.react';
 
-export default class ImageDialog extends React.Component {
+export default class ImageDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -80,14 +78,13 @@ export default class ImageDialog extends React.Component {
         title: "本地上传",
         component: (
           <ImageUpload
-          ref="image"
-          onChange={this.handleChange.bind(this)}
-          request={ uploader.request }
-          type={uploader.type}
-          name={uploader.name}
-          url={uploader.url}
-          uploadImageCallback={this.props.uploadImageCallback}
-          qiniu={uploader.qiniu}/>
+            ref="image"
+            onChange={this.handleChange.bind(this)}
+            filter={uploader.filter}
+            name={uploader.name}
+            url={uploader.url}
+            uploadImageCallback={this.props.uploadImageCallback} 
+          />
         )
       },
       {
@@ -123,20 +120,12 @@ ImageDialog.propTypes = {
   uploader: PropTypes.object,
   customUploader: PropTypes.object
 }
+
 ImageDialog.defaultProps = {
   uploader: {
-    type: "default", // qiniu
     name: "file",
     url: "/upload",
-    request: "image_src",
-    qiniu: {
-      app: {
-        bucket: "qtestbucket",
-        ak: "iN7NgwM31j4-BZacMjPrOQBs34UG1maYCAQmhdCV",
-        sk: "6QTOr2Jg1gcZEWDQXKOGZh5PziC2MCV5KsntT70j"
-      },
-      key: null,
-      upload_token: null
-    }
+    filter: (res)=> res.url,
+    data: {}
   }
 }

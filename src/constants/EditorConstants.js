@@ -1,4 +1,4 @@
-var EditorIconTypes = {
+export var EditorIconTypes = {
 	"source":{
 		title:"源代码",
 		disabled:false
@@ -175,7 +175,8 @@ var EditorIconTypes = {
 		disabled: false
 	}
 }
-var ColorTypes = {
+
+export var ColorTypes = {
 	themeColors:[
 		["#fff","#000","#eeece1","#1f497d","#4f81bd","#c0504d","#9bbb59","#8064a2","#4bacc6","#f79646"],
 		["#f2f2f2","7f7f7f","#ddd9c3","#c6d9f0","#dbe5f1","#f2dcdb","#ebf1dd","#e5e0ec","#dbeef3","#fdeada"],
@@ -186,7 +187,8 @@ var ColorTypes = {
 	],
 	standardColors:["#c00000","#ff0000","#ffc000","#ffff00","#92d050","#00b050","#00b0f0","#0070c0","#002060","#7030a0"]
 }
-var FormulaTypes = {
+
+export var FormulaTypes = {
 	commonFormulas:[
 		{backgroundPosition:"-0px -0px",latex:"\\frac{ }{ }"},
 		{backgroundPosition:"-30px -0px",latex:"^{ }/_{ }"},
@@ -272,10 +274,11 @@ var FormulaTypes = {
 		{backgroundPosition:"-150px -270px",latex:"\\Omega"},
 	]
 }
+
 var toArray = function(str){
 	return str.split(",");
 }
-var SpecialChars = [
+export var SpecialChars = [
     { name:"tsfh", title:"特殊字符", chars:toArray("、,。,·,ˉ,ˇ,¨,〃,々,—,～,‖,…,‘,’,“,”,〔,〕,〈,〉,《,》,「,」,『,』,〖,〗,【,】,±,×,÷,∶,∧,∨,∑,∏,∪,∩,∈,∷,√,⊥,∥,∠,⌒,⊙,∫,∮,≡,≌,≈,∽,∝,≠,≮,≯,≤,≥,∞,∵,∴,♂,♀,°,′,″,℃,＄,¤,￠,￡,‰,§,№,☆,★,○,●,◎,◇,◆,□,■,△,▲,※,→,←,↑,↓,〓,〡,〢,〣,〤,〥,〦,〧,〨,〩,㊣,㎎,㎏,㎜,㎝,㎞,㎡,㏄,㏎,㏑,㏒,㏕,︰,￢,￤,℡,ˊ,ˋ,˙,–,―,‥,‵,℅,℉,↖,↗,↘,↙,∕,∟,∣,≒,≦,≧,⊿,═,║,╒,╓,╔,╕,╖,╗,╘,╙,╚,╛,╜,╝,╞,╟,╠,╡,╢,╣,╤,╥,╦,╧,╨,╩,╪,╫,╬,╭,╮,╯,╰,╱,╲,╳,▁,▂,▃,▄,▅,▆,▇,�,█,▉,▊,▋,▌,▍,▎,▏,▓,▔,▕,▼,▽,◢,◣,◤,◥,☉,⊕,〒,〝,〞")},
     { name:"lmsz", title:"罗马字符", chars:toArray("ⅰ,ⅱ,ⅲ,ⅳ,ⅴ,ⅵ,ⅶ,ⅷ,ⅸ,ⅹ,Ⅰ,Ⅱ,Ⅲ,Ⅳ,Ⅴ,Ⅵ,Ⅶ,Ⅷ,Ⅸ,Ⅹ,Ⅺ,Ⅻ")},
     { name:"szfh", title:"数学字符", chars:toArray("⒈,⒉,⒊,⒋,⒌,⒍,⒎,⒏,⒐,⒑,⒒,⒓,⒔,⒕,⒖,⒗,⒘,⒙,⒚,⒛,⑴,⑵,⑶,⑷,⑸,⑹,⑺,⑻,⑼,⑽,⑾,⑿,⒀,⒁,⒂,⒃,⒄,⒅,⒆,⒇,①,②,③,④,⑤,⑥,⑦,⑧,⑨,⑩,㈠,㈡,㈢,㈣,㈤,㈥,㈦,㈧,㈨,㈩")},
@@ -286,7 +289,7 @@ var SpecialChars = [
     { name:"yyyb", title:"英语音标", chars:toArray("i:,i,e,æ,ʌ,ə:,ə,u:,u,ɔ:,ɔ,a:,ei,ai,ɔi,əu,au,iə,εə,uə,p,t,k,b,d,g,f,s,ʃ,θ,h,v,z,ʒ,ð,tʃ,tr,ts,dʒ,dr,dz,m,n,ŋ,l,r,w,j,")},
     { name:"zyzf", title:"其它", chars:toArray("ㄅ,ㄆ,ㄇ,ㄈ,ㄉ,ㄊ,ㄋ,ㄌ,ㄍ,ㄎ,ㄏ,ㄐ,ㄑ,ㄒ,ㄓ,ㄔ,ㄕ,ㄖ,ㄗ,ㄘ,ㄙ,ㄚ,ㄛ,ㄜ,ㄝ,ㄞ,ㄟ,ㄠ,ㄡ,ㄢ,ㄣ,ㄤ,ㄥ,ㄦ,ㄧ,ㄨ")}
 ];
-var EmotionImages = {
+export var EmotionImages = {
 	DemoUrl:"http://img.baidu.com/hi/tsj/t_0001.gif",
 	BaseUrl:"http://img.baidu.com/hi/",
 	SmileyInfor:{
@@ -307,12 +310,4 @@ var EmotionImages = {
 		tab5:{ name:"泡泡", prefix:"i_f", path:"face/"},
 		tab6:{ name:"有啊", prefix:"y_00", path:"youa/"},
 	}
-}
-
-module.exports = {
-	EditorIconTypes:EditorIconTypes,
-	ColorTypes:ColorTypes,
-	FormulaTypes:FormulaTypes,
-	SpecialChars:SpecialChars,
-	EmotionImages:EmotionImages
 }

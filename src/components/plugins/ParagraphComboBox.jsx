@@ -1,7 +1,7 @@
-var React = require('react');
-var ComboBox = require('../base/ComboBox.react');
+import React, { Component } from 'react'
+import ComboBox from '../base/ComboBox'
 
-class ParagraphDropdown extends React.Component{
+export default class ParagraphDropdown extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -58,5 +58,3 @@ class ParagraphDropdown extends React.Component{
 		}
 	}
 }
-		
-module.exports = ParagraphDropdown;

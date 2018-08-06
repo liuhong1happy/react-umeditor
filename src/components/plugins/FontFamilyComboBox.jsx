@@ -1,7 +1,7 @@
-var React = require('react');
-var ComboBox = require('../base/ComboBox.react');
+import React, { Component } from 'react'
+import ComboBox from '../base/ComboBox'
 
-class FontSizeDropdown extends React.Component{
+class FontFamilyDropdown  extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -40,17 +40,17 @@ class FontSizeDropdown extends React.Component{
 	}
 	render(){
 		var handleSelect = this.handleSelect.bind(this);
-		var fontsize = this.props.fontsize?this.props.fontsize:[];
+		var fontfamily = this.props.fontfamily?this.props.fontfamily:[];
 		var props = this.props;
 		if(this.props.hidden){
 			return (<div></div>)
 		}else{
-			return (<ComboBox ref="root" className="fontsize-combobox">
+			return (<ComboBox ref="root" className="fontfamily-combobox">
 				<ul>
 					{
-						fontsize.map(function(ele,pos){
+						fontfamily.map(function(ele,pos){
 							return (<li className={ele.value==props.value?"active":""} key={pos} data-value={ele.value} onClick={handleSelect}>
-										<span data-value={ele.value} style={{"fontSize":ele.name}}>{ele.name}</span>
+									<span data-value={ele.value} style={{"fontFamily":ele.value}}>{ele.name}</span>
 									</li>)
 						})
 					}
@@ -60,4 +60,4 @@ class FontSizeDropdown extends React.Component{
 	}
 }
 		
-module.exports = FontSizeDropdown;
+module.exports = FontFamilyDropdown;

@@ -1,11 +1,9 @@
-var React = require('react');
-var ReactDOM =  require('react-dom');
+import React from 'react';
+import TabGroup from '../base/TabGroup';
+import Dialog from '../base/Dialog';
+import {EmotionImages} from '../../constants/EditorConstants';
 
-var TabGroup = require('../base/TabGroup.react');
-var Dialog = require('../base/Dialog.react');
-var {EmotionImages} = require('../../constants/EditorConstants');
-
-class EmotionPanel extends React.Component{
+export class EmotionPanel extends Component{
 	handleClick(e){
 		e = e || event;
 		var target = e.target || e.srcElement;
@@ -34,7 +32,7 @@ class EmotionPanel extends React.Component{
 	}
 }
 
-class EmotionDialog extends React.Component{
+export default class EmotionDialog extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -112,5 +110,3 @@ class EmotionDialog extends React.Component{
 		}
 	}
 }
-		
-module.exports = EmotionDialog;

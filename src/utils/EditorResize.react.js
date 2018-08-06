@@ -1,11 +1,12 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var EditorDOM = require('./EditorDOM');
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import EditorDOM from './EditorDOM';
+
 // resize context
 var minWidth = 12;
 var minHeight = 12;
 
-class EditorResize extends React.Component{
+export default class EditorResize extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
@@ -217,5 +218,3 @@ class EditorResize extends React.Component{
 			</div>)
 	}
 }
-
-module.exports = EditorResize;

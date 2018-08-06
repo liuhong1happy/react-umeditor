@@ -4,31 +4,9 @@ import React, {
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import EditorCore from './components/core/EditorCore.react';
-var EditorEventEmitter = require('./utils/EditorEventEmitter');
+import EditorEventEmitter from './utils/EditorEventEmitter';
 import '../dist/less/editor.less';
-
-if (!Date.prototype.Format) {
-  Date.prototype.Format = function(n) {
-    var i = {
-        "M+": this.getMonth() + 1,
-        "d+": this.getDate(),
-        "h+": this.getHours(),
-        "m+": this.getMinutes(),
-        "s+": this.getSeconds(),
-        "q+": Math.floor((this.getMonth() + 3) / 3),
-        S: this.getMilliseconds()
-      },
-      t;
-    /(y+)/.test(n) && (n = n.replace(RegExp.$1, (this.getFullYear() + "")
-      .substr(4 - RegExp.$1.length)));
-    for (t in i) new RegExp("(" + t + ")")
-      .test(n) && (n = n.replace(RegExp.$1, RegExp.$1.length == 1 ? i[t] : (
-          "00" + i[t])
-        .substr(("" + i[t])
-          .length)));
-    return n
-  };
-}
+import '../utils/Date.js'
 
 export default class Editor extends Component {
   constructor(props) {
@@ -39,20 +17,19 @@ export default class Editor extends Component {
     }
   }
   componentDidMount() {
-    this.index = EditorEventEmitter.editorSum;
-    EditorEventEmitter.addStartListener("start-" + this.index, this.handleChange.bind(this));
+    this.index = EditorEventEmitter.editorIndex;
+    EditorEventEmitter.addStartListener("start-" + this.index, this.handleChange);
   }
   componentWillUnmount() {
     var index = this.index;
-    EditorEventEmitter.removeStartListener("start-" + index, this.handleChange.bind(this));
+    EditorEventEmitter.removeStartListener("start-" + index, this.handleChange);
   }
   componentDidUpdate() {
     if (this.state.loaded && this.state.reload) {
-      console.log('reload?', this.state)
       this.refs.editor.setContent(this.props.value || this.props.defaultValue);
     }
   }
-  handleChange() {
+  handleChange=()=> {
     this.setState({
       loaded: true
     })
@@ -99,15 +76,11 @@ export default class Editor extends Component {
           className="editor-contenteditable-div"
           style={{"minHeight":"30px","border":"1px solid #ddd"}}>
               正在加载...
-              </div>
+        </div>
       )
     } else {
       return (
-        <EditorCore
-          ref="editor"
-          {...props}
-          onEditorMount={this.handleMountSuccess.bind(this)}
-              />
+        <EditorCore ref="editor" {...props} onEditorMount={this.handleMountSuccess}/>
       )
     }
   }
@@ -150,7 +123,7 @@ Editor.defaultProps = {
     }
   },
   "fontFamily": [{
-      "name": "宋体",
+    "name": "宋体",
       value: "宋体, SimSun",
       defualt: true
     },

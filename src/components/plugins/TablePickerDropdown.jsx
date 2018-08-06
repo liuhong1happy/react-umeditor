@@ -1,7 +1,7 @@
-var React = require('react');
-var Dropdown = require('../base/Dropdown.react');
+import React from 'react'
+import Dropdown from '../base/Dropdown.react'
 
-class TablePickerDropdown extends React.Component{
+export default class TablePickerDropdown extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -10,7 +10,7 @@ class TablePickerDropdown extends React.Component{
             handle:function(){}
 		}
 	}
-	open(position,handle){
+	open(position, handle){
 		this.setState({
 			handle:handle
 		})
@@ -78,5 +78,3 @@ class TablePickerDropdown extends React.Component{
 		}
     }
 }
-
-module.exports = TablePickerDropdown;
