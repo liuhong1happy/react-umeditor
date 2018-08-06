@@ -1,21 +1,20 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-
-import EditorIcon from './EditorIcon'
-import EditorDOM from '../../utils/EditorDOM'
-import { 
+var React = require('react');
+var PropTypes = require('prop-types')
+var EditorIcon = require('./EditorIcon');
+var EditorDOM = require('../../utils/EditorDOM');
+var { 
 	EditorIconTypes
-} from '../../constants/EditorConstants'
-import EditorHistory from '../../utils/EditorHistory'
+} = require('../../constants/EditorConstants');
+var EditorHistory = require('../../utils/EditorHistory');
 
-export default class EditorToolbar extends React.Component{
-	handleIconClick = (e,state) => {
+class EditorToolbar extends React.Component{
+	handleIconClick(e,state){
 		if(this.props.onIconClick){
 			this.props.onIconClick(e,state)
 		}
 	}
 	getNameByValue(arr,value){
-		var filterArr = arr.filter(function(ele){
+		var filterArr = arr.filter(function(ele,pos){
 			return ele.value == value;
 		})
 		if(filterArr.length>0){
@@ -37,8 +36,8 @@ export default class EditorToolbar extends React.Component{
 		_icons = _icons.filter(function(ico){ return ico!=""});
 		var returnArray = [];
 		for(var i=0;i<_icons.length;i++){
-			returnArray[i] = EditorIconTypes[_icons[i]];
-			returnArray[i].onClick = this.handleIconClick;
+			returnArray[i]  = EditorIconTypes[_icons[i]];
+			returnArray[i].onClick = this.handleIconClick.bind(this);
 			returnArray[i].icon = _icons[i];
 			if(editorState.icons[_icons[i]]){
 				returnArray[i].disabled = !!editorState.icons[_icons[i]].disabled;
@@ -53,17 +52,13 @@ export default class EditorToolbar extends React.Component{
 	}
 	render(){
 		var icons = this.getIcons();
-		return (<div className="editor-toolbar" onMouseDown={EditorDOM.stopPropagation} onClick={EditorDOM.stopPropagation}>
-				{
+		return (<div className="editor-toolbar" onMouseDown={EditorDOM.stopPropagation} onClick={EditorDOM.stopPropagation}>{
 					icons.map(function(icon,pos){
 						var props = icon;
 						return(<EditorIcon key={pos} {...props} />)
 					})
-				}
-				{
-					this.props.children
-				}
-		</div>)
+					
+				}{this.props.children}</div>)
 	}
 }
 
@@ -73,3 +68,5 @@ EditorToolbar.propTypes = {
 EditorToolbar.defaultProps = {
 	icons:[]
 }
+	
+module.exports = EditorToolbar;

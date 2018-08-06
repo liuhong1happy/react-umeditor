@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import EditorCore from './components/core/EditorCore.react';
+import EditorCore from './components/core/EditorCore';
 import EditorEventEmitter from './utils/EditorEventEmitter';
 import '../dist/less/editor.less';
 import '../utils/Date.js'
@@ -94,32 +94,20 @@ Editor.propTypes = {
   icons: PropTypes.arrayOf(PropTypes.string),
   value: PropTypes.string,
   defaultValue: PropTypes.string,
-  uploadImageCallback: PropTypes.func
 }
 
 Editor.defaultProps = {
   "plugins": {
     "image": {
       "uploader": {
-        type: "default", // qiniu
         name: "file",
         url: "/upload",
-        qiniu: {
-          app: {
-            Bucket: "qtestbucket",
-            AK: "iN7NgwM31j4-BZacMjPrOQBs34UG1maYCAQmhdCV",
-            SK: "6QTOr2Jg1gcZEWDQXKOGZh5PziC2MCV5KsntT70j"
-          },
-          key: null,
-          upload_token: null,
-          domain: "http://o9sa2vijj.bkt.clouddn.com",
-          genKey: function(options) {
-            return options.file.type + "-" + options.file.size + "-" +
-              options.file.lastModifiedDate.valueOf() + "-" + new Date()
-              .valueOf() + "-" + options.file.name;
-          }
-        }
+        data: {},
+        filter: (res)=> res.url
       }
+    },
+    "toolbar": {
+      icons: []
     }
   },
   "fontFamily": [{

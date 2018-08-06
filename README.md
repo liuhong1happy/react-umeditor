@@ -111,6 +111,14 @@ You can set the `props`!The `props` maybe is as follows:
 * value: value of editor
 * icons: icons of toolbar
 * plugins: settings of plugins
+	* toolbar: settings of toolbar
+		* icons: custom icons
+			* name: name of icon
+			* onHandle: handle event
+			* onSelect: select event
+			* props: props of icon & component
+			* component: custom component, eg. dialog
+			* defaultValue: defaultValue of custom component
 	* image: settings of image dialog 
 		* uploader: settings of image uploader
 			* name:  form name of xhr
@@ -146,7 +154,6 @@ Support icons, As fllow:
 	cd example
 	npm run example
 	
-
 ## Todo
 
 - [ ] table-edit [wskongdesheng](https://github.com/wskongdesheng)

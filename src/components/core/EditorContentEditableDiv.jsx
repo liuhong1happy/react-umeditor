@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import EditorSelection from '../../utils/EditorSelection'
 import EditorDOM from '../../utils/EditorDOM'
-import EditorResize from '../../utils/EditorResize.react'
+import EditorResize from '../../utils/EditorResize'
 
 export default class EditorContentEditableDiv extends React.Component{
 	constructor(props){

@@ -2,6 +2,7 @@ import EventEmitter from 'events'
 
 export class EditorEventEmitter extends EventEmitter {
 	constructor() {
+		super();
 		this.editorStack = [];
 		this.isStart = false;
 		this.startTime = null;

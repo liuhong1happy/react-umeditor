@@ -826,6 +826,17 @@ export default class EditorCore extends Component {
       case "emotion":
         this.editorEmotion(editarea, root)
         break;
+      default:
+        const pIcons = this.props.plugins.toolbar.icons || [];
+        var fIcon = pIcons.find(ic=> ic.name === state.icon);
+        if(fIcon && fIcon.onHandle)
+          fIcon.onHandle({
+            editarea, 
+            root,
+            offsetPosition,
+            state,
+          })
+        break;
     }
     // setState
     editorState.icons[state.icon] = state;
@@ -982,6 +993,7 @@ export default class EditorCore extends Component {
     } = this.props;
     let editorState = this.state.editorState;
     let _icons = icons.join(" ").replace(/\|/gm, "separator").split(" ");
+    const pIcons = this.props.plugins.toolbar.icons || [];
     return (
       <div
         ref="root"
@@ -994,11 +1006,12 @@ export default class EditorCore extends Component {
 				<EditorToolbar
           ref="toolbar"
           editorState={editorState}
-          onIconClick={this.handleToolbarIconClick.bind(this)}
+          onIconClick={(e, state)=> this.handleToolbarIconClick(e, state)}
           icons={this.props.icons}
           paragraph={this.props.paragraph}
           fontsize={this.props.fontSize}
-          fontfamily={this.props.fontFamily}>
+          fontfamily={this.props.fontFamily}
+        >
 					<ImageDialog
             hidden={_icons.indexOf("image")==-1}
             ref="image"
@@ -1043,6 +1056,17 @@ export default class EditorCore extends Component {
             paragraph={this.props.paragraph}
             value={editorState.icons["paragraph"]?editorState.icons["paragraph"].value: paragraph[0].value}
           />
+          {
+            pIcons.filter(ic=>ic.component).map(ic=>{
+              const Com = ic.component;
+              return <Com 
+                hidden={ _icons.indexOf(ic.name) ==-1}
+                ref={(com)=> this.iconComponetMap[ic.name] = com}
+                {...ic.props}
+                value={editorState.icons[ic.name]?editorState.icons[ic.name].value: ic.defaultValue}
+              />
+            })
+          }
 					</EditorToolbar>
 					{editArea}
 				</div>

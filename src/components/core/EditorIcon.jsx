@@ -32,7 +32,7 @@ export default class EditorIcon extends Component{
 				break;
 		}
 	}
-	handleClick(e){
+	handleClick =(e)=>{
 		e = e || event;
 		let target = e.target || e.srcElement;
 		while(target.className.indexOf("editor-icon")==-1){
@@ -40,22 +40,22 @@ export default class EditorIcon extends Component{
 		}
 		e.target = target;
 		
-		let {onClick,...props} = this.props;
+		let { onClick, ...props} = this.props;
 		if(this.props.onClick){
 			this.props.onClick(e,{...props})
 		}
 	}
 	render(){
-		let {icon,active,disabled,showHtml,onClick,...props} = this.props;
+		let { icon, active, disabled, showHtml, onClick, ...props } = this.props;
 		let _disabled = showHtml && (icon!="source" && icon!="separator");
 		let _className = "editor-icon icon-" + icon + (active ? " active" : "") + (disabled || _disabled ? " disabled" : "");
 		if(icon=="fontsize" || icon=="fontfamily" || icon == "paragraph"){
-			return (<span ref="root" className={_className} onClick={this.handleClick.bind(this)} {...props}> 
+			return (<span ref="root" className={_className} onClick={this.handleClick} {...props}> 
 				<span className="icon-label">{props.name}</span>
 				<span className="icon-caret"/>
 				</span>)
 		}else{
-				return (<span ref="root" className={_className} onClick={this.handleClick.bind(this)} {...props}></span>)
+			return (<span ref="root" className={_className} onClick={this.handleClick} {...props}></span>)
 		}
 	}
 }
