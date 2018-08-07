@@ -156,12 +156,12 @@ Support icons, As fllow:
 	
 ## Todo - Version 1.0
 
-[x] 1. Custom Image Uploader Props
-[x] 2. Custom Toolbar Icon
-[x] 3. ES6 Style
-[x] 4. React16
-[ ] 5. Tests (Toolbar & Example & New Feature)
-[ ] 6. Docs (README.md & Docs & Example Docs)
+- [x] 1. Custom Image Uploader Props
+- [x] 2. Custom Toolbar Icon
+- [x] 3. ES6 Style
+- [x] 4. React16
+- [ ] 5. Tests (Toolbar & Example & New Feature)
+- [ ] 6. Docs (README.md & Docs & Example Docs)
 
 ## Contribute
 
