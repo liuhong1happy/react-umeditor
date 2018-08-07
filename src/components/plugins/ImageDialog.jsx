@@ -40,7 +40,7 @@ export default class ImageDialog extends Component {
     this.refs.modal.toggle();
   }
   handleOkClick(e) {
-    // 做相应的处理
+    // 做相应的处理做相应的处理
     let tabIndex = this.refs.tab.getTabIndex();
     let images = this.state.images[tabIndex];
     let strImgs = "";

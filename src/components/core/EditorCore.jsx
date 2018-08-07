@@ -85,6 +85,7 @@ export default class EditorCore extends Component {
       },
       value: this.props.value || this.props.defaultValue
     }
+    this.iconComponetMap = {};
   }
   componentDidMount() {
     EditorHistory.clear();
@@ -685,7 +686,6 @@ export default class EditorCore extends Component {
   }
 
   editorSpechars = (editarea, root) => {
-
     EditorSelection.storeRange();
     this.refs.special.toggle((char) => {
       editarea.focus();
@@ -830,12 +830,13 @@ export default class EditorCore extends Component {
         const { toolbar = {} } = this.props.plugins || {};
         const pIcons = toolbar.icons || [];
         var fIcon = pIcons.find(ic=> ic.name === state.icon);
-        if(fIcon && fIcon.onHandle)
-          fIcon.onHandle({
+        if(fIcon && fIcon.onIconClick)
+          fIcon.onIconClick({
             editarea, 
             root,
             offsetPosition,
             state,
+            ref: this.iconComponetMap[state.icon]
           })
         break;
     }
@@ -996,6 +997,7 @@ export default class EditorCore extends Component {
     let _icons = icons.join(" ").replace(/\|/gm, "separator").split(" ");
     const { toolbar = {} } = this.props.plugins || {};
     const pIcons = toolbar.icons || [];
+    EditorSelection.customIcons = pIcons;
     return (
       <div
         ref="root"

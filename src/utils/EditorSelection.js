@@ -12,6 +12,7 @@ var EditorSelection = {
 	range:null,
 	selection:null,
 	storedRange:false,
+	customIcons: [],
 	getSelection:function(){
 		if(window.getSelection) return window.getSelection();
 		else if(document.getSelection) return document.getSelection();
@@ -213,6 +214,13 @@ var EditorSelection = {
 		// change  icons state
 		if(this.range){
 			// IE 没有parentElement 固修改成parentNode
+
+			this.customIcons.forEach(cIcon=>{
+				if(cIcon && cIcon.mapRangeState) {
+					rangeState = cIcon.mapRangeState(rangeState, this);
+				}
+			})
+
 			var parentElement = this.range.startContainer.parentNode;
 			while((parentElement.tagName || parentElement.nodeName).toUpperCase()!="DIV"){
 				var tagName = parentElement.tagName || parentElement.nodeName;
