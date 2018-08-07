@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import EditorCore from './components/core/EditorCore';
 import EditorEventEmitter from './utils/EditorEventEmitter';
 import '../dist/less/editor.less';
-import '../utils/Date.js'
+import './utils/Date.js'
 
 export default class Editor extends Component {
   constructor(props) {

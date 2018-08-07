@@ -50,7 +50,7 @@ export default class ImageDialog extends Component {
         let str = "<img src='" + src + "'/>";
         strImgs += str;
       }
-      this.state.handle(e, strImgs);
+      this.state.handle(strImgs);
     }
     this.close();
   }
@@ -105,7 +105,7 @@ export default class ImageDialog extends Component {
           ref="modal"
           className="image-dialog"
           width={700}
-          height={508}
+          height={528}
           title="图片"
           buttons={buttons}
           onClose={this.close.bind(this)}>

@@ -29,7 +29,7 @@ export default class FontSizeDropdown extends Component{
 		var target = e.target || e.srcElement;
 		var value = target.getAttribute('data-value');
 		if(this.state.handle){
-			this.state.handle(e,value);
+			this.state.handle(value);
 		}
 		if(e.stopPropagation){
 			e.stopPropagation();

@@ -11,7 +11,7 @@ export class FormulaIcons extends Component{
 		var latex = target.getAttribute("data-latex");
 		var id = 'mathquill-'+new Date().valueOf();
 		if(this.props.onSelectFormula){
-			this.props.onSelectFormula(e,latex,id);
+			this.props.onSelectFormula(latex,id);
 		}
 	}
 	render(){
@@ -53,7 +53,7 @@ export default class FormulaDropdown extends React.Component{
 	handleSelectFormula(e,latex,id){
 		e = e || event;
 		if(this.state.handle){
-			this.state.handle(e,latex,id);
+			this.state.handle(latex,id);
 		}
 		if(e.stopPropagation){
 			e.stopPropagation()

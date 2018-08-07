@@ -21,9 +21,9 @@ import SpecialCharsDialog from '../plugins/SpecialCharsDialog'
 import ImageDialog from '../plugins/ImageDialog';
 
 // base components
-import EditorToolbar from '../core/EditorToolbar'
-import EditorTextArea from '../core/EditorTextArea'
-import EditorContentEditableDiv from '../core/EditorContentEditableDiv'
+import EditorToolbar from './EditorToolbar'
+import EditorTextArea from './EditorTextArea'
+import EditorContentEditableDiv from './EditorContentEditableDiv'
 
 // key down context
 var saveSceneTimer = null;
@@ -457,7 +457,7 @@ export default class EditorCore extends Component {
     EditorHistory.execCommand(state.icon, false, null);
   }
 
-  editorForeColor = (offsetPosition, editarea) => {
+  editorForeColor = (state, offsetPosition, editarea) => {
     EditorSelection.storeRange();
     offsetPosition.y += offsetPosition.h + 5;
     this.refs.color.toggle(offsetPosition, (color) => {
@@ -468,7 +468,7 @@ export default class EditorCore extends Component {
     });
   }
 
-  editorBackColor = (offsetPosition, editarea) => {
+  editorBackColor = (state, offsetPosition, editarea) => {
     EditorSelection.storeRange();
     offsetPosition.y += offsetPosition.h + 5;
 
@@ -480,7 +480,7 @@ export default class EditorCore extends Component {
     });
   }
 
-  editorFontSize = (offsetPosition, editarea) => {
+  editorFontSize = (state, offsetPosition, editarea) => {
     EditorSelection.storeRange();
     offsetPosition.y += offsetPosition.h + 5;
 
@@ -492,7 +492,7 @@ export default class EditorCore extends Component {
     });
   }
 
-  editorFontFamily = (offsetPosition, editarea) => {
+  editorFontFamily = (state, offsetPosition, editarea) => {
     EditorSelection.storeRange();
     offsetPosition.y += offsetPosition.h + 5;
 
@@ -504,7 +504,7 @@ export default class EditorCore extends Component {
     });
   }
 
-  editorParagraph = (offsetPosition, editarea) =>  {
+  editorParagraph = (state, offsetPosition, editarea) =>  {
     EditorSelection.storeRange();
     offsetPosition.y += offsetPosition.h + 5;
 
@@ -827,7 +827,8 @@ export default class EditorCore extends Component {
         this.editorEmotion(editarea, root)
         break;
       default:
-        const pIcons = this.props.plugins.toolbar.icons || [];
+        const { toolbar = {} } = this.props.plugins || {};
+        const pIcons = toolbar.icons || [];
         var fIcon = pIcons.find(ic=> ic.name === state.icon);
         if(fIcon && fIcon.onHandle)
           fIcon.onHandle({
@@ -993,7 +994,8 @@ export default class EditorCore extends Component {
     } = this.props;
     let editorState = this.state.editorState;
     let _icons = icons.join(" ").replace(/\|/gm, "separator").split(" ");
-    const pIcons = this.props.plugins.toolbar.icons || [];
+    const { toolbar = {} } = this.props.plugins || {};
+    const pIcons = toolbar.icons || [];
     return (
       <div
         ref="root"

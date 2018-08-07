@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { Component } from 'react'
 import Dropdown from '../base/Dropdown'
 
-export default class TablePickerDropdown extends React.Component{
+export default class TablePickerDropdown extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -12,7 +12,7 @@ export default class TablePickerDropdown extends React.Component{
 	}
 	open(position, handle){
 		this.setState({
-			handle:handle
+			handle
 		})
 		this.refs.root.open(position);
 	}
@@ -21,7 +21,7 @@ export default class TablePickerDropdown extends React.Component{
 	}
 	toggle(position,handle){
 		this.setState({
-			handle:handle
+			handle
 		})
 		this.refs.root.toggle(position);
 	}
@@ -59,7 +59,7 @@ export default class TablePickerDropdown extends React.Component{
                 Td.width = 200;
             }
         }
-        this.state.handle(e,Table);
+        this.state.handle(Table);
         this.refs.root.close();
     }
     render(){

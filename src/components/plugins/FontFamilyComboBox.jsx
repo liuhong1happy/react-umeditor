@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ComboBox from '../base/ComboBox'
 
-class FontFamilyDropdown  extends Component{
+export default class FontFamilyDropdown  extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -29,7 +29,7 @@ class FontFamilyDropdown  extends Component{
 		var target = e.target || e.srcElement;
 		var value = target.getAttribute('data-value');
 		if(this.state.handle){
-			this.state.handle(e,value);
+			this.state.handle(value);
 		}
 		if(e.stopPropagation){
 			e.stopPropagation();
@@ -59,5 +59,3 @@ class FontFamilyDropdown  extends Component{
 		}
 	}
 }
-		
-module.exports = FontFamilyDropdown;

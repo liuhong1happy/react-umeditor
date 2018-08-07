@@ -31,7 +31,7 @@ export default class ColorDropdown extends React.Component{
 		var target = e.target || e.srcElement;
 		var color = target.getAttribute('data-color');
 		if(this.state.handle){
-			this.state.handle(e,color);
+			this.state.handle(color);
 		}
 		this.close();
 		EditorDOM.stopPropagation(e);

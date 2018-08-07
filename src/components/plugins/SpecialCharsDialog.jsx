@@ -52,7 +52,7 @@ export default class SpecialCharsDialog extends React.Component{
 	handleSelectChar(e,char){
 		e = e || event;
 		if(this.state.handle){
-			this.state.handle(e,char);
+			this.state.handle(char);
 		}
 		if(e.stopPropagation){
 			e.stopPropagation()

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import TabGroup from '../base/TabGroup';
 import Dialog from '../base/Dialog';
 import {EmotionImages} from '../../constants/EditorConstants';
@@ -58,7 +58,7 @@ export default class EmotionDialog extends Component{
 	handleSelectImage(e,img){
 		e = e || event;
 		if(this.state.handle){
-			this.state.handle(e,img);
+			this.state.handle(img);
 		}
 		if(e.stopPropagation){
 			e.stopPropagation()

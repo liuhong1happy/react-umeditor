@@ -1,9 +1,9 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
+import React, { Component } from 'react'
+import ReactDOM from'react-dom'
 // var Editor = require('../src/editor');
-import Editor from '../src/editor';
+import Editor from '../lib/editor';
 
-class App extends React.Component{
+class App extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
