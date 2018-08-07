@@ -154,10 +154,14 @@ Support icons, As fllow:
 	cd example
 	npm run example
 	
-## Todo
+## Todo - Version 1.0
 
-- [ ] table-edit [wskongdesheng](https://github.com/wskongdesheng)
-- [ ] insert time date video audio etc. [liuhong1happy](https://github.com/liuhong1happy)
+[x] 1. Custom Image Uploader Props
+[x] 2. Custom Toolbar Icon
+[x] 3. ES6 Style
+[x] 4. React16
+[ ] 5. Tests (Toolbar & Example & New Feature)
+[ ] 6. Docs (README.md & Docs & Example Docs)
 
 ## Contribute
 
