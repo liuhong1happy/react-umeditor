@@ -83,6 +83,7 @@ export default class ImageDialog extends Component {
             filter={uploader.filter}
             name={uploader.name}
             url={uploader.url}
+            data={uploader.data}
             uploadImageCallback={this.props.uploadImageCallback} 
           />
         )

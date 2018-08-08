@@ -57,7 +57,10 @@ class App extends Component{
 				      uploader: {
 								url:'/upload',
 								name:"file",
-								filter:(res)=> res.url
+								filter:(res)=> res.url,
+								data: {
+									'filename': '1.jpg'
+								}
 							}
 					},
 					toolbar: {
