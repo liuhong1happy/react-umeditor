@@ -114,11 +114,10 @@ You can set the `props`!The `props` maybe is as follows:
 	* toolbar: settings of toolbar
 		* icons: custom icons
 			* name: name of icon
-			* onHandle: handle event
-			* onSelect: select event
+			* onIconClick: handle event
+			* mapRangeState: filter rangeState
 			* props: props of icon & component
 			* component: custom component, eg. dialog
-			* defaultValue: defaultValue of custom component
 	* image: settings of image dialog 
 		* uploader: settings of image uploader
 			* name:  form name of xhr
