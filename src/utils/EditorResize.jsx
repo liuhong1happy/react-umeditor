@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import EditorDOM from './EditorDOM';
+import EditorDom from './EditorDom';
 
 // resize context
 var minWidth = 12;
@@ -26,7 +26,7 @@ export default class EditorResize extends Component {
 	}
 	setTarget(target){
 		var root = ReactDOM.findDOMNode(this.refs.root);
-		var position = EditorDOM.getOffsetRootParentPosition(target,root.parentElement);
+		var position = EditorDom.getOffsetRootParentPosition(target,root.parentElement);
 		var width = position.w;
 		var height = position.h;
 		var offsetPosition = { x: position.x, y: position.y}
@@ -100,7 +100,7 @@ export default class EditorResize extends Component {
 		window.addEventListener("mouseup",this.handleMouseUp.bind(this));
 		window.addEventListener("mousemove",this.handleMouseMove.bind(this));
 
-		EditorDOM.stopPropagation(e);
+		EditorDom.stopPropagation(e);
 	}
 	handleMouseMove(e){
 		if(!this.state.direction) return;
@@ -147,7 +147,7 @@ export default class EditorResize extends Component {
 			height:height
 		})
 
-		EditorDOM.stopPropagation(e);
+		EditorDom.stopPropagation(e);
 	}
 	handleMouseUp(e){
 		if(!this.state.direction) return;
@@ -197,7 +197,7 @@ export default class EditorResize extends Component {
 			direction:null,
 		})
 		
-		EditorDOM.stopPropagation(e);
+		EditorDom.stopPropagation(e);
 	}
 	render(){
 		var style = {

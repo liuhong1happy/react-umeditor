@@ -1,7 +1,7 @@
 import React from 'react'
 import Dropdown from '../base/Dropdown'
 import { ColorTypes } from '../../constants/EditorConstants'
-import EditorDOM from '../../utils/EditorDOM'
+import EditorDom from '../../utils/EditorDom'
 
 export default class ColorDropdown extends React.Component{
 	constructor(props){
@@ -34,7 +34,7 @@ export default class ColorDropdown extends React.Component{
 			this.state.handle(color);
 		}
 		this.close();
-		EditorDOM.stopPropagation(e);
+		EditorDom.stopPropagation(e);
 	}
 	render(){
 		var handleSelectColor = this.handleSelectColor.bind(this);

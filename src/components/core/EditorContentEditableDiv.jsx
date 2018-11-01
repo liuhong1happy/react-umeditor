@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import EditorSelection from '../../utils/EditorSelection'
-import EditorDOM from '../../utils/EditorDOM'
+import EditorDom from '../../utils/EditorDom'
 import EditorResize from '../../utils/EditorResize'
 
 export default class EditorContentEditableDiv extends React.Component{
@@ -76,7 +76,7 @@ export default class EditorContentEditableDiv extends React.Component{
 
 	handleMouseDown = (e) => {
 		EditorSelection.clearRange();
-		EditorDOM.stopPropagation(e);
+		EditorDom.stopPropagation(e);
 	}
 
 	handleMouseUp = (e) => {
@@ -84,7 +84,7 @@ export default class EditorContentEditableDiv extends React.Component{
 		if(this.props.onRangeChange) {
 			this.props.onRangeChange(e);
     	}
-		EditorDOM.stopPropagation(e);
+		EditorDom.stopPropagation(e);
 	}
 
 	setResizeTarget(target){

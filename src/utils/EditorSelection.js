@@ -1,4 +1,4 @@
-import EditorDOM from './EditorDOM';
+import EditorDom from './EditorDom';
 
 NodeList.prototype.toArray = function(){
 	var nodes = [];
@@ -39,7 +39,7 @@ var EditorSelection = {
 		var endOffset = this.range.endOffset;
 		var textNodes = [];
 
-		if(startNode===endNode && EditorDOM.isTextNode(startNode)){
+		if(startNode===endNode && EditorDom.isTextNode(startNode)){
 			textNodes.push({
 				childNode:startNode,
 				startOffset:startOffset,
@@ -50,7 +50,7 @@ var EditorSelection = {
 			var childNodes = parent.childNodes.toArray(),startFlag = false;
             var childNode = childNodes.shift();
 			while(childNode){
-				if(EditorDOM.isTextNode(childNode)){
+				if(EditorDom.isTextNode(childNode)){
 					if(childNode===startNode){
 						textNodes.push({
 							childNode:childNode,
@@ -93,10 +93,10 @@ var EditorSelection = {
 		var endNode = this.range.endContainer;
 		var spanNodes = [];
         
-        if(EditorDOM.isSpanNode(parent)){
+        if(EditorDom.isSpanNode(parent)){
             spanNodes.push(parent)
         }
-		if(startNode===endNode && EditorDOM.isSpanNode(startNode)){
+		if(startNode===endNode && EditorDom.isSpanNode(startNode)){
 			spanNodes.push(startNode)
 		}
 		else{
@@ -105,11 +105,11 @@ var EditorSelection = {
 			while(childNode){
 				if(childNode===startNode){
 					startFlag = true;
-					if(EditorDOM.isSpanNode(childNode.parentNode)){
+					if(EditorDom.isSpanNode(childNode.parentNode)){
 						spanNodes.push(childNode.parentNode)
 					}
 				}
-				if(EditorDOM.isSpanNode(childNode) && startFlag){
+				if(EditorDom.isSpanNode(childNode) && startFlag){
 					spanNodes.push(childNode)
 				}
 				if(childNode==endNode){

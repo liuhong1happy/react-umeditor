@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import EditorIcon from './EditorIcon'
-import EditorDOM from '../../utils/EditorDOM'
+import EditorDom from '../../utils/EditorDom'
 import { 
 	EditorIconTypes
 } from '../../constants/EditorConstants'
@@ -53,7 +53,7 @@ export default class EditorToolbar extends React.Component{
 	}
 	render(){
 		var icons = this.getIcons();
-		return (<div className="editor-toolbar" onMouseDown={EditorDOM.stopPropagation} onClick={EditorDOM.stopPropagation}>
+		return (<div className="editor-toolbar" onMouseDown={EditorDom.stopPropagation} onClick={EditorDom.stopPropagation}>
 				{
 					icons.map(function(icon,pos){
 						var props = icon;
