@@ -11,7 +11,7 @@ export class FormulaIcons extends Component{
 		var latex = target.getAttribute("data-latex");
 		var id = 'mathquill-'+new Date().valueOf();
 		if(this.props.onSelectFormula){
-			this.props.onSelectFormula(latex,id);
+			this.props.onSelectFormula(e, latex,id);
 		}
 	}
 	render(){
