@@ -63,6 +63,7 @@ export default class ImageDialog extends Component {
   }
   render() {
     let uploader = this.props.uploader;
+    let customUploader = this.props.customUploader;
     let buttons = [{
         name: "btn-ok",
         content: "确定",
@@ -79,11 +80,9 @@ export default class ImageDialog extends Component {
         component: (
           <ImageUpload
             ref="image"
+            {...uploader}
             onChange={this.handleChange.bind(this)}
-            filter={uploader.filter}
-            name={uploader.name}
-            url={uploader.url}
-            data={uploader.data}
+            customUploader={customUploader}
             uploadImageCallback={this.props.uploadImageCallback} 
           />
         )
