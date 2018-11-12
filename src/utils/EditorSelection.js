@@ -174,7 +174,7 @@ var EditorSelection = {
 		if(!parentNode) return false;
 		if(anchorNode.offsetParent && anchorNode.offsetParent.className=="editor-toolbar") return false;
 		if(parentNode.offsetParent && parentNode.offsetParent.className=="editor-toolbar") return false;
-		return true;
+		return parentNode;
 	},
 	validateRange: function(parentNode,range){
 		var rangeParentNode = range.startContainer.parentNode;
