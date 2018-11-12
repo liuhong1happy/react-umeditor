@@ -50,7 +50,7 @@ export default class EditorCore extends Component {
       lastKeyCode: null,
       maxInputCount: 10,
       editorState: {
-        icon: "source",
+        icon: "",
         showHtml: false,
         icons: {
           "forecolor": {

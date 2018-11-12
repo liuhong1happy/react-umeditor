@@ -1,6 +1,6 @@
 {
   "name": "react-umeditor",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "React Editor like UMEditor",
   "main": "lib/editor.js",
   "files": [
