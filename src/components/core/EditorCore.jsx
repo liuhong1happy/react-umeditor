@@ -199,7 +199,7 @@ export default class EditorCore extends Component {
   }
   handleRangeChange(e) {
     e = e || event;
-    if (e && e.type == "blur") return;
+    // if (e && e.type == "blur") return;
     // 已经被卸载了。
     if (this._calledComponentWillUnmount) return;
     let target = e ? e.target || e.srcElement : null;
