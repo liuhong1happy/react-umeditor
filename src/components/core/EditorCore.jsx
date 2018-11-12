@@ -96,18 +96,17 @@ export default class EditorCore extends Component {
     let editorState = this.state.editorState;
     switch (editorState.icon) {
       case "source":
-        if (editorState.content) {
-          this.setContent(editorState.content)
-        }
-        break;
       case "cleardoc":
         if (editorState.content) {
           this.setContent(editorState.content)
         }
+        setTimeout(()=>{
+          this.setState({
+            editorState: {...editorState, icon: ""}
+          })
+        })
         break;
     }
-  }
-  componentWillUnmont() {
   }
 
   // event handler
@@ -117,7 +116,6 @@ export default class EditorCore extends Component {
     let { maxInputCount } = this.state
     if (target.className && target.className.indexOf('editor-contenteditable-div') != -1) {
       let keyCode = evt.keyCode || evt.which;
-      console.log('kkkk', keyCode)
       if (!evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
         if (EditorHistory.getCommandStack().length == 0) {
           this.autoSave();
@@ -223,14 +221,17 @@ export default class EditorCore extends Component {
         this.setState({
           editorState: editorState
         })
-      } else if (!EditorSelection.validateSelection(selection)) return;
+      }
       else {
-        editorState = this.exchangeRangeState(editorState);
-        this.setState({
-          editorState: editorState
-        })
-        if (this.refs.editarea && this.refs.editarea.clearResizeTarget) {
-          this.refs.editarea.clearResizeTarget();
+        let parentNode = EditorSelection.validateSelection(selection);
+        if(parentNode && EditorDom.isEditorDom(parentNode, ReactDOM.findDOMNode(this.refs.root))) {
+          editorState = this.exchangeRangeState(editorState);
+          this.setState({
+            editorState: editorState
+          })
+          if (this.refs.editarea && this.refs.editarea.clearResizeTarget) {
+            this.refs.editarea.clearResizeTarget();
+          }
         }
       }
     } else if (target && EditorDom.isEditorDom(target, ReactDOM.findDOMNode(
