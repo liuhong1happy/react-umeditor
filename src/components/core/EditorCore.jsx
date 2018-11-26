@@ -1013,6 +1013,7 @@ export default class EditorCore extends Component {
           editorState={editorState}
           onIconClick={(e, state)=> this.handleToolbarIconClick(e, state)}
           icons={this.props.icons}
+          customIcons={pIcons}
           paragraph={this.props.paragraph}
           fontsize={this.props.fontSize}
           fontfamily={this.props.fontFamily}

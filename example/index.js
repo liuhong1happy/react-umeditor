@@ -22,7 +22,7 @@ class App extends Component{
 				"paragraph fontfamily fontsize | superscript subscript | ",
 				"forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ",
 				"cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | ",
-				"horizontal date time  | image spechars | inserttable | link"
+				"horizontal date time  | image spechars | inserttable | custom-link"
 			]
 	}
 	handleFormChange(e){
@@ -65,7 +65,9 @@ class App extends Component{
 					},
 					toolbar: {
 						icons: [{
-							name: 'link',
+							name: 'custom-link',
+							title: "超链接",
+							className: "editor-icon icon-link",
 							component: LinkDialog,
 							onIconClick:({ editarea, root, ref })=> {
 								EditorSelection.storeRange();

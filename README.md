@@ -114,6 +114,7 @@ You can set the `props`!The `props` maybe is as follows:
 	* toolbar: settings of toolbar
 		* icons: custom icons
 			* name: name of icon
+			* title: title of icon
 			* onIconClick: handle event
 			* mapRangeState: filter rangeState
 			* props: props of icon & component
