@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import classNames from 'classnames'
 
 /**
 * @icon: 图标名称 string
@@ -46,16 +47,16 @@ export default class EditorIcon extends Component{
 		}
 	}
 	render(){
-		let { icon, active, disabled, showHtml, onClick, ...props } = this.props;
+		let { icon, active, disabled, showHtml, onClick, className, ...props } = this.props;
 		let _disabled = showHtml && (icon!="source" && icon!="separator");
-		let _className = "editor-icon icon-" + icon + (active ? " active" : "") + (disabled || _disabled ? " disabled" : "");
+		let _className = className || "editor-icon icon-" + icon;
 		if(icon=="fontsize" || icon=="fontfamily" || icon == "paragraph"){
-			return (<span ref="root" className={_className} onClick={this.handleClick} {...props}> 
+			return (<span ref="root" className={classNames(_className, { active, disabled: disabled || _disabled})} onClick={this.handleClick} {...props}> 
 				<span className="icon-label">{props.name}</span>
 				<span className="icon-caret"/>
 				</span>)
 		}else{
-			return (<span ref="root" className={_className} onClick={this.handleClick} {...props}></span>)
+			return (<span ref="root" className={classNames(_className, { active, disabled: disabled || _disabled})} onClick={this.handleClick} {...props}></span>)
 		}
 	}
 }
