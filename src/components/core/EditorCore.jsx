@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 // utlils
 import EditorHistory from '../../utils/EditorHistory'
 import EditorSelection from '../../utils/EditorSelection'
-import EditorDOM from '../../utils/EditorDOM'
+import EditorDom from '../../utils/EditorDom'
 import EditorTimer from '../../utils/EditorTimer'
 
 // dialog & dropdown
@@ -50,7 +50,7 @@ export default class EditorCore extends Component {
       lastKeyCode: null,
       maxInputCount: 10,
       editorState: {
-        icon: "source",
+        icon: "",
         showHtml: false,
         icons: {
           "forecolor": {
@@ -96,18 +96,17 @@ export default class EditorCore extends Component {
     let editorState = this.state.editorState;
     switch (editorState.icon) {
       case "source":
-        if (editorState.content) {
-          this.setContent(editorState.content)
-        }
-        break;
       case "cleardoc":
         if (editorState.content) {
           this.setContent(editorState.content)
         }
+        setTimeout(()=>{
+          this.setState({
+            editorState: {...editorState, icon: ""}
+          })
+        })
         break;
     }
-  }
-  componentWillUnmont() {
   }
 
   // event handler
@@ -117,7 +116,6 @@ export default class EditorCore extends Component {
     let { maxInputCount } = this.state
     if (target.className && target.className.indexOf('editor-contenteditable-div') != -1) {
       let keyCode = evt.keyCode || evt.which;
-      console.log('kkkk', keyCode)
       if (!evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
         if (EditorHistory.getCommandStack().length == 0) {
           this.autoSave();
@@ -139,7 +137,7 @@ export default class EditorCore extends Component {
         }
       }
     }
-    EditorDOM.stopPropagation(evt);
+    EditorDom.stopPropagation(evt);
   }
 
   handleKeyUp = (evt) => {
@@ -151,18 +149,18 @@ export default class EditorCore extends Component {
         // some handle
       }
     }
-    EditorDOM.stopPropagation(evt);
+    EditorDom.stopPropagation(evt);
   }
 
   handleFocus(e) {
     if (this.props.onFocus) {
       this.props.onFocus(e, this.findDOMNode('root'));
     }
-    EditorDOM.stopPropagation(e);
+    EditorDom.stopPropagation(e);
   }
 
   handleClick(e) {
-    EditorDOM.stopPropagation(e);
+    EditorDom.stopPropagation(e);
   }
 
   exchangeRangeState(editorState) {
@@ -201,7 +199,7 @@ export default class EditorCore extends Component {
   }
   handleRangeChange(e) {
     e = e || event;
-    if (e && e.type == "blur") return;
+    // if (e && e.type == "blur") return;
     // 已经被卸载了。
     if (this._calledComponentWillUnmount) return;
     let target = e ? e.target || e.srcElement : null;
@@ -223,17 +221,20 @@ export default class EditorCore extends Component {
         this.setState({
           editorState: editorState
         })
-      } else if (!EditorSelection.validateSelection(selection)) return;
+      }
       else {
-        editorState = this.exchangeRangeState(editorState);
-        this.setState({
-          editorState: editorState
-        })
-        if (this.refs.editarea && this.refs.editarea.clearResizeTarget) {
-          this.refs.editarea.clearResizeTarget();
+        let parentNode = EditorSelection.validateSelection(selection);
+        if(parentNode && EditorDom.isEditorDom(parentNode, ReactDOM.findDOMNode(this.refs.root))) {
+          editorState = this.exchangeRangeState(editorState);
+          this.setState({
+            editorState: editorState
+          })
+          if (this.refs.editarea && this.refs.editarea.clearResizeTarget) {
+            this.refs.editarea.clearResizeTarget();
+          }
         }
       }
-    } else if (target && EditorDOM.isEditorDom(target, ReactDOM.findDOMNode(
+    } else if (target && EditorDom.isEditorDom(target, ReactDOM.findDOMNode(
         this.refs.root))) {
       let tagName = target.tagName.toUpperCase();
       switch (tagName) {
@@ -369,7 +370,7 @@ export default class EditorCore extends Component {
     for (let i = 0; i < spanNodes.length - 1; i++) {
       let spanNode = spanNodes[i];
       let parentNode = spanNodes[i].parentNode;
-      if (EditorDOM.isNullOfTextNode(spanNode.nextSibling)) {
+      if (EditorDom.isNullOfTextNode(spanNode.nextSibling)) {
         // 移除空元素
         parentNode.removeChild(spanNode.nextSibling);
       }
@@ -440,7 +441,7 @@ export default class EditorCore extends Component {
       let spanNode = spanNodes[i];
       let parentNode = spanNodes[i].parentNode;
 
-      if (EditorDOM.isNullOfTextNode(spanNode.nextSibling)) {
+      if (EditorDom.isNullOfTextNode(spanNode.nextSibling)) {
         // 移除空元素
         parentNode.removeChild(spanNode.nextSibling);
       }
@@ -559,8 +560,8 @@ export default class EditorCore extends Component {
       if (EditorSelection.range.pasteHTML) {
         EditorSelection.range.pasteHTML(strTime);
       } else {
-        let hr = EditorDOM.createHR();
-        let p = EditorDOM.createNodeByTag('p', '<br/>');
+        let hr = EditorDom.createHR();
+        let p = EditorDom.createNodeByTag('p', '<br/>');
         EditorSelection.range.deleteContents();
         EditorSelection.insertNode(p);
         EditorSelection.insertNode(hr);
@@ -578,7 +579,7 @@ export default class EditorCore extends Component {
       if (EditorSelection.range.pasteHTML) {
         EditorSelection.range.pasteHTML(strDate);
       } else {
-        let textNode = EditorDOM.createTextNode(strDate);
+        let textNode = EditorDom.createTextNode(strDate);
         EditorSelection.range.deleteContents();
         EditorSelection.insertNode(textNode);
       }
@@ -595,7 +596,7 @@ export default class EditorCore extends Component {
       if (EditorSelection.range.pasteHTML) {
         EditorSelection.range.pasteHTML(strTime);
       } else {
-        let textNode = EditorDOM.createTextNode(strTime);
+        let textNode = EditorDom.createTextNode(strTime);
         EditorSelection.range.deleteContents();
         EditorSelection.insertNode(textNode);
       }
@@ -615,7 +616,7 @@ export default class EditorCore extends Component {
           if (EditorSelection.range.pasteHTML) {
             EditorSelection.range.pasteHTML('<p>' + html + '</p>');
           } else {
-            let p = EditorDOM.createNodeByTag('p', html);
+            let p = EditorDom.createNodeByTag('p', html);
             EditorSelection.range.deleteContents();
             EditorSelection.insertNode(p);
           }
@@ -644,7 +645,7 @@ export default class EditorCore extends Component {
           if (EditorSelection.range.pasteHTML) {
             EditorSelection.range.pasteHTML(html);
           } else {
-            let span = EditorDOM.createNodeByTag('span',
+            let span = EditorDom.createNodeByTag('span',
               '&nbsp;<span class="mathquill-embedded-latex" id="' +
                 id + '"></span>&nbsp;');
             EditorSelection.range.deleteContents();
@@ -695,7 +696,7 @@ export default class EditorCore extends Component {
         if (EditorSelection.range.pasteHTML) {
           EditorSelection.range.pasteHTML(char);
         } else {
-          let textNode = EditorDOM.createTextNode(char);
+          let textNode = EditorDom.createTextNode(char);
           EditorSelection.range.deleteContents();
           EditorSelection.insertNode(textNode);
         }
@@ -732,7 +733,7 @@ export default class EditorCore extends Component {
     e = e || event;
     let target = e.target || e.srcElement;
     let root = ReactDOM.findDOMNode(this.refs.root);
-    let offsetPosition = EditorDOM.getOffsetRootParentPosition(target, root);
+    let offsetPosition = EditorDom.getOffsetRootParentPosition(target, root);
 
     let handleRangeChange = this.handleRangeChange.bind(this);
     let editarea = ReactDOM.findDOMNode(this.refs.editarea);
@@ -847,7 +848,7 @@ export default class EditorCore extends Component {
 
     // range state
     handleRangeChange();
-    EditorDOM.stopPropagation(e);
+    EditorDom.stopPropagation(e);
   }
   closeAllOpenDialog(icon) {
     let refsDialog = ["image", "color", "formula", "table", "special",
@@ -881,30 +882,30 @@ export default class EditorCore extends Component {
     let $htmlElement = $(htmlElement);
     $htmlElement.keydown(function(e) {
       mathField.focus();
-      EditorDOM.stopPropagation(e);
+      EditorDom.stopPropagation(e);
     });
     $htmlElement.keyup(function(e) {
       mathField.focus();
-      EditorDOM.stopPropagation(e);
+      EditorDom.stopPropagation(e);
     });
     $htmlElement.mouseup(function(e) {
       mathField.focus();
-      EditorDOM.stopPropagation(e);
+      EditorDom.stopPropagation(e);
     });
     $htmlElement.mousedown(function(e) {
-      EditorDOM.stopPropagation(e);
+      EditorDom.stopPropagation(e);
     });
     $htmlElement.mousemove(function(e) {
-      EditorDOM.stopPropagation(e);
+      EditorDom.stopPropagation(e);
     });
     $(editarea)
       .mousedown(function(e) {
         mathField.blur();
-        EditorDOM.stopPropagation(e);
+        EditorDom.stopPropagation(e);
       })
     $(editarea)
       .mousemove(function(e) {
-        EditorDOM.stopPropagation(e);
+        EditorDom.stopPropagation(e);
       })
   }
   autoSave() {
@@ -1012,6 +1013,7 @@ export default class EditorCore extends Component {
           editorState={editorState}
           onIconClick={(e, state)=> this.handleToolbarIconClick(e, state)}
           icons={this.props.icons}
+          customIcons={pIcons}
           paragraph={this.props.paragraph}
           fontsize={this.props.fontSize}
           fontfamily={this.props.fontFamily}

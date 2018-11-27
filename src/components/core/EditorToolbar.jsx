@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import EditorIcon from './EditorIcon'
-import EditorDOM from '../../utils/EditorDOM'
+import EditorDom from '../../utils/EditorDom'
 import { 
 	EditorIconTypes
 } from '../../constants/EditorConstants'
@@ -33,11 +33,12 @@ export default class EditorToolbar extends React.Component{
 		if(editorState.icons["fontfamily"]) editorState.icons["fontfamily"].name = this.getNameByValue(this.props.fontfamily,editorState.icons["fontfamily"].value);
 		
 		var icons = this.props.icons;
+		var customIcons = this.props.customIcons;
 		var _icons = icons.join(" ").replace(/\|/gm,"separator").split(" ");
 		_icons = _icons.filter(function(ico){ return ico!=""});
 		var returnArray = [];
 		for(var i=0;i<_icons.length;i++){
-			returnArray[i] = EditorIconTypes[_icons[i]];
+			returnArray[i] = EditorIconTypes[_icons[i]] || customIcons.find(cusIcon=> cusIcon.name === _icons[i]) || { title: "自定义按钮" };
 			returnArray[i].onClick = this.handleIconClick;
 			returnArray[i].icon = _icons[i];
 			if(editorState.icons[_icons[i]]){
@@ -53,7 +54,7 @@ export default class EditorToolbar extends React.Component{
 	}
 	render(){
 		var icons = this.getIcons();
-		return (<div className="editor-toolbar" onMouseDown={EditorDOM.stopPropagation} onClick={EditorDOM.stopPropagation}>
+		return (<div className="editor-toolbar" onMouseDown={EditorDom.stopPropagation} onClick={EditorDom.stopPropagation}>
 				{
 					icons.map(function(icon,pos){
 						var props = icon;

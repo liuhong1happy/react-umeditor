@@ -1,4 +1,4 @@
-var EditorDOM = {
+var EditorDom = {
 	stopPropagation:function(e){
 		e = e || event;
 		if(e.stopPropagation){
@@ -66,4 +66,4 @@ var EditorDOM = {
 	}
 }
 
-export default EditorDOM;
+export default EditorDom;
