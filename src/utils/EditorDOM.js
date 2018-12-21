@@ -63,6 +63,12 @@ var EditorDom = {
 	createBR: function(){
 		var node = document.createElement('br');
 		return node;
+	},
+	focusNode: function(node) {
+		let scrollTop = node.scrollTop;
+		let scrollLeft = node.scrollLeft;
+		node.focus && node.focus();
+		node.scrollTo(scrollLeft, scrollTop);
 	}
 }
 

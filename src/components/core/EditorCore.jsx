@@ -463,7 +463,7 @@ export default class EditorCore extends Component {
     EditorSelection.storeRange();
     offsetPosition.y += offsetPosition.h + 5;
     this.refs.color.toggle(offsetPosition, (color) => {
-      editarea.focus();
+      EditorDom.focusNode(editarea);;
       EditorSelection.restoreRange();
       EditorHistory.execCommand('forecolor', false, color);
       this.handleRangeChange();
@@ -475,7 +475,7 @@ export default class EditorCore extends Component {
     offsetPosition.y += offsetPosition.h + 5;
 
     this.refs.color.toggle(offsetPosition, (color) => {
-      editarea.focus();
+      EditorDom.focusNode(editarea);;
       EditorSelection.restoreRange();
       EditorHistory.execCommand('backcolor', false, color);
       this.handleRangeChange();
@@ -487,7 +487,7 @@ export default class EditorCore extends Component {
     offsetPosition.y += offsetPosition.h + 5;
 
     this.refs.fontsize.toggle(offsetPosition, (fontsize) => {
-      editarea.focus();
+      EditorDom.focusNode(editarea);
       EditorSelection.restoreRange();
       EditorHistory.execCommand('fontsize', false, fontsize);
       this.handleRangeChange();
@@ -499,7 +499,7 @@ export default class EditorCore extends Component {
     offsetPosition.y += offsetPosition.h + 5;
 
     this.refs.fontfamily.toggle(offsetPosition, (fontfamily) => {
-      editarea.focus();
+      EditorDom.focusNode(editarea);;
       EditorSelection.restoreRange();
       EditorHistory.execCommand('fontname', false, fontfamily);
       this.handleRangeChange();
@@ -511,7 +511,7 @@ export default class EditorCore extends Component {
     offsetPosition.y += offsetPosition.h + 5;
 
     this.refs.paragraph.toggle(offsetPosition, (paragraph) => {
-      editarea.focus();
+      EditorDom.focusNode(editarea);;
       EditorSelection.restoreRange();
       let paragraphs = EditorSelection.getParagraphs();
       let parentElement = null, childNodes = null, paraElement = null, parentNode = null
@@ -609,7 +609,7 @@ export default class EditorCore extends Component {
   editorImage = (editarea, root) => {
     EditorSelection.storeRange();
     this.refs.image.toggle((html) => {
-      editarea.focus();
+      EditorDom.focusNode(editarea);;
       EditorSelection.restoreRange();
       if (html && html.length > 0) {
         if (EditorSelection.range && EditorSelection.validateRange(root, EditorSelection.range)) {
@@ -633,7 +633,7 @@ export default class EditorCore extends Component {
     offsetPosition.y += offsetPosition.h + 5;
     offsetPosition.x -= offsetPosition.w / 2;
     this.refs.formula.toggle(offsetPosition, (latex, id) => {
-      editarea.focus();
+      EditorDom.focusNode(editarea);;
       EditorSelection.restoreRange();
 
       if (latex && latex.length > 0) {
@@ -668,7 +668,7 @@ export default class EditorCore extends Component {
     offsetPosition.y += offsetPosition.h + 5;
     offsetPosition.x -= offsetPosition.w / 2;
     this.refs.table.toggle(offsetPosition, (table) => {
-      editarea.focus();
+      EditorDom.focusNode(editarea);;
       EditorSelection.restoreRange();
       if (EditorSelection.range && EditorSelection.validateRange(
         root, EditorSelection.range)) {
@@ -689,7 +689,7 @@ export default class EditorCore extends Component {
   editorSpechars = (editarea, root) => {
     EditorSelection.storeRange();
     this.refs.special.toggle((char) => {
-      editarea.focus();
+      EditorDom.focusNode(editarea);;
       EditorSelection.restoreRange();
       if (EditorSelection.range && EditorSelection.validateRange(
         root, EditorSelection.range)) {
@@ -711,7 +711,7 @@ export default class EditorCore extends Component {
   editorEmotion = (editarea, root) => {
     EditorSelection.storeRange();
     this.refs.emotion.toggle((img) => {
-      editarea.focus();
+      EditorDom.focusNode(editarea);;
       EditorSelection.restoreRange();
       if (EditorSelection.range && EditorSelection.validateRange(
         root, EditorSelection.range)) {
@@ -956,7 +956,7 @@ export default class EditorCore extends Component {
   }
   focusEditor() {
     let editarea = ReactDOM.findDOMNode(this.refs.editarea);
-    editarea.focus();
+    EditorDom.focusNode(editarea);;
   }
   // render functions  
   renderEditArea() {
