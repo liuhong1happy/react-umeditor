@@ -7,29 +7,40 @@ var minWidth = 12;
 var minHeight = 12;
 
 export default class EditorResize extends Component {
-	constructor(props){
-		super(props);
-		this.state = {
-			target:null,
-			position:{
-				x:0,y:0
-			},
-			width:0,
-			height:0,
-			startPosition:{
-				x:0,y:0
-			},
-			curPosition:{
-				x:0,y:0
-			}
-		}
+	state = {
+		direction: null,
+		target:null,
+		position:{
+			x:0,
+			y:0
+		},
+		width:0,
+		height:0,
 	}
+	componentDidMount = () => {
+		this.parentElement = this.root.parentElement.querySelector('.editable-range');
+		this.parentElement.addEventListener('scroll', this.resetPosition)
+	}
+
+	componentWillUnmount = () => {
+		this.parentElement.removeEventListener('scroll', this.resetPosition)
+	}
+	
+	resetPosition = ()=> {
+		if(!this.state.target) return
+		if(!this.state.show) return
+		if(this.state.direction) return
+		let position = EditorDom.getOffsetRootParentPosition(this.state.target,this.parentElement);
+		this.setState({
+			position: { x: position.x, y: position.y },
+		})
+	}
+
 	setTarget(target){
-		var root = ReactDOM.findDOMNode(this.refs.root);
-		var position = EditorDom.getOffsetRootParentPosition(target,root.parentElement);
-		var width = position.w;
-		var height = position.h;
-		var offsetPosition = { x: position.x, y: position.y}
+		let position = EditorDom.getOffsetRootParentPosition(target, this.parentElement);
+		let width = position.w;
+		let height = position.h;
+		let offsetPosition = { x: position.x, y: position.y}
 		this.setState({
 			target:target,
 			width:width,
@@ -38,9 +49,11 @@ export default class EditorResize extends Component {
 			position:offsetPosition
 		})
 	}
+
 	getTarget(){
 		return this.state.target;
 	}
+
 	clearTarget(){
 		this.setState({
 			target:null,
@@ -64,55 +77,17 @@ export default class EditorResize extends Component {
 
 		return {x:x,y:y};
 	}
-	handleMouseDown(e){
-		e = e || event;
-		var target = e.target || e.srcElement;
-		var className = target.className;
-		var startPosition = this.getMousePosition(e);
-		this.clearSelect();
-		if(className.indexOf("nw-resize")!=-1){
-			this.setState({
-				direction:"nw-resize",
-				startPosition:startPosition
-			})
-		}
-		if(className.indexOf("ne-resize")!=-1){
-			this.setState({
-				direction:"ne-resize",
-				startPosition:startPosition
-			})
-		}
-		if(className.indexOf("sw-resize")!=-1){
-			this.setState({
-				direction:"sw-resize",
-				startPosition:startPosition
-			})
-		}
-		if(className.indexOf("se-resize")!=-1){
-			this.setState({
-				direction:"se-resize",
-				startPosition:startPosition
-			})
-		}
-		
-		window.removeEventListener("mouseup",this.handleMouseUp.bind(this));
-		window.removeEventListener("mousemove",this.handleMouseMove.bind(this));
-		window.addEventListener("mouseup",this.handleMouseUp.bind(this));
-		window.addEventListener("mousemove",this.handleMouseMove.bind(this));
 
-		EditorDom.stopPropagation(e);
-	}
-	handleMouseMove(e){
+	updatePosition(e, direction) {
 		if(!this.state.direction) return;
+		if(!this.state.show) return;
 		this.clearSelect();
-		e = e || event;
-		var target = e.target || e.srcElement;
-		var curPosition = this.getMousePosition(e);
-		var  startPosition = this.state.startPosition;
-		var dx = curPosition.x-startPosition.x;
-		var dy = curPosition.y-startPosition.y;
-		var width = this.state.width;
-		var height = this.state.height;
+		let curPosition = this.getMousePosition(e);
+		let  startPosition = this.startPosition;
+		let dx = curPosition.x - startPosition.x;
+		let dy = curPosition.y - startPosition.y;
+		let width = this.state.width;
+		let height = this.state.height;
 		
 		switch(this.state.direction){
 			case "nw-resize":
@@ -132,72 +107,61 @@ export default class EditorResize extends Component {
 				height += dy;
 				break;
 		}
-		startPosition = curPosition;
+
+		this.startPosition = curPosition;
+
 		if(width<minWidth) width = minWidth;
 		if(height<minHeight) height = minHeight;
 		
-		if(this.state.target){
+		if(this.state.target) {
 			this.state.target.style.width = width+"px";
 			this.state.target.style.height = height+"px";
 		}
-		
+
+		let position = EditorDom.getOffsetRootParentPosition(this.state.target,this.parentElement);
+
 		this.setState({
-			startPosition:startPosition,
 			width:width,
-			height:height
-		})
-
-		EditorDom.stopPropagation(e);
-	}
-	handleMouseUp(e){
-		if(!this.state.direction) return;
-		this.clearSelect();
-		e = e || event;
-		var target = e.target || e.srcElement;
-		var curPosition = this.getMousePosition(e);
-		var  startPosition = this.state.startPosition;
-		var dx = curPosition.x-startPosition.x;
-		var dy = curPosition.y-startPosition.y;
-		var width = this.state.width;
-		var height = this.state.height;
-		
-		switch(this.state.direction){
-			case "nw-resize":
-				width -= dx;
-				height -= dy;
-				break;
-			case "ne-resize":
-				width += dx;
-				height -= dy;
-				break;
-			case "sw-resize":
-				width -= dx;
-				height += dy;
-				break;
-			case "se-resize":
-				width += dx;
-				height += dy;
-				break;
-		}
-		startPosition = curPosition;
-		
-		if(width<minWidth) width = minWidth;
-		if(height<minHeight) height = minHeight;
-		
-		window.removeEventListener("mouseup",this.handleMouseUp.bind(this));
-		window.removeEventListener("mousemove",this.handleMouseMove.bind(this));
-		if(this.state.target){
-			this.state.target.style.width = width+"px";
-			this.state.target.style.height = height+"px";
-		}
-		this.setState({
-			startPosition:startPosition,
 			height:height,
-			width:width,
-			direction:null,
+			position: { x: position.x, y: position.y },
+			direction
 		})
-		
+
 		EditorDom.stopPropagation(e);
+	}
+
+	handleMouseDown = (e)=>{
+		e = e || event;
+		let target = e.target || e.srcElement;
+		let className = target.className;
+		this.startPosition = this.getMousePosition(e);
+		this.targetPosition = this.state.target.getBoundingClientRect();
+
+		let direction = null;
+		this.clearSelect();
+		if(className.indexOf("nw-resize")!=-1) direction = "nw-resize";
+		if(className.indexOf("ne-resize")!=-1) direction = "ne-resize";
+		if(className.indexOf("sw-resize")!=-1) direction = "sw-resize";
+		if(className.indexOf("se-resize")!=-1) direction = "se-resize";
+
+		window.removeEventListener("mouseup",this.handleMouseUp);
+		window.removeEventListener("mousemove",this.handleMouseMove);
+		window.addEventListener("mouseup",this.handleMouseUp);
+		window.addEventListener("mousemove",this.handleMouseMove);
+
+		this.setState({
+			direction,
+		})
+
+		EditorDom.stopPropagation(e);
+	}
+	handleMouseMove = (e)=>{		
+		this.updatePosition(e, this.state.direction);
+	}
+	handleMouseUp = (e)=>{
+		window.removeEventListener("mouseup",this.handleMouseUp);
+		window.removeEventListener("mousemove",this.handleMouseMove);
+		this.updatePosition(e, null );
 	}
 	render(){
 		var style = {
@@ -208,12 +172,12 @@ export default class EditorResize extends Component {
 			display:this.state.show?"block":"none",
 			positoin:"absolute"
 		};		
-		return (<div className="editor-resize-container" ref="root">
+		return (<div className="editor-resize-container" ref={ref=> this.root = ref}>
 				<div className="editor-resize" style={style}>
-					<div className="block-resize nw-resize" onMouseDown={this.handleMouseDown.bind(this)} onMouseMove={this.handleMouseMove.bind(this)} onMouseUp={this.handleMouseUp.bind(this)}></div>
-					<div className="block-resize ne-resize" onMouseDown={this.handleMouseDown.bind(this)} onMouseMove={this.handleMouseMove.bind(this)} onMouseUp={this.handleMouseUp.bind(this)}></div>
-					<div className="block-resize sw-resize" onMouseDown={this.handleMouseDown.bind(this)} onMouseMove={this.handleMouseMove.bind(this)} onMouseUp={this.handleMouseUp.bind(this)}></div>
-					<div className="block-resize se-resize" onMouseDown={this.handleMouseDown.bind(this)} onMouseMove={this.handleMouseMove.bind(this)} onMouseUp={this.handleMouseUp.bind(this)}></div>
+					<div className="block-resize nw-resize" onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp}></div>
+					<div className="block-resize ne-resize" onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp}></div>
+					<div className="block-resize sw-resize" onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp}></div>
+					<div className="block-resize se-resize" onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp}></div>
 				</div>
 			</div>)
 	}
