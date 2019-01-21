@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import classnames from 'classnames'
 import Uploader from '../../utils/FileUpload';
 
 export default class ImageUpload extends Component{
@@ -39,8 +40,8 @@ export default class ImageUpload extends Component{
 						fileIndex = 0;
 						if(!obj.dropEffect){
 							obj.value = "";
-              _self.afterUploading();
-						}
+                        }
+                        _self.afterUploading();
 					}
 				},200)
 			},
@@ -84,8 +85,8 @@ export default class ImageUpload extends Component{
   }
 
 	handleUploadFile(obj){
-    let file = obj.files[0]
-    this.argumentUpload(file, obj.files, 0, obj)
+        let file = obj.files[0]
+        this.argumentUpload(file, obj.files, 0, obj)
 	}
 	handleChange(e){
 		e = e || event;
@@ -158,7 +159,7 @@ export default class ImageUpload extends Component{
 
 			let hasImages = images.length > 0;
 			return (<div className="tab-panel">
-						<div className={"image-content" +(dragEnter?" drag-enter":"")}  onDrop={this.handleDrop.bind(this)}
+						<div className={classnames("image-content", {" drag-enter": dragEnter })}  onDrop={this.handleDrop.bind(this)}
 									onDragOver={this.handleDragOver.bind(this)}
 									onDragEnter={this.handleDragEnter.bind(this)}
 									onDragLeave={this.handleDragLeave.bind(this)}

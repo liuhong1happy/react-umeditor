@@ -1,6 +1,6 @@
 {
   "name": "react-umeditor",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "React Editor like UMEditor",
   "main": "lib/editor.js",
   "files": [
@@ -42,7 +42,6 @@
   },
   "homepage": "https://github.com/liuhong1happy/react-umeditor#readme",
   "dependencies": {
-    "classnames": "^2.2.6",
-    "hmacsha1": "^1.0.0"
+    "classnames": "^2.2.6"
   }
 }
