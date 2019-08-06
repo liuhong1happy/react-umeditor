@@ -1063,9 +1063,10 @@ export default class EditorCore extends Component {
             value={editorState.icons["paragraph"]?editorState.icons["paragraph"].value: paragraph[0].value}
           />
           {
-            pIcons.filter(ic=>ic.component).map(ic=>{
+            pIcons.filter(ic=>ic.component).map((ic,iIndex)=>{
               const Com = ic.component;
               return <Com 
+		key={iIndex}	     
                 hidden={ _icons.indexOf(ic.name) ==-1}
                 ref={(com)=> this.iconComponetMap[ic.name] = com}
                 {...ic.props}
